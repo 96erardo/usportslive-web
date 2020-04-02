@@ -4,15 +4,19 @@ import {
   Route,
   Switch
 } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from '../redux'
 import Home from './pages/Home';
 
 function App () {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Home}/>
-      </Switch>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home}/>
+        </Switch>
+      </Router>
+    </Provider>
   );
 }
 
