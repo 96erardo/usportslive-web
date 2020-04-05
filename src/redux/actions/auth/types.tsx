@@ -1,19 +1,38 @@
-export const AUTH_LOGIN = 'AUTH_LOGIN';
+import { User } from '../../../shared/types';
 
-export interface Authentication {
+export const SET_AUTH_TOKENS = 'SET_AUTH_TOKENS';
+
+export const SET_USER_DATA = 'SET_USER_DATA';
+
+export const LOGOUT_USER = 'LOGOUT_USER';
+
+export interface AuthenticationState {
   isLoggedIn: boolean,
   accessToken: string,
   refreshToken: string,
-  user: object | null,
+  user: User | null
 }
 
-interface AuthenticateUserAction {
-  type: typeof AUTH_LOGIN,
+export interface SetAuthTokensAction {
+  type: typeof SET_AUTH_TOKENS,
   payload: {
-    user: object,
     accessToken: string,
-    refreshToken: string,
+    refreshToken: string
   }
 }
 
-export type AuthenticationActionTypes = AuthenticateUserAction;
+export interface SetUserDataAction {
+  type: typeof SET_USER_DATA,
+  payload: User
+}
+
+export interface LogoutUserAction {
+  type: typeof LOGOUT_USER
+}
+
+
+export type AuthenticationActionTypes = 
+  SetAuthTokensAction |
+  SetUserDataAction |
+  LogoutUserAction
+;

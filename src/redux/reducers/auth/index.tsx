@@ -1,14 +1,15 @@
 import { 
-  Authentication,
+  AuthenticationState,
   AuthenticationActionTypes,
-  AUTH_LOGIN,
+  SET_AUTH_TOKENS,
+  SET_USER_DATA,
 } from '../../actions/auth/types';
 
-const initialState : Authentication = {
+const initialState : AuthenticationState = {
   isLoggedIn: false,
-  user: null,
   accessToken: '',
   refreshToken: '',
+  user: null,
 }
 
 /**
@@ -17,18 +18,22 @@ const initialState : Authentication = {
  * @param {State} state - The previous state of this reducer
  * @param {object} action - The action to execute
  * 
- * @returns {Authentication} Next reducer state
+ * @returns {AuthenticationState} Next reducer state
  */
-export default function (state: Authentication = initialState, action: AuthenticationActionTypes) : Authentication {
+export default function (state: AuthenticationState = initialState, action: AuthenticationActionTypes) : AuthenticationState {
   switch (action.type) {
-    case AUTH_LOGIN:
+    case SET_AUTH_TOKENS:
       return {
         ...state,
-        isLoggedIn: true,
-        user: action.payload.user,
         accessToken: action.payload.accessToken,
         refreshToken: action.payload.refreshToken,
       };
+    case SET_USER_DATA: 
+      return {
+        ...state,
+        isLoggedIn: true,
+        user: action.payload,
+      }
     default:
       return state;
   }
