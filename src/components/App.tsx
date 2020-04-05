@@ -7,12 +7,14 @@ import {
 import { Provider } from 'react-redux';
 import store from '../redux'
 import Home from './pages/Home';
+import AuthCallback from './pages/AuthCallback';
 
 function App () {
   return (
     <Provider store={store}>
       <Router>
         <Switch>
+          <Route exact path="/oauth/callback" component={AuthCallback}/>
           <Route exact path="/" component={Home}/>
         </Switch>
       </Router>
