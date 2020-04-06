@@ -4,13 +4,24 @@ import {
   SET_AUTH_TOKENS,
   SET_USER_DATA,
 } from '../../actions/auth/types';
+import { Reducer } from 'redux';
 
-const initialState : AuthenticationState = {
-  isLoggedIn: false,
-  accessToken: '',
-  refreshToken: '',
-  user: null,
-}
+const auth = JSON.parse(localStorage.getItem('auth') as string);
+
+const initialState : AuthenticationState = auth ? (
+  {
+    ...auth, 
+    isLoggedIn: false, 
+    user: null
+  }
+) : (
+  {
+    user: null,
+    isLoggedIn: false,
+    accessToken: '',
+    refreshToken: '',
+  }
+);
 
 /**
  * Authentication reducer
@@ -20,21 +31,30 @@ const initialState : AuthenticationState = {
  * 
  * @returns {AuthenticationState} Next reducer state
  */
-export default function (state: AuthenticationState = initialState, action: AuthenticationActionTypes) : AuthenticationState {
+const reducer: Reducer<AuthenticationState, AuthenticationActionTypes> =  (state = initialState, action) => {
+  let nextState: AuthenticationState = state;
   switch (action.type) {
     case SET_AUTH_TOKENS:
-      return {
+      nextState = {
         ...state,
         accessToken: action.payload.accessToken,
         refreshToken: action.payload.refreshToken,
-      };
-    case SET_USER_DATA: 
-      return {
+      }; break;
+    case SET_USER_DATA:
+      nextState = {
         ...state,
         isLoggedIn: true,
         user: action.payload,
-      }
+      }; break;
     default:
-      return state;
+      nextState = state;
   }
+  
+  const { user, isLoggedIn, ...rest} = state;
+  
+  localStorage.setItem('auth', JSON.stringify(rest));
+  
+  return nextState;
 }
+
+export default reducer;
