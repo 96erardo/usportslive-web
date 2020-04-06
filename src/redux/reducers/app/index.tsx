@@ -2,6 +2,7 @@ import {
   AppActionTypes,
   APP_FINISHED_LOADING,
   SET_SPORTS_IN_APP,
+  SET_ROLES_IN_APP
 } from '../../actions/app/types';
 import { Reducer } from 'redux';
 import { Sport, Role } from '../../../shared/types';
@@ -32,6 +33,11 @@ const reducer: Reducer <AppState, AppActionTypes> = (state = initialState, actio
           ...state.sports,
           ...action.payload
         ]
+      };
+    case SET_ROLES_IN_APP:
+      return {
+        ...state,
+        roles: action.payload,
       }
     default:
       return state;
