@@ -1,15 +1,21 @@
 import {
   AppActionTypes,
   APP_FINISHED_LOADING,
+  SET_SPORTS_IN_APP,
 } from '../../actions/app/types';
 import { Reducer } from 'redux';
+import { Sport, Role } from '../../../shared/types';
 
 type AppState = {
-  loading: boolean
+  loading: boolean,
+  sports: Array<Sport>,
+  roles: Array<Role>
 }
 
 const initialState: AppState = {
   loading: true,
+  sports: [],
+  roles: []
 };
 
 const reducer: Reducer <AppState, AppActionTypes> = (state = initialState, action) => {
@@ -19,6 +25,14 @@ const reducer: Reducer <AppState, AppActionTypes> = (state = initialState, actio
         ...state,
         loading: false,
       };
+    case SET_SPORTS_IN_APP:
+      return {
+        ...state,
+        sports: [
+          ...state.sports,
+          ...action.payload
+        ]
+      }
     default:
       return state;
   }

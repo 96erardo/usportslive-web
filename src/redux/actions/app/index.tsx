@@ -1,14 +1,13 @@
 import {
   APP_FINISHED_LOADING,
-  AppFinishedLoadingAction
+  SET_SPORTS_IN_APP,
+  AppFinishedLoadingAction,
+  SetSportsInAppAction
 } from './types';
-import {
-  setUserData
-} from '../auth/index'
-import { authenticated } from '../../../config/axios';
-import { AppThunk, User } from '../../../shared/types';
+import { setUserData } from '../auth';
+import { authenticated, request } from '../../../config/axios';
+import { AppThunk, User, Sport } from '../../../shared/types';
 import { AxiosResponse } from 'axios';
-
 
 export const loadAppResources = (): AppThunk => {
   return async (dispatch, getState) => {
@@ -20,7 +19,18 @@ export const loadAppResources = (): AppThunk => {
       dispatch(setUserData(user));
     }
 
+    const { data: sports }: AxiosResponse<Array<Sport>> = await request.get('/api/sports');
+
+    dispatch(setSportsInApp(sports));
+
     dispatch(appFinishedLoading());
+  }
+}
+
+export const setSportsInApp = (sports: Array<Sport>): SetSportsInAppAction => {
+  return {
+    type: SET_SPORTS_IN_APP,
+    payload: sports
   }
 }
 

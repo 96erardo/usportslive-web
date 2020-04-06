@@ -11,6 +11,10 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Action<string>
 >;
 
+export interface ObjectRef<T> {
+  id: T | null
+}
+
 export interface Person {
   id: number,
   name: string,
@@ -29,5 +33,13 @@ export interface User {
   email: string,
   streamKey?: string,
   person: Person,
-  role: Role
+  role: Role,
+  createdAt: string,
+}
+
+export interface Sport {
+  id: number,
+  name: string,
+  team: ObjectRef<number>,
+  createdAt: string
 }
