@@ -33,8 +33,6 @@ function AuthCallback (props: Props) {
     }
   }, [isLoggedIn, props.history, q, dispatch]);
   
-  console.log('props', props);
-
   return <p>Loading...</p>
 }
 
