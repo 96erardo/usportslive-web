@@ -28,6 +28,15 @@ const theme = createMuiTheme({
       '@global': {
         '@font-face': [...muli]
       }
+    },
+    MuiAppBar: {
+      root: {
+        boxShadow: 'none',
+        borderBottom: '1px solid #fff'
+      },
+      colorDefault: {
+        backgroundColor: '#111',
+      }
     }
   }
 });
