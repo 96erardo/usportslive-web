@@ -8,11 +8,11 @@ import { AppDispatch } from '../shared/types';
 import AppLoader from './organisms/AppLoader';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
+import theme from '../config/theme';
+import store from '../redux';
 
 import Admin from './layouts/Admin';
 
-import theme from '../config/theme';
-import store from '../redux';
 
 function App () {
   const [loading, setLoading] = useState(true);

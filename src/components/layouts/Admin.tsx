@@ -1,7 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { RouteComponentProps  } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton } from '@material-ui/core';
+import AppsIcon from '@material-ui/icons/Apps';
+import SearchIcon from '@material-ui/icons/Search';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DropdownMenu from './../organisms/DropdownMenu';
 
@@ -14,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2)
     },
     title: {
-      flexGrow: 1,
+      // flexGrow: 1,
       fontWeight: 700,
     }
   })
@@ -28,20 +31,36 @@ function Admin (props: Props) {
     setMenuOpen(!isMenuOpen);
   }, [isMenuOpen, setMenuOpen])
 
+  useEffect(() => {
+    const unsubscribe = props.history.listen(() => {
+      if (isMenuOpen) {
+        setMenuOpen(false);
+      }
+    })
+
+    return () => unsubscribe();
+  }, [isMenuOpen])
+
   return (
     <div className={classes.root}>
       <AppBar color="default">
         <Toolbar>
-          <IconButton 
-            onClick={toggle}
-            className={classes.menuButton} 
-            edge="start" 
-            aria-label="menu"
-          >
-          </IconButton>
-          <Typography align="center" className={classes.title} variant="h5">
-            Admin
-          </Typography>
+          <Grid container alignItems="center" justify="space-between">
+            <IconButton 
+              onClick={toggle}
+              aria-label="menu"
+            >
+              <AppsIcon />
+            </IconButton>
+            <Typography align="center" className={classes.title} variant="h5">
+              Inicio
+            </Typography>
+            <IconButton
+              aria-label="menu"
+            >
+              <SearchIcon />
+            </IconButton>
+          </Grid>
         </Toolbar>
       </AppBar>
       <DropdownMenu 
