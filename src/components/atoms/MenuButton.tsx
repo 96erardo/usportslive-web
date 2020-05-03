@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     active: {
       color: '#1976D2'
+    },
+    label: {
+      fontSize: '14px',
     }
   })
 )
@@ -36,6 +39,7 @@ function MenuButton (props: Props) {
       </Box>
       <Box lineHeight="normal" textAlign="center" width="100%">
         <Typography 
+          className={classes.label}
           variant="caption"
           display="block"
           color="inherit"

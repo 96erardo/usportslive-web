@@ -11,6 +11,14 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Action<string>
 >;
 
+export interface PaginatedListState<T> {
+  items: Array<T>,
+  count: number,
+  loading: boolean,
+  error: Error | null,
+  last: boolean
+}
+
 export interface ObjectRef<T> {
   id: T | null
 }
@@ -40,6 +48,6 @@ export interface User {
 export interface Sport {
   id: number,
   name: string,
-  team: ObjectRef<number>,
+  team: ObjectRef<number> | null,
   createdAt: string
 }

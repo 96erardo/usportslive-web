@@ -2,11 +2,14 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { RouteComponentProps } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton } from '@material-ui/core';
+import { Switch, Route } from 'react-router-dom';
 import AppsIcon from '@material-ui/icons/Apps';
 import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DropdownMenu from './../organisms/DropdownMenu';
+
+import AdminSports from '../pages/AdminSports';
 
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
@@ -39,11 +42,14 @@ function Admin (props: Props) {
     })
 
     return () => unsubscribe();
-  }, [isMenuOpen])
+  }, [props.history, isMenuOpen])
 
   return (
     <div className={classes.root}>
-      <AppBar color="default">
+      <DropdownMenu 
+        isOpen={isMenuOpen}
+      />
+      <AppBar position="sticky" color="default">
         <Toolbar>
           <Grid container alignItems="center" justify="space-between">
             <IconButton 
@@ -63,9 +69,9 @@ function Admin (props: Props) {
           </Grid>
         </Toolbar>
       </AppBar>
-      <DropdownMenu 
-        isOpen={isMenuOpen}
-      />
+      <Switch>
+        <Route path="/admin/sports" component={AdminSports} />
+      </Switch>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import { Transition } from 'react-transition-group';
 import AccountCircleOutlined from '@material-ui/icons/AccountCircleOutlined'
+import SportsHandball from '@material-ui/icons/SportsHandball'
 import MenuButton from './../atoms/MenuButton';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -41,9 +42,9 @@ function DropdownMenu (props: Props) {
                 </Grid>
                 <Grid className={classes.item} item xs={3} container alignContent="center" direction="column">
                   <MenuButton 
-                    to="/admin/score" 
-                    label="Puntuaciones" 
-                    icon={AccountCircleOutlined} 
+                    to="/admin/sports" 
+                    label="Deportes" 
+                    icon={SportsHandball}
                   />
                 </Grid>
                 <Grid className={classes.item} item xs={3} container alignContent="center" direction="column">
@@ -158,6 +159,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       padding: '24px',
       transition: `transform ${duration}ms ease-in-out`,
+      overflow: 'auto',
       [theme.breakpoints.up('sm')]: {
         bottom: 'calc(100vh - 64px)',
         height: 'calc(100vh - 64px)'
