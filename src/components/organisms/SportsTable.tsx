@@ -16,8 +16,8 @@ function SportsTable (props: Props) {
           <TableCell>Nombre</TableCell>
           <TableCell>Icono</TableCell>
           <TableCell>Color</TableCell>
+          <TableCell>Equipo Oficial</TableCell>
           <TableCell>Creado</TableCell>
-          <TableCell>Actualizado</TableCell>
           <TableCell>Acciones</TableCell>
         </TableRow>
       </TableHead>
@@ -28,8 +28,10 @@ function SportsTable (props: Props) {
             <TableCell>{sport.name}</TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
+            <TableCell>
+              {sport.team ? sport.team.id : 'No asignado'}
+            </TableCell>
             <TableCell>{sport.createdAt}</TableCell>
-            <TableCell></TableCell>
             <TableCell></TableCell>
           </TableRow>
         ))}

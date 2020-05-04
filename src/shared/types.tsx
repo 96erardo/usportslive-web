@@ -19,6 +19,13 @@ export interface PaginatedListState<T> {
   last: boolean
 }
 
+export interface ModalState {
+  isOpen: boolean,
+  title: string,
+  props: object,
+  component?: React.ComponentType
+}
+
 export interface ObjectRef<T> {
   id: T | null
 }
@@ -49,5 +56,5 @@ export interface Sport {
   id: number,
   name: string,
   team: ObjectRef<number> | null,
-  createdAt: string
+  createdAt?: string
 }

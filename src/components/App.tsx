@@ -7,6 +7,7 @@ import AuthCallback from './pages/AuthCallback';
 import { AppDispatch } from '../shared/types';
 import AppLoader from './organisms/AppLoader';
 import { ThemeProvider } from '@material-ui/core/styles';
+import Dialog from './organisms/Dialog';
 import { CssBaseline } from '@material-ui/core';
 import theme from '../config/theme';
 import store from '../redux';
@@ -40,6 +41,7 @@ function App () {
           </Router>
         </AppLoader>
         <CssBaseline />
+        <Dialog />
       </ThemeProvider>
     </Provider>
   );

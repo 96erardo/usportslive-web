@@ -4,7 +4,11 @@ import {
   SET_ROLES_IN_APP,
   AppFinishedLoadingAction,
   SetSportsInAppAction,
-  SetRolesInAppAction
+  SetRolesInAppAction,
+  OpenAppModalAction,
+  OPEN_APP_MODAL,
+  CloseAppModalAction,
+  CLOSE_APP_MODAL
 } from './types';
 import { setUserData } from '../auth';
 import { authenticated, request } from '../../../config/axios';
@@ -49,4 +53,21 @@ export const appFinishedLoading = () : AppFinishedLoadingAction => {
   return {
     type: APP_FINISHED_LOADING
   };
+};
+
+export const openAppModal = (title: string, component: React.ComponentType, props: object): OpenAppModalAction => {
+  return {
+    type: OPEN_APP_MODAL,
+    payload: {
+      title,
+      component,
+      props
+    }
+  }
+};
+
+export const closeAppModal = (): CloseAppModalAction => {
+  return {
+    type: CLOSE_APP_MODAL,
+  }
 };
