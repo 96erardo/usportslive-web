@@ -2,14 +2,14 @@ import { useTypedSelector } from '../../shared/utils';
 import { check } from '../../modules/user/utils';
 import rules from '../../config/rbac-rules';
 
-function Can (props: Props) {
+function Can ({ perform, data, onYes, onNo, ...rest}: Props) {
   const user = useTypedSelector(state => state.auth.user);
   const role = user ? user.role.name : 'Visitor';
 
-  return check(rules, role, props.perform, { user, ...props.data }) ? (
-    props.onYes()
+  return check(rules, role, perform, { user, ...data }) ? (
+    onYes()
   ) : (
-    props.onNo()
+    onNo()
   )
 }
 

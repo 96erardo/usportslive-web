@@ -5,10 +5,7 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import Can from '../atoms/Can';
 
-
 function Home (props: Props) {
-  
-  
   return (
     <Grid container spacing={2}>
       <Grid item>

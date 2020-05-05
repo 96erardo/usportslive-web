@@ -1,4 +1,4 @@
-export default {
+const rules: Rules = {
   Visitor: {
     static: [
       'dashboard-page:visit'
@@ -10,10 +10,10 @@ export default {
       'dashboard-page:visit'
     ],
     dynamic: {
-
+      
     }
   }
-}
+};
 
 export type Rules = {
   [key: string]: {
@@ -23,3 +23,5 @@ export type Rules = {
     }
   }
 }
+
+export default rules;

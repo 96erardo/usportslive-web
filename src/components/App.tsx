@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import Home from './pages/Home';
 import { loadAppResources } from '../redux/actions/app';
 import AuthCallback from './pages/AuthCallback';
 import { AppDispatch } from '../shared/types';
@@ -12,7 +11,10 @@ import { CssBaseline } from '@material-ui/core';
 import theme from '../config/theme';
 import store from '../redux';
 
+import ProtectedRoute from './atoms/ProtectedRoute';
+// import VisitorsRoute from './atoms/VisitorsRoute';
 import Admin from './layouts/Admin';
+import Home from './pages/Home';
 
 
 function App () {
@@ -35,7 +37,7 @@ function App () {
           <Router>
             <Switch>
               <Route exact path="/oauth/callback" component={AuthCallback}/>
-              <Route path="/admin" component={Admin} />
+              <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
               <Route exact path="/" component={Home}/>
             </Switch>
           </Router>
