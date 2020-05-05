@@ -10,6 +10,7 @@ import {
   CloseAppModalAction,
   CLOSE_APP_MODAL
 } from './types';
+import { logout } from '../auth'
 import { setUserData } from '../auth';
 import { authenticated, request } from '../../../config/axios';
 import { AppThunk, User, Sport, Role } from '../../../shared/types';
@@ -21,8 +22,13 @@ export const loadAppResources = (): AppThunk => {
     const authOptions = { headers: { Authorization: `Bearer ${auth.accessToken}` }};
 
     if (auth.accessToken) {
-      const { data: user }: AxiosResponse<User> = await authenticated.get('/api/users', authOptions);
-      dispatch(setUserData(user));
+      try {        
+        const { data: user }: AxiosResponse<User> = await authenticated.get('/api/users', authOptions);
+        dispatch(setUserData(user));
+
+      } catch (e) {
+        dispatch(logout());
+      }
     }
 
     const { data: sports }: AxiosResponse<Array<Sport>> = await request.get('/api/sports');

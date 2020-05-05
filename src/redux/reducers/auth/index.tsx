@@ -3,6 +3,7 @@ import {
   AuthenticationActionTypes,
   SET_AUTH_TOKENS,
   SET_USER_DATA,
+  LOGOUT_USER,
 } from '../../actions/auth/types';
 import { Reducer } from 'redux';
 
@@ -11,7 +12,6 @@ const auth = JSON.parse(localStorage.getItem('auth') as string);
 const initialState : AuthenticationState = auth ? (
   {
     ...auth, 
-    isLoggedIn: false, 
     user: null
   }
 ) : (
@@ -46,13 +46,23 @@ const reducer: Reducer<AuthenticationState, AuthenticationActionTypes> =  (state
         isLoggedIn: true,
         user: action.payload,
       }; break;
+    case LOGOUT_USER:
+      nextState = {
+        ...state,
+        isLoggedIn: false,
+        accessToken: '',
+        refreshToken: '',
+        user: null
+      }; break;
     default:
       nextState = state;
   }
-  
-  const { user, isLoggedIn, ...rest} = state;
-  
-  localStorage.setItem('auth', JSON.stringify(rest));
+    
+  localStorage.setItem('auth', JSON.stringify({
+    accessToken: nextState.accessToken,
+    refreshToken: nextState.refreshToken,
+    isLoggedIn: nextState.isLoggedIn,
+  }));
   
   return nextState;
 }

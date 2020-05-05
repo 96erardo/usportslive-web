@@ -8,6 +8,7 @@ import {
   LOGOUT_USER,
   SET_USER_DATA
 } from './types';
+import { logout as logoutRequest } from '../../../modules/user/actions';
 import { AppThunk, User } from '../../../shared/types';
 import { AxiosResponse } from 'axios';
 
@@ -51,6 +52,27 @@ export const exchageCodeForToken = (
   };
 };
 
+/**
+ * Logs the user out
+ * 
+ * @returns {AppThunk<Promise<void>>}
+ */
+export const signout = () : AppThunk<Promise<void>> => {
+  return async (dispatch): Promise<void> => {
+    await logoutRequest();
+
+    dispatch(logout());
+  }
+}
+
+/**
+ * Created an action object based on the given tokens
+ * 
+ * @param {string} accessToken - User's access token
+ * @param {string} refreshToken - User's refresh token
+ * 
+ * @returns {SetAuthTokensAction} The action object
+ */
 export const setAuthTokens = (accessToken: string, refreshToken: string) : SetAuthTokensAction => {
   return {
     type: SET_AUTH_TOKENS,
@@ -72,4 +94,4 @@ export const logout = (): LogoutUserAction => {
   return {
     type: LOGOUT_USER
   };
-};
+}; 

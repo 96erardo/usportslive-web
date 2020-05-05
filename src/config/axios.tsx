@@ -31,7 +31,7 @@ export const authenticated = axios.create({
   }
 });
 
-request.interceptors.response.use(response => {
+authenticated.interceptors.response.use(response => {
   return response;
 }, error => {
   const { config, response } = error;
@@ -39,14 +39,16 @@ request.interceptors.response.use(response => {
   if (response.status === 401) {
     const { auth } = store.getState();
 
-    if (!auth.refreshToken)
+    if (!auth.refreshToken) {
+      store.dispatch(logout());
       return Promise.reject(error);
+    }
     
     return refresh.post('/oauth/token', {refresh_token: auth.refreshToken}) 
       .then(res => {
         const { access_token, refresh_token } = res.data;
     
-        store.dispatch(setAuthTokens(access_token, refresh_token));    
+        store.dispatch(setAuthTokens(access_token, refresh_token));
     
         config.headers['Authorization'] = `Bearer ${access_token}`;
     

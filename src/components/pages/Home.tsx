@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginButton from '../atoms/LoginButton';
+import AuthButton from '../atoms/AuthButton';
 
 function Home (props: Props) {
   
@@ -7,9 +7,7 @@ function Home (props: Props) {
   return (
     <div>
       <div>
-        <LoginButton>
-          Login
-        </LoginButton>
+        <AuthButton />
       </div>
     </div>
   );
