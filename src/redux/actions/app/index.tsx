@@ -23,9 +23,12 @@ export const loadAppResources = (): AppThunk => {
 
     if (auth.accessToken) {
       try {        
-        const { data: user }: AxiosResponse<User> = await authenticated.get('/api/users', authOptions);
-        dispatch(setUserData(user));
-
+        const response: AxiosResponse<User> = await authenticated.get('/api/users', authOptions);
+        if (response.status !== 200) {
+          dispatch(logout());
+        } else {
+          dispatch(setUserData(response.data));
+        }
       } catch (e) {
         dispatch(logout());
       }
