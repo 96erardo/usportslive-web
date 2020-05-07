@@ -6,6 +6,7 @@ import AuthCallback from './pages/AuthCallback';
 import { AppDispatch } from '../shared/types';
 import AppLoader from './organisms/AppLoader';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { SnackbarProvider } from 'notistack';
 import Dialog from './organisms/Dialog';
 import { CssBaseline } from '@material-ui/core';
 import theme from '../config/theme';
@@ -33,17 +34,19 @@ function App () {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <AppLoader loading={loading} error={error}>
-          <Router>
-            <Switch>
-              <Route exact path="/oauth/callback" component={AuthCallback}/>
-              <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
-              <Route exact path="/" component={Home}/>
-            </Switch>
-          </Router>
-        </AppLoader>
-        <CssBaseline />
-        <Dialog />
+        <SnackbarProvider maxSnack={4}>
+          <AppLoader loading={loading} error={error}>
+            <Router>
+              <Switch>
+                <Route exact path="/oauth/callback" component={AuthCallback}/>
+                <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
+                <Route exact path="/" component={Home}/>
+              </Switch>
+            </Router>
+          </AppLoader>
+          <CssBaseline />
+          <Dialog />
+        </SnackbarProvider>
       </ThemeProvider>
     </Provider>
   );

@@ -8,6 +8,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { createSport, updateSport } from '../../modules/sport/actions';
 import ImageFilePicker from '../atoms/ImageFilePicker';
 import { Sport } from '../../shared/types';
+import { useSnackbar } from 'notistack';
  
 const initialForm = {
   name: '',
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function SportForm (props: Props) {
   const [form, setForm] = useState(initialForm);
+  const { enqueueSnackbar: notify } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
 
