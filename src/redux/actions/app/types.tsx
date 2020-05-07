@@ -30,6 +30,7 @@ export interface OpenAppModalAction {
     title: string,
     component: React.ComponentType,
     props: object,
+    maxWidth: 'xs' | 'sm' | 'md' | 'lg'
   }
 }
 

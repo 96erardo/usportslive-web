@@ -23,6 +23,7 @@ const initialState: AppState = {
   modal: {
     isOpen: false,
     title: '',
+    maxWidth: 'sm',
     props: {},
   }
 };
@@ -55,7 +56,8 @@ const reducer: Reducer <AppState, AppActionTypes> = (state = initialState, actio
           isOpen: true,
           title: action.payload.title,
           component: action.payload.component,
-          props: action.payload.props
+          props: action.payload.props,
+          maxWidth: action.payload.maxWidth
         }
       };
     case CLOSE_APP_MODAL: 

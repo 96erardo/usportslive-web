@@ -13,7 +13,7 @@ import {
 import { logout } from '../auth'
 import { setUserData } from '../auth';
 import { authenticated, request } from '../../../config/axios';
-import { AppThunk, User, Sport, Role } from '../../../shared/types';
+import { AppThunk, User, Sport, Role, Size } from '../../../shared/types';
 import { AxiosResponse } from 'axios';
 
 export const loadAppResources = (): AppThunk => {
@@ -64,13 +64,14 @@ export const appFinishedLoading = () : AppFinishedLoadingAction => {
   };
 };
 
-export const openAppModal = (title: string, component: React.ComponentType, props: object): OpenAppModalAction => {
+export const openAppModal = (title: string, component: React.ComponentType, props: object = {}, maxWidth: Size = 'sm'): OpenAppModalAction => {
   return {
     type: OPEN_APP_MODAL,
     payload: {
       title,
       component,
-      props
+      props,
+      maxWidth
     }
   }
 };

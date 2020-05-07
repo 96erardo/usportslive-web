@@ -22,6 +22,7 @@ export interface PaginatedListState<T> {
 export interface ModalState {
   isOpen: boolean,
   title: string,
+  maxWidth: Size,
   props: object,
   component?: React.ComponentType
 }
@@ -58,3 +59,5 @@ export interface Sport {
   team: ObjectRef<number> | null,
   createdAt?: string
 }
+
+export type Size = 'xs' | 'sm' | 'md' | 'lg';

@@ -2,15 +2,15 @@ import React, { useCallback } from 'react';
 import MaterialDialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../redux/reducers';
+import { useDispatch } from 'react-redux';
 import { closeAppModal } from '../../redux/actions/app';
-import { AppDispatch } from '../../shared/types';
+import { AppDispatch, ModalState } from '../../shared/types';
+import { useTypedSelector } from '../../shared/utils';
 
 function Dialog () {
-  const state: any = useSelector<RootState>(state => state.app.modal);
+  const state: ModalState = useTypedSelector(state => state.app.modal);
   const dispatch: AppDispatch = useDispatch();
-  const Child: React.ComponentType | null = state.component;
+  const Child: React.ComponentType | undefined = state.component;
 
   const handleClose = useCallback(() => {
     dispatch(closeAppModal())
@@ -19,7 +19,7 @@ function Dialog () {
   return (
     <MaterialDialog 
       open={state.isOpen} 
-      maxWidth="sm"
+      maxWidth={state.maxWidth}
       fullWidth
       onClose={handleClose}
     >

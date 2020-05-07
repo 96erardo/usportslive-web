@@ -25,7 +25,7 @@ function AdminSports () {
     dispatch(openAppModal("Crear deporte", SportForm as React.ComponentType, {
       onDone: handleDone,
       onCancel: () => dispatch(closeAppModal())
-    }));
+    }, 'xs'));
   }, [dispatch, handleDone]);
 
   return (

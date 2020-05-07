@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { createSport, updateSport } from '../../modules/sport/actions';
+import ImageFilePicker from '../atoms/ImageFilePicker';
 import { Sport } from '../../shared/types';
  
 const initialForm = {
@@ -65,7 +67,17 @@ function SportForm (props: Props) {
 
   return (
     <div className={classes.root}>
+      {loading &&
+        <LinearProgress color="primary" />
+      }
       <Grid container direction="column" spacing={2}>
+        <Grid item container alignItems="center" justify="center">
+          <Box my={2}>
+            <ImageFilePicker 
+              size="md"
+            />
+          </Box>
+        </Grid>
         <Grid item>
           <TextField 
             name="name"
@@ -81,24 +93,22 @@ function SportForm (props: Props) {
             <Button 
               onClick={props.onCancel}
               variant="contained" 
+              disabled={loading}
               disableElevation
             >
               Cancelar
             </Button>
           </Grid>
           <Grid item>
-            {loading ? (
-              <CircularProgress size={20} color="primary"/>
-            ) : (
-              <Button 
-                variant="contained" 
-                color="primary"
-                onClick={onSubmit}
-                disableElevation
-              >
-                Crear
-              </Button>
-            )}
+            <Button 
+              variant="contained" 
+              color="primary"
+              onClick={onSubmit}
+              disabled={loading}
+              disableElevation
+            >
+              Crear
+            </Button>
           </Grid>
         </Grid>
       </Grid>
