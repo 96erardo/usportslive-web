@@ -43,6 +43,25 @@ export async function updateSport (data: UpdateSport): Promise<void> {
   
 };
 
+/**
+ * Deletes the specified sport from the platform
+ * 
+ * @param {number|string} id - Id of the sport about to delete
+ * 
+ * @returns {Promise<void>}
+ */
+export async function deleteSport (id: number): Promise<void> {
+  /**
+   * Functionality missing because it has to be defined what should
+   * happen when a sport is deleted. This functionality is going to be left here
+   * to simulate the process of deletition
+   */
+
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), 2000);
+  });
+}
+
 type CreateSport = {
   name: string,
   teamId: number | string | null

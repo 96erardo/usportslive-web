@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-function TableItemActions () {
+function TableItemActions (props: Props) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const classes = useStyles();
@@ -48,6 +48,10 @@ function TableItemActions () {
   const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, [setAnchorEl]);
+
+  const handleDelete = useCallback(() => {
+    props.onDelete(props.id);
+  }, [props]);
 
   return (
     <div>
@@ -70,7 +74,7 @@ function TableItemActions () {
           </ListItemIcon>
           <Typography variant="inherit">Update</Typography>
         </MenuItem>
-        <MenuItem className={classes.delete} onClick={() => console.log('delete')}>
+        <MenuItem className={classes.delete} onClick={handleDelete}>
           <ListItemIcon>
             <DeleteOutlinedIcon color="inherit" fontSize="small" />
           </ListItemIcon>
@@ -79,6 +83,11 @@ function TableItemActions () {
       </Menu>
     </div>
   );
+}
+
+interface Props {
+  id: number,
+  onDelete (id: number): void,
 }
 
 export default TableItemActions;

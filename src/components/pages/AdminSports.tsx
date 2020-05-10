@@ -9,24 +9,19 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Typography } from '@material-ui/core';
 import SportsTable from '../organisms/SportsTable';
 import { useSports } from '../../modules/sport/hooks';
-import { PaginatedListState, Sport, AppDispatch } from '../../shared/types';
-import { openAppModal, closeAppModal } from '../../redux/actions/app';
-import { useDispatch } from 'react-redux';
+import { PaginatedListState, Sport } from '../../shared/types';
+import { useModal } from '../../shared/hooks';
 
 function AdminSports () {
-  const {items, count, loading }: PaginatedListState<Sport> = useSports();
-  const dispatch: AppDispatch = useDispatch();
+  const { items, count, loading }: PaginatedListState<Sport> = useSports();
+  const [open, close] = useModal("Crear deporte", SportForm as React.ComponentType, 'xs');
+  const handleOpen = useCallback(() => {
+    open({
+      onDone: close,
+      onCancel: close,
+    });
+  }, [open, close]);
 
-  const handleDone = useCallback(() => {
-    dispatch(closeAppModal());
-  }, [dispatch]);
-
-  const openForm = useCallback(() => {
-    dispatch(openAppModal("Crear deporte", SportForm as React.ComponentType, {
-      onDone: handleDone,
-      onCancel: () => dispatch(closeAppModal())
-    }, 'xs'));
-  }, [dispatch, handleDone]);
 
   return (
     <Box p={3}>
@@ -36,7 +31,7 @@ function AdminSports () {
             <Typography variant="h4">
               Deportes
             </Typography>
-            <IconButton onClick={openForm} aria-label="add sport" color="primary">
+            <IconButton onClick={handleOpen} aria-label="add sport" color="primary">
               <AddBoxIcon />
             </IconButton>
           </Grid>
