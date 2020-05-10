@@ -37,6 +37,11 @@ const theme = createMuiTheme({
       colorDefault: {
         backgroundColor: '#111',
       }
+    },
+    MuiListItemIcon: {
+      root: {
+        minWidth: '35px'
+      }
     }
   }
 });

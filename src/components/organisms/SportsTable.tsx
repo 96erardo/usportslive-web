@@ -5,6 +5,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import TableItemActions from '../atoms/TableItemActions';
 
 function SportsTable (props: Props) {
 
@@ -32,7 +33,9 @@ function SportsTable (props: Props) {
               {sport.team ? sport.team.id : 'No asignado'}
             </TableCell>
             <TableCell>{sport.createdAt}</TableCell>
-            <TableCell></TableCell>
+            <TableCell>
+              <TableItemActions />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
