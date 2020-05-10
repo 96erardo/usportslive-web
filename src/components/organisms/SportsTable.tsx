@@ -7,11 +7,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import TableItemActions from '../atoms/TableItemActions';
 import DecisionDialog from '../molecules/DecisionDialog';
+import SportForm from '../organisms/SportForm';
 import { useModal } from '../../shared/hooks';
 import { deleteSport } from '../../modules/sport/actions';
 
 function SportsTable (props: Props) {
   const [onDeleteQuestion] =  useModal('Eliminar deporte', DecisionDialog as React.ComponentType, 'xs');
+  const [onUpdateClick, onUpdateDone] = useModal('Editar deporte', SportForm as React.ComponentType, 'xs');
   
   const handleDeleteClick = useCallback((id: number) => {
     onDeleteQuestion({
@@ -20,6 +22,13 @@ function SportsTable (props: Props) {
     });
   }, [onDeleteQuestion]);
 
+  const handleUpdateClick = useCallback((id: number) => {
+    onUpdateClick({
+      sport: props.items.find(sport => sport.id === id),
+      onDone: onUpdateDone,
+      onCancel: onUpdateDone,
+    });
+  }, [props.items, onUpdateClick, onUpdateDone]);
 
   return (
     <Table>
@@ -48,6 +57,7 @@ function SportsTable (props: Props) {
             <TableCell>
               <TableItemActions 
                 id={sport.id}
+                onUpdate={handleUpdateClick}
                 onDelete={handleDeleteClick}
               />
             </TableCell>

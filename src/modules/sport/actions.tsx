@@ -1,7 +1,9 @@
 import { request, authenticated } from '../../config/axios';
 import { Sport } from '../../shared/types';
 import { RootState } from '../../redux/reducers'
+import Logger from 'js-logger';
 import store from '../../redux';
+
 /**
  * Fetches the sports from the api
  * 
@@ -36,11 +38,26 @@ export async function createSport (data: CreateSport): Promise<Sport> {
     }
   });
 
+  Logger.debug('createSport', res);
+
   return res.data;
 }
 
 export async function updateSport (data: UpdateSport): Promise<void> {
-  
+  const { auth }: RootState = store.getState();
+
+  const res = await authenticated.patch(`/api/sports/${data.id}`, {
+    name: data.name,
+    teamId: data.teamId,
+  }, { 
+    headers: {
+      Authorization: `Bearer ${auth.accessToken}`
+    }
+  });
+
+  Logger.debug('updateSport', res);
+
+  return res.data;
 };
 
 /**

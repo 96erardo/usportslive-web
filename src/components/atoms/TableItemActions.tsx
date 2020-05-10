@@ -53,6 +53,10 @@ function TableItemActions (props: Props) {
     props.onDelete(props.id);
   }, [props]);
 
+  const handleUpdate = useCallback(() => {
+    props.onUpdate(props.id);
+  }, [props]);
+
   return (
     <div>
       <IconButton
@@ -68,17 +72,17 @@ function TableItemActions (props: Props) {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem className={classes.update} onClick={() => console.log('update')}>
+        <MenuItem className={classes.update} onClick={handleUpdate}>
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
-          <Typography variant="inherit">Update</Typography>
+          <Typography variant="inherit">Editar</Typography>
         </MenuItem>
         <MenuItem className={classes.delete} onClick={handleDelete}>
           <ListItemIcon>
             <DeleteOutlinedIcon color="inherit" fontSize="small" />
           </ListItemIcon>
-          <Typography variant="inherit">Delete</Typography>
+          <Typography variant="inherit">Eliminar</Typography>
         </MenuItem>
       </Menu>
     </div>
@@ -88,6 +92,7 @@ function TableItemActions (props: Props) {
 interface Props {
   id: number,
   onDelete (id: number): void,
+  onUpdate (id: number): void,
 }
 
 export default TableItemActions;

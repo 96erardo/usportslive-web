@@ -23,7 +23,11 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 function SportForm (props: Props) {
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(props.sport ? {
+    id: props.sport.id,
+    name: props.sport.name,
+    teamId: props.sport.team ? props.sport.team.id : null,
+  } : initialForm);
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
 
@@ -107,7 +111,7 @@ function SportForm (props: Props) {
               disabled={loading}
               disableElevation
             >
-              Crear
+              {props.sport ? 'Editar' : 'Crear'}
             </Button>
           </Grid>
         </Grid>

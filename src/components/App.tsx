@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import LoggerProvider from './atoms/LoggerProvider';
 import { loadAppResources } from '../redux/actions/app';
 import AuthCallback from './pages/AuthCallback';
 import { AppDispatch } from '../shared/types';
@@ -17,6 +18,9 @@ import ProtectedRoute from './atoms/ProtectedRoute';
 import Admin from './layouts/Admin';
 import Home from './pages/Home';
 
+const { 
+  REACT_APP_LOG_LEVEL: level
+} = process.env;
 
 function App () {
   const [loading, setLoading] = useState(true);
@@ -35,15 +39,17 @@ function App () {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <SnackbarProvider maxSnack={4}>
-          <AppLoader loading={loading} error={error}>
-            <Router>
-              <Switch>
-                <Route exact path="/oauth/callback" component={AuthCallback}/>
-                <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
-                <Route exact path="/" component={Home}/>
-              </Switch>
-            </Router>
-          </AppLoader>
+          <LoggerProvider level={level}>
+            <AppLoader loading={loading} error={error}>
+              <Router>
+                <Switch>
+                  <Route exact path="/oauth/callback" component={AuthCallback}/>
+                  <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
+                  <Route exact path="/" component={Home}/>
+                </Switch>
+              </Router>
+            </AppLoader>
+          </LoggerProvider>
           <CssBaseline />
           <Dialog />
         </SnackbarProvider>
