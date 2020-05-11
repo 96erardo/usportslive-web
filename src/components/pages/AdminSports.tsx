@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -13,15 +13,27 @@ import { PaginatedListState, Sport } from '../../shared/types';
 import { useModal } from '../../shared/hooks';
 
 function AdminSports () {
-  const { items, count, loading }: PaginatedListState<Sport> = useSports();
-  const [open, close] = useModal("Crear deporte", SportForm as React.ComponentType, 'xs');
+  const [page, setPage] = useState(0);
+  const { items, count, loading, refresh }: PaginatedListState<Sport> = useSports(page);
+  const { open, close } = useModal("Crear deporte", SportForm as React.ComponentType, 'xs');
+
+  const handleRefresh = useCallback(() => {
+    if (page === 0) {
+      refresh();
+    } else {
+      setPage(0)
+    }
+  }, [page, refresh, setPage]);
+  
   const handleOpen = useCallback(() => {
     open({
-      onDone: close,
+      onDone: () => {
+        close();
+        handleRefresh();
+      },
       onCancel: close,
     });
-  }, [open, close]);
-
+  }, [open, close, handleRefresh]);
 
   return (
     <Box p={3}>
@@ -40,6 +52,7 @@ function AdminSports () {
           items={items}
           count={count}
           loading={loading}
+          refresh={handleRefresh}
         />
       </Card>
     </Box>

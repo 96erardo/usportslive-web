@@ -14,6 +14,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 export interface PaginatedListState<T> {
   items: Array<T>,
   count: number,
+  refresh(): void,
   loading: boolean,
   error: Error | null,
   last: boolean

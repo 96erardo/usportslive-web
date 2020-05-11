@@ -159,6 +159,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       padding: '24px',
       transition: `transform ${duration}ms ease-in-out`,
+      zIndex: 900,
       overflow: 'auto',
       [theme.breakpoints.up('sm')]: {
         bottom: 'calc(100vh - 64px)',

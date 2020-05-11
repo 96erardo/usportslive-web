@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getSports } from './actions';
 import { PaginatedListState, Sport } from '../../shared/types';
 import { ITEMS_PER_PAGE } from '../../shared/constants';
@@ -6,6 +6,7 @@ import { ITEMS_PER_PAGE } from '../../shared/constants';
 const initialSports: PaginatedListState<Sport> = {
   items: [],
   count: 0,
+  refresh: () => { console.log('refresh'); },
   error: null,
   loading: true,
   last: false,
@@ -14,7 +15,7 @@ const initialSports: PaginatedListState<Sport> = {
 export function useSports (page = 0, infinite = false): PaginatedListState<Sport> {
   const [sports, setSports] = useState<PaginatedListState<Sport>>(initialSports);
   
-  useEffect(() => {
+  const refresh = useCallback(() => {
     getSports(page)
       .then(items =>
         setSports(sports => ({
@@ -27,5 +28,9 @@ export function useSports (page = 0, infinite = false): PaginatedListState<Sport
       .catch(e => setSports(sports => ({...sports, error: e})));
   }, [page, infinite]);
 
-  return sports;
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return {...sports, refresh };
 }

@@ -23,7 +23,7 @@ export function useModal (title: string, Component: React.ComponentType, maxWidt
     dispatch(closeAppModal());
   }, [dispatch])
 
-  return [open, close];
+  return { open, close };
 }
 
 export function useCloseModal () {

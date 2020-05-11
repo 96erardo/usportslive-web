@@ -14,6 +14,8 @@ import store from '../../redux';
 export async function getSports (page = 0): Promise<Array<Sport>> {
   const res = await request.get(`/api/sports?page=${page}`);
 
+  Logger.info('getSports', res);
+
   return res.data;
 }
 
@@ -38,7 +40,7 @@ export async function createSport (data: CreateSport): Promise<Sport> {
     }
   });
 
-  Logger.debug('createSport', res);
+  Logger.info('createSport', res);
 
   return res.data;
 }
@@ -55,7 +57,7 @@ export async function updateSport (data: UpdateSport): Promise<void> {
     }
   });
 
-  Logger.debug('updateSport', res);
+  Logger.info('updateSport', res);
 
   return res.data;
 };
