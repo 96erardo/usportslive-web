@@ -1,4 +1,4 @@
-import { Rules } from '../../config/rbac-rules';
+import { Rules } from '../../shared/config/rbac-rules';
 
 /**
  * Checks if a given role can perform a specific action

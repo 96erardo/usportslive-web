@@ -1,8 +1,8 @@
-import { request, authenticated } from '../../config/axios';
+import { request, authenticated } from '../../shared/config/axios';
 import { Sport } from '../../shared/types';
-import { RootState } from '../../redux/reducers'
+import { RootState } from '../../shared/config/redux/reducers'
 import Logger from 'js-logger';
-import store from '../../redux';
+import store from '../../shared/config/redux';
 
 /**
  * Fetches the sports from the api

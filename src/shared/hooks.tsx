@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { openAppModal, closeAppModal } from '../redux/actions/app';
+import { openAppModal, closeAppModal } from './config/redux/actions/app';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, Size } from './types';
 
