@@ -5,15 +5,15 @@ import {
   SET_ROLES_IN_APP,
   OPEN_APP_MODAL,
   CLOSE_APP_MODAL
-} from '../../actions/app/types';
+} from '../actions/app/types';
 import { Reducer } from 'redux';
-import { ModalState, Sport, Role } from '../../../../types';
+import { ModalState, Sport, Role } from '../../../types';
 
 type AppState = {
   loading: boolean,
   sports: Array<Sport>,
   roles: Array<Role>,
-  modal: ModalState
+  modal: ModalState,
 }
 
 const initialState: AppState = {

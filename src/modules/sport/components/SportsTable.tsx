@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { Sport } from '../../../shared/types';
+import React, { useState, useCallback } from 'react';
+import { Sport, PaginatedListState } from '../../../shared/types';
 import Table from '@material-ui/core/Table';
 import Box from '@material-ui/core/Box';
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -10,40 +10,55 @@ import TableBody from '@material-ui/core/TableBody';
 import TableItemActions from '../../../shared/components/utilities/TableItemActions';
 import DeleteDialog from '../../../shared/components/globals/DeleteDialog';
 import SportForm from './SportForm';
-import { useModal } from '../../../shared/hooks';
-import { deleteSport } from '../actions';
+import { useModal, useSubscription } from '../../../shared/hooks';
+import { useSports } from '../sport-hooks';
+import { deleteSport } from '../sport-actions';
 import { useSnackbar } from 'notistack';
 
 function SportsTable (props: Props) {
+  const [page, setPage] = useState(0);
+  const { items, loading, refresh }: PaginatedListState<Sport> = useSports(page);
   const { enqueueSnackbar: pushSnack } = useSnackbar();
-  const { open: onDeleteQuestion } =  useModal('Eliminar deporte', DeleteDialog as React.ComponentType, 'xs');
-  const { open: onUpdateClick, close: onCloseUpdate } = useModal('Editar deporte', SportForm as React.ComponentType, 'xs');
+  const { open: openDelete } =  useModal('Eliminar deporte', DeleteDialog as React.ComponentType, 'xs');
+  const { open: openUpdate, close: closeUpdate } = useModal('Editar deporte', SportForm as React.ComponentType, 'xs');
+
+  const refreshTable = useCallback(() => {
+    if (page !== 0) {
+      setPage(0);
+    } else {
+      refresh();
+    }
+  }, [page]);
+
+  useSubscription('sport', 'createSport', 'success', () => {
+    refreshTable();
+  });
+
+  useSubscription('sport', 'updateSport', 'success', () => {
+    closeUpdate();
+    refreshTable();
+  });
 
   const handleDeleteClick = useCallback((id: number) => {
-    onDeleteQuestion({
-      text: '¿Está seguro de que desea eliminar este deporte? Una vez realice la operación no podrá deshacerla.',
-      onAccept: () => 
-        deleteSport(id)
-          .then(() => pushSnack('Deporte eliminado correctamente', { variant: 'success' }))
-          .then(props.refresh)
-          .catch(() => pushSnack('Algo ha sucedido, intentalo de nuevo', { variant: 'error' })),
-    });
-  }, [props.refresh, pushSnack, onDeleteQuestion]);
+    // openDelete({
+    //   text: '¿Está seguro de que desea eliminar este deporte? Una vez realice la operación no podrá deshacerla.',
+    //   onAccept: () => 
+    //     deleteSport(id)
+    //       .then(() => pushSnack('Deporte eliminado correctamente', { variant: 'success' }))
+    //       .then(props.refresh)
+    //       .catch(() => pushSnack('Algo ha sucedido, intentalo de nuevo', { variant: 'error' })),
+    // });
+  }, [pushSnack, openDelete]);
 
   const handleUpdateClick = useCallback((id: number) => {
-    onUpdateClick({
-      sport: props.items.find(sport => sport.id === id),
-      onDone: () => {
-        onCloseUpdate();
-        props.refresh();
-      },
-      onCancel: onCloseUpdate,
+    openUpdate({
+      sport: items.find(sport => sport.id === id),
+      onCancel: closeUpdate,
     });
-  }, [props, onUpdateClick, onCloseUpdate]);
+  }, [items, openUpdate, closeUpdate]);
 
   return (
-    <div>
-      
+    <div>      
       <Table>
         <TableHead>
           <TableRow>
@@ -57,8 +72,8 @@ function SportsTable (props: Props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {!props.loading &&
-            props.items.map((sport, i) => (
+          {!loading &&
+            items.map((sport, i) => (
               <TableRow key={sport.id}>
                 <TableCell>{i + 1}</TableCell>
                 <TableCell>{sport.name}</TableCell>
@@ -80,7 +95,7 @@ function SportsTable (props: Props) {
           }
         </TableBody>
       </Table>
-      {props.loading &&
+      {loading &&
         <Box p={1}>
           {[1, 2, 3, 4, 5].map((value) => (
             <Box key={value} mb={1}>
@@ -93,11 +108,6 @@ function SportsTable (props: Props) {
   );
 }
 
-interface Props {
-  items: Array<Sport>,
-  count: number,
-  loading: boolean,
-  refresh(): void,
-}
+type Props = {};
 
 export default SportsTable;

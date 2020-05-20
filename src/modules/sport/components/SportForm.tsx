@@ -5,10 +5,12 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { createSport, updateSport } from '../actions';
+import { addSport, editSport } from '../sport-actions';
 import ImageFilePicker from '../../../shared/components/utilities/ImageFilePicker';
-import { Sport } from '../../../shared/types';
+import { useSubscription } from '../../../shared/hooks';
+import { Sport, AppDispatch } from '../../../shared/types';
 import { useSnackbar } from 'notistack';
+import { useDispatch } from 'react-redux';
  
 const initialForm = {
   name: '',
@@ -24,14 +26,15 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 function SportForm (props: Props) {
+  const dispatch: AppDispatch = useDispatch();
   const { enqueueSnackbar: pushSnack } = useSnackbar();
+  const [loading, setLoading] = useState(false);
+  const classes = useStyles();
   const [form, setForm] = useState(props.sport ? {
     id: props.sport.id,
     name: props.sport.name,
     teamId: props.sport.team ? props.sport.team.id : null,
   } : initialForm);
-  const [loading, setLoading] = useState(false);
-  const classes = useStyles();
 
   const handleChange = useCallback((e) => {
     setForm({
@@ -40,38 +43,40 @@ function SportForm (props: Props) {
     })
   }, [form, setForm]);
 
-  const onDone = useCallback(() => {
-    setLoading(false);
-
-    props.onDone();
-  }, [setLoading, props]);
-  
-  const onError = useCallback((e) => {
-    setLoading(false);
-
-    pushSnack(e.message, { variant: 'error' });
-  }, [pushSnack, setLoading]);
-
   const onSubmit = useCallback(() => {
     setLoading(true);
 
     if (props.sport) {
-      updateSport({
+      dispatch(editSport({
         id: props.sport.id,
         name: form.name,
         teamId: form.teamId
-      })
-      .then(() => pushSnack('Deporte editado correctamente', { variant: 'success' }))
-      .then(onDone)
-      .catch(onError);
+      }));
 
     } else {
-      createSport(form)
-      .then(() => pushSnack('Deporte creado correctamente', { variant: 'success' }))
-      .then(onDone)
-      .catch(onError);
+      dispatch(addSport(form));
     }
-  }, [form, props, pushSnack, onDone, onError]);
+  }, [form, props]);
+
+  useSubscription<Sport>('sport', 'createSport', 'success', () => {
+    pushSnack('Deporte creado correctamente', { variant: 'success' });
+  });
+  
+  useSubscription<Sport>('sport', 'updateSport', 'success', () => {
+    pushSnack('Deporte actualizado correctamente', { variant: 'success' });
+  });
+
+  useSubscription<Error>('sport', 'createSport', 'error', e => {
+    setLoading(false);
+
+    pushSnack(e.message, { variant: 'error' });
+  });
+  
+  useSubscription<Error>('sport', 'updateSport', 'error', e => {
+    setLoading(false);
+
+    pushSnack(e.message, { variant: 'error' });
+  });
 
   return (
     <div className={classes.root}>

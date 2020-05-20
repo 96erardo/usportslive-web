@@ -11,6 +11,10 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Action<string>
 >;
 
+export type EventStore = 'sport';
+
+export type EventResult = 'success' | 'error';
+
 export interface PaginatedListState<T> {
   items: Array<T>,
   count: number,

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -8,32 +8,15 @@ import SportForm from './SportForm';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Typography } from '@material-ui/core';
 import SportsTable from './SportsTable';
-import { useSports } from '../hooks';
-import { PaginatedListState, Sport } from '../../../shared/types';
-import { useModal } from '../../../shared/hooks';
+import { useModal, useSubscription } from '../../../shared/hooks';
+import { Sport } from '../../../shared/types';
 
 function AdminSports () {
-  const [page, setPage] = useState(0);
-  const { items, count, loading, refresh }: PaginatedListState<Sport> = useSports(page);
   const { open, close } = useModal("Crear deporte", SportForm as React.ComponentType, 'xs');
 
-  const handleRefresh = useCallback(() => {
-    if (page === 0) {
-      refresh();
-    } else {
-      setPage(0)
-    }
-  }, [page, refresh, setPage]);
+  const handleOpen = useCallback(() => open({ onCancel: close }), [open, close]);
   
-  const handleOpen = useCallback(() => {
-    open({
-      onDone: () => {
-        close();
-        handleRefresh();
-      },
-      onCancel: close,
-    });
-  }, [open, close, handleRefresh]);
+  useSubscription<Sport>('sport', 'createSport', 'success', close);
 
   return (
     <Box p={3}>
@@ -48,12 +31,7 @@ function AdminSports () {
             </IconButton>
           </Grid>
         </CardContent>
-        <SportsTable 
-          items={items}
-          count={count}
-          loading={loading}
-          refresh={handleRefresh}
-        />
+        <SportsTable />
       </Card>
     </Box>
   );
