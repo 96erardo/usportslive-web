@@ -27,11 +27,8 @@ const DeleteDialog: React.FunctionComponent<Props> = (props) => {
   const handleClick = useCallback(() => {
     setLoading(true);
 
-    props.onAccept()
-      .then(() => setLoading(false))
-      .then(() => cancel());
-
-  }, [props, cancel, setLoading]);
+    props.onAccept();
+  }, [props, setLoading]);
 
   return (
     <div>

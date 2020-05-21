@@ -12,6 +12,10 @@ export const UPDATE_SPORT = 'UPDATE_SPORT';
 
 export const UPDATE_SPORT_ERROR = 'UPDATE_SPORT_ERROR';
 
+export const DELETE_SPORT = 'DELETE_SPORT';
+
+export const DELETE_SPORT_ERROR = 'DELETE_SPORT_ERROR';
+
 export interface FetchSportsAction {
   type: typeof FETCH_SPORTS,
   payload: Array<Sport>
@@ -42,11 +46,23 @@ export interface UpdateSportErrorAction {
   payload: Error
 }
 
+export interface DeleteSportAction {
+  type: typeof DELETE_SPORT,
+  payload: number
+}
+
+export interface DeleteSportErrorAction {
+  type: typeof DELETE_SPORT_ERROR,
+  payload: Error
+}
+
 export type SportActionTypes = 
   FetchSportsAction | 
   FetchSportsErrorAction |
   CreateSportAction | 
   CreateSportErrorAction | 
   UpdateSportAction |
-  UpdateSportErrorAction
+  UpdateSportErrorAction |
+  DeleteSportAction | 
+  DeleteSportErrorAction
 ;

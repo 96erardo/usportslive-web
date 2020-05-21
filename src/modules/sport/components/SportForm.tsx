@@ -56,7 +56,7 @@ function SportForm (props: Props) {
     } else {
       dispatch(addSport(form));
     }
-  }, [form, props]);
+  }, [form, props, dispatch]);
 
   useSubscription<Sport>('sport', 'createSport', 'success', () => {
     pushSnack('Deporte creado correctamente', { variant: 'success' });

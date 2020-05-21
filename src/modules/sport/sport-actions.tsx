@@ -14,9 +14,10 @@ import {
   UPDATE_SPORT,
   UPDATE_SPORT_ERROR,
   UpdateSportAction,
-  UpdateSportErrorAction
+  UpdateSportErrorAction,
+  DELETE_SPORT,
+  DeleteSportAction,
 } from './sport-action-types';
-import store from '../../shared/config/redux';
 
 /**
  * Fetches the sports from the api
@@ -129,16 +130,20 @@ export function editSport (data: UpdateSport): AppThunk<Promise<void>> {
  * 
  * @returns {Promise<void>}
  */
-export async function deleteSport (id: number): Promise<void> {
-  /**
-   * Functionality missing because it has to be defined what should
-   * happen when a sport is deleted. This functionality is going to be left here
-   * to simulate the process of deletition
-   */
-
-  return new Promise((resolve) => {
-    setTimeout(() => resolve(), 2000);
-  });
+export function removeSport (id: number): AppThunk<Promise<void>> {
+  return async (dispatch): Promise<void> => {
+    /**
+     * Functionality missing because it has to be defined what should
+     * happen when a sport is deleted. This functionality is going to be left here
+     * to simulate the process of deletition
+     */
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        dispatch(deleteSport(id))
+        resolve();
+      }, 2000);
+    });
+  }
 }
 
 type CreateSport = {
@@ -191,5 +196,12 @@ function updateSportError (err: Error): UpdateSportErrorAction {
   return {
     type: UPDATE_SPORT_ERROR,
     payload: err
+  }
+}
+
+function deleteSport (id: number): DeleteSportAction {
+  return {
+    type: DELETE_SPORT,
+    payload: id,
   }
 }

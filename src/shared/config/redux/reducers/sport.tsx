@@ -5,7 +5,8 @@ import {
   CREATE_SPORT,
   CREATE_SPORT_ERROR,
   UPDATE_SPORT,
-  UPDATE_SPORT_ERROR
+  UPDATE_SPORT_ERROR,
+  DELETE_SPORT
 } from '../../../../modules/sport/sport-action-types';
 import { Reducer } from 'redux';
 import { Sport } from '../../../types';
@@ -15,12 +16,14 @@ interface State  {
   fetchSports: { success: Array<Sport>, error: Error | null },
   createSport: { success: Sport | null, error: Error | null },
   updateSport: { success: Sport | null, error: Error | null },
+  deleteSport: { success: number, error: Error | null },
 }
 
 const initialState: State = {
   fetchSports: { success: [], error: null },
   createSport: { success: null, error: null },
-  updateSport: { success: null, error: null }
+  updateSport: { success: null, error: null },
+  deleteSport: { success: 0, error: null }
 }
 
 const reducer: Reducer<State, SportActionTypes> = (state = initialState, action) => {
@@ -73,6 +76,14 @@ const reducer: Reducer<State, SportActionTypes> = (state = initialState, action)
           error: action.payload
         }
       };
+    case DELETE_SPORT:
+      return {
+        ...state,
+        deleteSport: {
+          ...state.deleteSport,
+          success: action.payload
+        }
+      }
     default:
       return state;
   }
