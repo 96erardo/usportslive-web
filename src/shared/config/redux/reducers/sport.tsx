@@ -6,7 +6,8 @@ import {
   CREATE_SPORT_ERROR,
   UPDATE_SPORT,
   UPDATE_SPORT_ERROR,
-  DELETE_SPORT
+  DELETE_SPORT,
+  DELETE_SPORT_ERROR
 } from '../../../../modules/sport/sport-action-types';
 import { Reducer } from 'redux';
 import { Sport } from '../../../types';
@@ -82,6 +83,14 @@ const reducer: Reducer<State, SportActionTypes> = (state = initialState, action)
         deleteSport: {
           ...state.deleteSport,
           success: action.payload
+        }
+      }
+    case DELETE_SPORT_ERROR:
+      return {
+        ...state,
+        deleteSport: {
+          ...state.deleteSport,
+          error: action.payload
         }
       }
     default:

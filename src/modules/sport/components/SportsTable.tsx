@@ -12,8 +12,9 @@ import TableItemActions from '../../../shared/components/utilities/TableItemActi
 import DeleteDialog from '../../../shared/components/globals/DeleteDialog';
 import SportForm from './SportForm';
 import { useModal, useSubscription } from '../../../shared/hooks';
+import { onErrorMixin } from '../../../shared/mixins';
 import { useSports } from '../sport-hooks';
-import { removeSport } from '../sport-actions';
+import { deleteSport } from '../sport-actions';
 import { useSnackbar } from 'notistack';
 
 function SportsTable (props: Props) {
@@ -45,12 +46,14 @@ function SportsTable (props: Props) {
     refreshTable();
     closeDelete();
     pushSnack('Deporte eliminado correctamente', { variant: 'success' });
-  })
+  });
+
+  useSubscription('sport', 'deleteSport', 'error', onErrorMixin);
 
   const handleDeleteClick = useCallback((id: number) => {
     openDelete({
       text: '¿Está seguro de que desea eliminar este deporte? Una vez realice la operación no podrá deshacerla.',
-      onAccept: () => dispatch(removeSport(id))
+      onAccept: () => dispatch(deleteSport(id))
     });
   }, [dispatch, openDelete]);
 

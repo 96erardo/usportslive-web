@@ -8,6 +8,7 @@ import AuthCallback from './modules/auth/components/AuthCallback';
 import { AppDispatch } from './shared/types';
 import AppLoader from './shared/components/globals/AppLoader';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { ToastContainer } from 'react-toastify';
 import { SnackbarProvider } from 'notistack';
 import Dialog from './shared/components/globals/Dialog';
 import { CssBaseline } from '@material-ui/core';
@@ -56,6 +57,10 @@ function App () {
           </LoggerProvider>
           <CssBaseline />
           <Dialog />
+          <ToastContainer
+            autoClose={15000}
+            position="bottom-left"
+          />
         </SnackbarProvider>
       </ThemeProvider>
     </Provider>

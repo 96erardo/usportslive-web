@@ -16,7 +16,9 @@ import {
   UpdateSportAction,
   UpdateSportErrorAction,
   DELETE_SPORT,
+  DELETE_SPORT_ERROR,
   DeleteSportAction,
+  DeleteSportErrorAction
 } from './sport-action-types';
 
 /**
@@ -26,7 +28,7 @@ import {
  * 
  * @returns {AppThunk<Promise<void>>}
  */
-export function getSports (page: number = 0): AppThunk<Promise<void>> {
+export function fetchSports (page: number = 0): AppThunk<Promise<void>> {
   return async (dispatch): Promise<void> => {
     let res = null;
 
@@ -35,16 +37,16 @@ export function getSports (page: number = 0): AppThunk<Promise<void>> {
       res = await request.get(`api/sports?page=${page}`);
 
     } catch (e) {
-      Logger.error('getSports', e);
+      Logger.error('fetchSports', e);
 
-      dispatch(fetchSportsError(e));
+      dispatch(fetchError(e));
 
       return;
     }
 
-    Logger.info('getSports', res.data);
+    Logger.info('fetchSports', res);
 
-    dispatch(fetchSports(res.data));
+    dispatch(fetch(res.data));
   }
 }
 
@@ -57,7 +59,7 @@ export function getSports (page: number = 0): AppThunk<Promise<void>> {
  * 
  * @returns {AppThunk<Promise<void>>}
  */
-export function addSport (data: CreateSport): AppThunk<Promise<void>> {
+export function createSport (data: CreateSport): AppThunk<Promise<void>> {
   return async (dispatch, getState): Promise<void> => {
     const { auth }: RootState = getState();
     let res = null;
@@ -74,16 +76,16 @@ export function addSport (data: CreateSport): AppThunk<Promise<void>> {
       });
 
     } catch (e) {
-      Logger.error('addSport', e);
+      Logger.error('createSport', e.response);
 
-      dispatch(createSportError(e));
+      dispatch(createError(e));
 
       return;
     }
 
-    Logger.info('addSport', res);
+    Logger.info('createSport', res);
 
-    dispatch(createSport(res.data));
+    dispatch(create(res.data));
   }
 }
 
@@ -94,7 +96,7 @@ export function addSport (data: CreateSport): AppThunk<Promise<void>> {
  * 
  * @returns {AppThunk<Promise<void>>}
  */
-export function editSport (data: UpdateSport): AppThunk<Promise<void>> {
+export function updateSport (data: UpdateSport): AppThunk<Promise<void>> {
   return async (dispatch, getState): Promise<void> => {
     const { auth }: RootState = getState();
     let res = null;
@@ -110,16 +112,16 @@ export function editSport (data: UpdateSport): AppThunk<Promise<void>> {
         }
       });
     } catch (e) {
-      Logger.error('editSport', e);
+      Logger.error('updateSport', e.response);
 
-      dispatch(updateSportError(e));
+      dispatch(updateError(e));
       
       return;
     }
 
     Logger.info('updateSport', res);
 
-    dispatch(updateSport(res.data));
+    dispatch(update(res.data));
   }
 };
 
@@ -130,19 +132,30 @@ export function editSport (data: UpdateSport): AppThunk<Promise<void>> {
  * 
  * @returns {Promise<void>}
  */
-export function removeSport (id: number): AppThunk<Promise<void>> {
-  return async (dispatch): Promise<void> => {
-    /**
-     * Functionality missing because it has to be defined what should
-     * happen when a sport is deleted. This functionality is going to be left here
-     * to simulate the process of deletition
-     */
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch(deleteSport(id))
-        resolve();
-      }, 2000);
-    });
+export function deleteSport (id: number): AppThunk<Promise<void>> {
+  return async (dispatch, getState): Promise<void> => {
+    const { auth }: RootState = getState();
+    let res = null;
+
+    try {
+
+      res = await authenticated.delete(`/api/sports/${45}`, {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`
+        }
+      });
+
+    } catch (e) {
+      Logger.error('deleteSport', e.response);
+
+      dispatch(deleteError(e));
+
+      return;
+    }
+
+    Logger.info('deleteSport', res);
+
+    dispatch(deletes(id));
   }
 }
 
@@ -157,51 +170,58 @@ type UpdateSport = {
   teamId: number | null,
 };
 
-function fetchSports (data: Array<Sport>): FetchSportsAction {
+function fetch (data: Array<Sport>): FetchSportsAction {
   return {
     type: FETCH_SPORTS,
     payload: data
   }
 }
 
-function fetchSportsError (err: Error): FetchSportsErrorAction {
+function fetchError (err: Error): FetchSportsErrorAction {
   return {
     type: FETCH_SPORTS_ERROR,
     payload: err
   }
 }
 
-function createSport (data: Sport): CreateSportAction {
+function create (data: Sport): CreateSportAction {
   return {
     type: CREATE_SPORT,
     payload: data
   }
 }
 
-function createSportError (err: Error): CreateSportErrorAction {
+function createError (err: Error): CreateSportErrorAction {
   return {
     type: CREATE_SPORT_ERROR,
     payload: err
   }
 }
 
-function updateSport (data: Sport): UpdateSportAction {
+function update (data: Sport): UpdateSportAction {
   return {
     type: UPDATE_SPORT,
     payload: data
   }
 }
 
-function updateSportError (err: Error): UpdateSportErrorAction {
+function updateError (err: Error): UpdateSportErrorAction {
   return {
     type: UPDATE_SPORT_ERROR,
     payload: err
   }
 }
 
-function deleteSport (id: number): DeleteSportAction {
+function deletes (id: number): DeleteSportAction {
   return {
     type: DELETE_SPORT,
     payload: id,
+  }
+}
+
+function deleteError (err: Error): DeleteSportErrorAction {
+  return {
+    type: DELETE_SPORT_ERROR,
+    payload: err,
   }
 }

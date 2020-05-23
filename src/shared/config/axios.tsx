@@ -55,4 +55,6 @@ authenticated.interceptors.response.use(response => {
         return axios(config);
       }, err => store.dispatch(logout()));
   }
+
+  throw error;
 });

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getSports } from './sport-actions';
+import { fetchSports } from './sport-actions';
 import { PaginatedListState, Sport, AppDispatch } from '../../shared/types';
 import { useSubscription } from '../../shared/hooks';
 import { useDispatch } from 'react-redux';
@@ -18,7 +18,7 @@ export function useSports (page = 0, infinite = false): PaginatedListState<Sport
   const [sports, setSports] = useState<PaginatedListState<Sport>>(initialSports);
   
   const refresh = useCallback(() => {
-    dispatch(getSports(page));
+    dispatch(fetchSports(page));
   }, [page, dispatch]);
 
   useEffect(() => {

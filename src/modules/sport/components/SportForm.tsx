@@ -5,7 +5,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { addSport, editSport } from '../sport-actions';
+import { createSport, updateSport } from '../sport-actions';
 import ImageFilePicker from '../../../shared/components/utilities/ImageFilePicker';
 import { useSubscription } from '../../../shared/hooks';
 import { Sport, AppDispatch } from '../../../shared/types';
@@ -47,14 +47,14 @@ function SportForm (props: Props) {
     setLoading(true);
 
     if (props.sport) {
-      dispatch(editSport({
+      dispatch(updateSport({
         id: props.sport.id,
         name: form.name,
         teamId: form.teamId
       }));
 
     } else {
-      dispatch(addSport(form));
+      dispatch(createSport(form));
     }
   }, [form, props, dispatch]);
 
