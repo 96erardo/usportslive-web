@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import LoggerProvider from './shared/components/globals/LoggerProvider';
 import * as SnackbarIcons from './shared/components/globals/snackbar-icons';
-import { loadAppResources } from './shared/config/redux/actions/app';
+import { loadAppResources } from './modules/app/app-actions';
 import AuthCallback from './modules/auth/components/AuthCallback';
 import { AppDispatch } from './shared/types';
 import AppLoader from './shared/components/globals/AppLoader';

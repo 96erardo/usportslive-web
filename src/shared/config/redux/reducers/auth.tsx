@@ -4,7 +4,7 @@ import {
   SET_AUTH_TOKENS,
   SET_USER_DATA,
   LOGOUT_USER,
-} from '../actions/auth/types';
+} from '../../../../modules/auth/auth-action-types';
 import { Reducer } from 'redux';
 
 const auth = JSON.parse(localStorage.getItem('auth') as string);

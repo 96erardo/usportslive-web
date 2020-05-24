@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { openAppModal, closeAppModal } from './config/redux/actions/app';
+import { openAppModal, closeAppModal } from '../modules/app/app-actions';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, Size, EventStore, EventResult } from './types';
 import { useTypedSelector } from './utils';

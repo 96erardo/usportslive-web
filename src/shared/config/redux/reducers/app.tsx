@@ -5,7 +5,7 @@ import {
   SET_ROLES_IN_APP,
   OPEN_APP_MODAL,
   CLOSE_APP_MODAL
-} from '../actions/app/types';
+} from '../../../../modules/app/app-action-types';
 import { Reducer } from 'redux';
 import { ModalState, Sport, Role } from '../../../types';
 

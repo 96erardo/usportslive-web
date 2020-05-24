@@ -1,4 +1,4 @@
-import { User } from '../../../../types';
+import { User } from '../../shared/types';
 
 export const SET_AUTH_TOKENS = 'SET_AUTH_TOKENS';
 

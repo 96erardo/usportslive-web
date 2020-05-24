@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useTypedSelector } from '../../../shared/utils';
 import { RouteComponentProps } from 'react-router';
 import { useDispatch } from 'react-redux';
-import { exchageCodeForToken } from '../../../shared/config/redux/actions/auth';
+import { exchageCodeForToken } from '../auth-actions';
 import { AppDispatch } from '../../../shared/types';
 import { } from '../../../shared/config/axios';
 import qs from 'query-string';

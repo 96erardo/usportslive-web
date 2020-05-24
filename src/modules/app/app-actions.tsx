@@ -9,11 +9,10 @@ import {
   OPEN_APP_MODAL,
   CloseAppModalAction,
   CLOSE_APP_MODAL
-} from './types';
-import { logout } from '../auth'
-import { setUserData } from '../auth';
-import { authenticated, request } from '../../../axios';
-import { AppThunk, PaginatedResponse, User, Sport, Role, Size } from '../../../../types';
+} from './app-action-types';
+import { logout, setUserData } from '../auth/auth-actions';
+import { authenticated, request } from '../../shared/config/axios';
+import { AppThunk, PaginatedResponse, User, Sport, Role, Size } from '../../shared/types';
 import { AxiosResponse } from 'axios';
 
 export const loadAppResources = (): AppThunk => {

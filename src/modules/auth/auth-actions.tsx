@@ -1,4 +1,4 @@
-import { request, authenticated } from '../../../axios';
+import { request, authenticated } from '../../shared/config/axios';
 import qs from 'query-string';
 import {
   LogoutUserAction,
@@ -7,9 +7,9 @@ import {
   SET_AUTH_TOKENS,
   LOGOUT_USER,
   SET_USER_DATA
-} from './types';
-import { logout as logoutRequest } from '../../../../../modules/user/actions';
-import { AppThunk, User } from '../../../../types';
+} from './auth-action-types';
+import { AppThunk, User } from '../../shared/types';
+import { RootState } from '../../shared/config/redux/reducers';
 import { AxiosResponse } from 'axios';
 
 /**
@@ -58,10 +58,25 @@ export const exchageCodeForToken = (
  * @returns {AppThunk<Promise<void>>}
  */
 export const signout = () : AppThunk<Promise<void>> => {
-  return async (dispatch): Promise<void> => {
-    await logoutRequest();
+  return async (dispatch, getState): Promise<void> => {
+    const { auth }: RootState = getState();
+    let response = null;
 
-    dispatch(logout());
+    try {
+      
+      response = await request.post('/oauth/logout', { refreshToken: auth.refreshToken }, {
+        headers: {
+          Authorization: `Bearer ${auth.accessToken}`
+        }
+      });
+      
+    } catch (e) {
+      throw e;
+    }
+
+    if (response) {
+      dispatch(logout());
+    }
   }
 }
 

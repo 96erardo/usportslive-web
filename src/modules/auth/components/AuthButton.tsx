@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from '@material-ui/core/Button';
-import { RootState } from '../../config/redux/reducers';
-import { signout } from '../../config/redux/actions/auth'
-import { AppDispatch } from '../../types';
+import { RootState } from '../../../shared/config/redux/reducers';
+import { signout } from '../auth-actions';
+import { AppDispatch } from '../../../shared/types';
 
 const {
   REACT_APP_API_SERVER: server,

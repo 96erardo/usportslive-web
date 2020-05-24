@@ -1,4 +1,4 @@
-import { Sport, Role } from "../../../../types";
+import { Sport, Role } from '../../shared/types';
 
 export const APP_FINISHED_LOADING = 'APP_FINISHED_LOADING';
 

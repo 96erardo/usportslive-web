@@ -4,7 +4,7 @@ import qs from 'query-string';
 import { 
   setAuthTokens,
   logout
-} from './redux/actions/auth';
+} from '../../modules/auth/auth-actions';
 
 export const request = axios.create({
   baseURL: process.env.REACT_APP_API_SERVER,

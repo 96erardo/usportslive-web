@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthButton from '../../../shared/components/buttons/AuthButton';
+import AuthButton from '../../auth/components/AuthButton';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';

@@ -3,7 +3,7 @@ import MaterialDialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import { useDispatch } from 'react-redux';
-import { closeAppModal } from '../../config/redux/actions/app';
+import { closeAppModal } from '../../../modules/app/app-actions';
 import { AppDispatch, ModalState } from '../../types';
 import { useTypedSelector } from '../../utils';
 
