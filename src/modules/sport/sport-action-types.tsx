@@ -1,4 +1,4 @@
-import { Sport } from '../../shared/types';
+import { PaginatedResponse, Sport } from '../../shared/types';
 
 export const FETCH_SPORTS = 'FETCH_SPORTS';
 
@@ -18,7 +18,7 @@ export const DELETE_SPORT_ERROR = 'DELETE_SPORT_ERROR';
 
 export interface FetchSportsAction {
   type: typeof FETCH_SPORTS,
-  payload: Array<Sport>
+  payload: PaginatedResponse<Sport>
 }
 
 export interface FetchSportsErrorAction {

@@ -13,7 +13,7 @@ import {
 import { logout } from '../auth'
 import { setUserData } from '../auth';
 import { authenticated, request } from '../../../axios';
-import { AppThunk, User, Sport, Role, Size } from '../../../../types';
+import { AppThunk, PaginatedResponse, User, Sport, Role, Size } from '../../../../types';
 import { AxiosResponse } from 'axios';
 
 export const loadAppResources = (): AppThunk => {
@@ -34,8 +34,8 @@ export const loadAppResources = (): AppThunk => {
       }
     }
 
-    const { data: sports }: AxiosResponse<Array<Sport>> = await request.get('/api/sports');
-    dispatch(setSportsInApp(sports));
+    const { data: sports }: AxiosResponse<PaginatedResponse<Sport>> = await request.get('/api/sports');
+    dispatch(setSportsInApp(sports.items));
     
     const { data: roles }: AxiosResponse<Array<Role>> = await request.get('/api/roles');
     dispatch(setRolesInApp(roles));

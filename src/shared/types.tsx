@@ -24,6 +24,11 @@ export interface PaginatedListState<T> {
   last: boolean
 }
 
+export interface PaginatedResponse<T> {
+  count: number,
+  items: Array<T>
+};
+
 export interface ModalState {
   isOpen: boolean,
   title: string,

@@ -1,5 +1,5 @@
 import { request, authenticated } from '../../shared/config/axios';
-import { Sport, AppThunk } from '../../shared/types';
+import { Sport, AppThunk, PaginatedResponse } from '../../shared/types';
 import { RootState } from '../../shared/config/redux/reducers'
 import Logger from 'js-logger';
 import {
@@ -28,13 +28,13 @@ import {
  * 
  * @returns {AppThunk<Promise<void>>}
  */
-export function fetchSports (page: number = 0): AppThunk<Promise<void>> {
+export function fetchSports (page: number = 1): AppThunk<Promise<void>> {
   return async (dispatch): Promise<void> => {
     let res = null;
-
+    
     try {
 
-      res = await request.get(`api/sports?page=${page}`);
+      res = await request.get(`api/sports?page=${page - 1}`);
 
     } catch (e) {
       Logger.error('fetchSports', e);
@@ -170,7 +170,7 @@ type UpdateSport = {
   teamId: number | null,
 };
 
-function fetch (data: Array<Sport>): FetchSportsAction {
+function fetch (data: PaginatedResponse<Sport>): FetchSportsAction {
   return {
     type: FETCH_SPORTS,
     payload: data

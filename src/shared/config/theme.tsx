@@ -50,6 +50,11 @@ const theme = createMuiTheme({
           marginRight: '5px'
         }
       },
+    },
+    MuiTableBody: {
+      root: {
+        minHeight: '1100px'
+      }
     }
   }
 });

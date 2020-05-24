@@ -1,11 +1,10 @@
 import React, { useCallback } from 'react';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import IconButton from '@material-ui/core/IconButton';
 import CardContent from '@material-ui/core/CardContent';
 import SportForm from './SportForm';
-import AddBoxIcon from '@material-ui/icons/AddBox';
 import { Typography } from '@material-ui/core';
 import SportsTable from './SportsTable';
 import { useModal, useSubscription } from '../../../shared/hooks';
@@ -26,9 +25,9 @@ function AdminSports () {
             <Typography variant="h4">
               Deportes
             </Typography>
-            <IconButton onClick={handleOpen} aria-label="add sport" color="primary">
-              <AddBoxIcon />
-            </IconButton>
+            <Button variant="contained" color="primary" onClick={handleOpen} disableElevation>
+              Crear Deporte
+            </Button>
           </Grid>
         </CardContent>
         <SportsTable />
