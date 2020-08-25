@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { useTypedSelector } from '../../utils';
+import { useAuthStore } from '../../../modules/auth/auth-store';
 
 function VisitorsRoute ({ component, ...rest}: Props) {
-  const isLoggedIn: boolean = useTypedSelector(state => state.auth.isLoggedIn);
+  const isLoggedIn: boolean = useAuthStore(state => state.isLoggedIn);
   const Component = component;
 
   return (

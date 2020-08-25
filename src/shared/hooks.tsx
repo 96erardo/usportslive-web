@@ -1,8 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { openAppModal, closeAppModal } from '../modules/app/app-actions';
-import { useDispatch } from 'react-redux';
-import { AppDispatch, Size, EventStore, EventResult } from './types';
-import { useTypedSelector } from './utils';
+import { Size, EventStore, EventResult } from './types';
 
 /**
  * Hook that subscribes to store changes to execute callbacks
@@ -22,18 +19,16 @@ export function useSubscription<R>(
   handler: (data: R) => void, 
   dependencies: Array<any> = []
 ) {
-  const data = useTypedSelector(state => state[store][event][result]);
   const mounted = useRef(false);
 
   const onHandler = useCallback(handler, dependencies);
 
   useEffect(() => {
     if (mounted.current) {
-      onHandler(data);
     }
     
     mounted.current = true;
-  }, [data, onHandler]);
+  }, [onHandler]);
 }
 
 /**
@@ -46,15 +41,12 @@ export function useSubscription<R>(
  * @returns {Function}
  */
 export function useModal (title: string, Component: React.ComponentType, maxWidth: Size = 'sm') {
-  const dispatch: AppDispatch = useDispatch();
 
-  const open = useCallback((props: object) => {
-    dispatch(openAppModal(title, Component as React.ComponentType, props, maxWidth));
-  }, [dispatch, title, Component, maxWidth]);
+  const open = useCallback(() => {
+  }, []);
 
   const close = useCallback(() => {
-    dispatch(closeAppModal());
-  }, [dispatch])
+  }, [])
 
   return { open, close };
 }
@@ -65,11 +57,9 @@ export function useModal (title: string, Component: React.ComponentType, maxWidt
  * @returns {Fuction} The close modal function
  */
 export function useCloseModal () {
-  const dispatch: AppDispatch = useDispatch();
 
   const close = useCallback(() => {
-    dispatch(closeAppModal());
-  }, [dispatch])
+  }, [])
 
   return close;
 }

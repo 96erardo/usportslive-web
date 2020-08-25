@@ -2,14 +2,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { RouteComponentProps } from 'react-router-dom';
 import { AppBar, Toolbar, IconButton } from '@material-ui/core';
-import { Switch, Route } from 'react-router-dom';
 import AppsIcon from '@material-ui/icons/Apps';
 import SearchIcon from '@material-ui/icons/Search';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import DropdownMenu from './DropdownMenu';
-
-import AdminSports from '../../../modules/sport/components/AdminSports';
 
 const useStyles = makeStyles((theme: Theme) => 
   createStyles({
@@ -69,9 +66,6 @@ function Admin (props: Props) {
           </Grid>
         </Toolbar>
       </AppBar>
-      <Switch>
-        <Route path="/admin/sports" component={AdminSports} />
-      </Switch>
     </div>
   );
 }

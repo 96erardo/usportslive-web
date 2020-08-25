@@ -1,16 +1,3 @@
-import { Action } from 'redux';
-import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { RootState } from './config/redux/reducers';
-
-export type AppDispatch = ThunkDispatch<RootState, undefined, Action>;
-
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
-
 export type EventStore = 'sport';
 
 export type EventResult = 'success' | 'error';

@@ -1,10 +1,10 @@
 import React from 'react';
 import Can from './Can';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { useTypedSelector } from '../../utils';
+import { useAuthStore } from '../../../modules/auth/auth-store';
 
 function ProtectedRoute ({ component, perform, ...rest}: Props) {
-  const isLoggedIn: boolean = useTypedSelector(state => state.auth.isLoggedIn);
+  const isLoggedIn: boolean = useAuthStore(state => state.isLoggedIn);
   const Component = component;
 
   return (

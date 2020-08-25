@@ -1,0 +1,1 @@
+declare module '@8base/boost'
