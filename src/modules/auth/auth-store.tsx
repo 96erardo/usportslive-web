@@ -1,8 +1,25 @@
-import create from 'zustand';
+import create, { SetState, GetState, StoreApi, StateCreator } from 'zustand';
 import { fetchUser } from '../user/user-actions';
 import { exchageCodeForToken } from './auth-actions';
+import { User } from '../../shared/types';
 
-export const useAuthStore = create((set, get) => {
+const save = (config: StateCreator<Store>) => (
+  set: SetState<Store>, 
+  get: GetState<Store>,
+  api: StoreApi<Store>
+) => config(args => {
+  set(args);
+
+  const { isLoggedIn, accessToken, refreshToken } = get();
+
+  localStorage.setItem('auth', JSON.stringify({
+    isLoggedIn,
+    accessToken,
+    refreshToken
+  }) as string);
+}, get, api);
+
+export const useAuthStore = create<Store>(save((set: SetState<Store>, get: GetState<Store>) => {
   const auth = JSON.parse(localStorage.getItem('auth') as string);
 
   return {
@@ -16,7 +33,7 @@ export const useAuthStore = create((set, get) => {
      * if it is
      */
     fetchAuthenticatedUser: async () => {
-      const [err, data] = await fetchUser();
+      const [err, data] = await fetchUser(0, ['role', 'person']);
 
       if (err || !data.user) {
         return get().logout();
@@ -45,8 +62,8 @@ export const useAuthStore = create((set, get) => {
       }
 
       set({
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
       });
 
       await get().fetchAuthenticatedUser();
@@ -66,4 +83,21 @@ export const useAuthStore = create((set, get) => {
      */
     setAuthTokens: (accessToken: string, refreshToken: string) => set({ accessToken, refreshToken }),
   }
-})
+}));
+
+type Store = {
+  isLoggedIn: boolean,
+  accessToken: string,
+  refreshToken: string,
+  user: User | null,
+  authenticate: (
+    code: string,
+    grantType: string,
+    state: String,
+    redirectUri: string,
+    clientId: string
+  ) => Promise<void>,
+  fetchAuthenticatedUser: () => Promise<void>,
+  setAuthTokens: (access: string, refresh: string) => void,
+  logout: () => void,
+}

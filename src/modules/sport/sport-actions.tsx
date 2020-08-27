@@ -10,15 +10,17 @@ import { AxiosResponse } from 'axios';
  * 
  * @returns {Promise} The request result
  */
-export async function fetchSports (page: number = 1) {
+export async function fetchSports (page: number = 1, include: Array<string> = [], filters = {}) {
   const first = 10;
   const skip = first * (page - 1);
 
   try {
-    const res: AxiosResponse<PaginatedResponse<Sport>> = await request(`/api/sports`, {
+    const res: AxiosResponse<PaginatedResponse<Sport>> = await request.get(`/api/sports`, {
       params: {
         first,
-        skip
+        skip,
+        include,
+        filters,
       }
     });
 

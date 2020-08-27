@@ -1,0 +1,61 @@
+import React, { useState } from 'react';
+import { Row, Button, Table, Pagination, styled } from '@8base/boost';
+import Card from '../../../../shared/components/globals/Card';
+import SportsTableRow from './SportsTableRow';
+import { useSports } from '../../sport-hooks';
+import { Sport } from '../../../../shared/types';
+
+const Body = styled(Table.Body)`
+  min-height: 500px;
+`;
+
+const include = ['team'];
+const columns = 'repeat(6, 1fr)';
+
+function SportsView () {
+  const [page, setPage] = useState(1);
+  const { items, count, loading, error } = useSports(page, include);
+
+  return (
+    <div style={{ padding: '24px' }}>
+      <Card stretch>
+        <Card.Header>
+          <Card.Header.Left>
+            
+          </Card.Header.Left>
+          <Card.Header.Right gap="sm">
+            <Button color="neutral">Create Sport</Button>
+          </Card.Header.Right>
+        </Card.Header>
+        <Card.Body padding="none">
+          <Table>
+            <Table.Header columns={columns}>
+              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell>Nombre</Table.HeaderCell>
+              <Table.HeaderCell>Color</Table.HeaderCell>
+              <Table.HeaderCell>Fecha de Creación</Table.HeaderCell>
+              <Table.HeaderCell>Equipo Oficial</Table.HeaderCell>
+              <Table.HeaderCell>Acciones</Table.HeaderCell>
+            </Table.Header>
+            <Body data={items} loading={loading}>
+              {(sport: Sport) => (
+                <SportsTableRow sport={sport} columns={columns} />
+              )}
+            </Body>
+            <Table.Footer>
+              <Row stretch alignItems="center" justifyContent="center">
+                <Pagination
+                  page={page}
+                  total={count}
+                  onChange={setPage}
+                />
+              </Row>
+            </Table.Footer>
+          </Table>
+        </Card.Body>
+      </Card>
+    </div>
+  )
+}
+
+export default SportsView;

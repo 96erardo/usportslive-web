@@ -10,7 +10,7 @@ const {
 } = process.env;
 
 const redirect: string = encodeURIComponent(redirectUri ? redirectUri : '');
-const url: string = `${server}/oauth/authenticate?client_id=${clientId}&grant_type=${grant}&redirect_uri=${redirect}&response_type=code`;
+const url: string = `${server}/oauth/authenticate?client_id=${clientId}&grant_type=${grant}&redirect_uri=${redirect}&response_type=code&state=myState`;
 
 function AuthButton () {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);

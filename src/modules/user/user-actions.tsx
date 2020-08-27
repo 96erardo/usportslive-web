@@ -12,7 +12,7 @@ import { useAuthStore } from '../auth/auth-store';
  * 
  * @returns {User} The fetched user
  */
-export async function fetchUser (id: number = 0, include = []) {
+export async function fetchUser (id: number = 0, include: Array<string> = []) {
   if (id === 0) {
     const { accessToken } = useAuthStore.getState();
 

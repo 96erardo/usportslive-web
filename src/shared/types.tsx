@@ -53,8 +53,15 @@ export interface User {
 export interface Sport {
   id: number,
   name: string,
-  team: ObjectRef<number> | null,
+  color: string,
+  team?: Team,
   createdAt?: string
+}
+
+export interface Team {
+  id: number,
+  name: string,
+  sportId: number,
 }
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';

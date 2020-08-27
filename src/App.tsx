@@ -18,10 +18,22 @@ import AppLoader from './shared/components/globals/AppLoader';
 // import theme from './shared/config/theme';
 // import store from './shared/config/redux';
 
-// import ProtectedRoute from './shared/components/utilities/ProtectedRoute';
+// Pages
+import ProtectedRoute from './shared/components/utilities/ProtectedRoute';
 // // import VisitorsRoute from './atoms/VisitorsRoute';
-// import Admin from './shared/components/layouts/Admin';
+import Admin from './shared/components/layouts/Admin';
 import Home from './modules/app/components/Home';
+
+// Icons
+import { ReactComponent as WhiteSoccer } from './shared/assets/images/white-soccer.svg';
+import { ReactComponent as WhiteTrophy } from './shared/assets/images/white-trophy.svg';
+import { ReactComponent as WhiteProfile } from './shared/assets/images/white-profile.svg';
+
+const icons = {
+  WhiteSoccer,
+  WhiteTrophy,
+  WhiteProfile,
+};
 
 Logger.setLevel(Logger[process.env.REACT_APP_LOG_LEVEL]);
 
@@ -33,12 +45,12 @@ function App () {
   }, [fetchAppResources]);
 
   return (
-    <BoostProvider>
+    <BoostProvider icons={icons}>
       <AppLoader>
         <Router>
           <Switch>
             <Route exact path="/oauth/callback" component={AuthCallback}/>
-            {/* <ProtectedRoute perform="admin-page" path="/admin" component={Admin} /> */}
+            <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
             <Route exact path="/" component={Home}/>
           </Switch>
         </Router>
