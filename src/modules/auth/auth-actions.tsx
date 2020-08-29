@@ -1,5 +1,5 @@
 import { request } from '../../shared/config/axios';
-import qs from 'query-string';
+import qs from 'qs';
 import Logger from 'js-logger';
 
 /**

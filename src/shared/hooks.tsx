@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { Size, EventStore, EventResult } from './types';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { EventStore, EventResult } from './types';
+import { useLocation } from 'react-router-dom';
+import qs from 'qs';
 
 /**
  * Hook that subscribes to store changes to execute callbacks
@@ -31,35 +33,9 @@ export function useSubscription<R>(
   }, [onHandler]);
 }
 
-/**
- * Hooks that encapsulates the functionality of the global modal component
- * 
- * @param {string} title 
- * @param {React.ComponentType} Component 
- * @param {object} props 
- * 
- * @returns {Function}
- */
-export function useModal (title: string, Component: React.ComponentType, maxWidth: Size = 'sm') {
+export function useQuery () {
+  const location = useLocation();
+  const [query] = useState(qs.parse(location.search, { ignoreQueryPrefix: true }));
 
-  const open = useCallback(() => {
-  }, []);
-
-  const close = useCallback(() => {
-  }, [])
-
-  return { open, close };
-}
-
-/**
- * Hook that encapsulates the close functionality of the global modal component
- * 
- * @returns {Fuction} The close modal function
- */
-export function useCloseModal () {
-
-  const close = useCallback(() => {
-  }, [])
-
-  return close;
+  return query;
 }

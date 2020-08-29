@@ -1,5 +1,5 @@
 import axios from 'axios';
-import qs from 'query-string';
+import qs from 'qs';
 import { useAuthStore } from '../../modules/auth/auth-store';
 
 export const request = axios.create({

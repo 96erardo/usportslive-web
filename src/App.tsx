@@ -35,7 +35,7 @@ const icons = {
   WhiteProfile,
 };
 
-Logger.setLevel(Logger[process.env.REACT_APP_LOG_LEVEL]);
+Logger.useDefaults({ defaultLevel: Logger[process.env.REACT_APP_LOG_LEVEL] });
 
 function App () {
   const fetchAppResources = useAppStore(state => state.fetchAppResources);

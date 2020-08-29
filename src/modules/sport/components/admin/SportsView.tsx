@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Row, Button, Table, Pagination, styled } from '@8base/boost';
 import Card from '../../../../shared/components/globals/Card';
 import SportsTableRow from './SportsTableRow';
 import { useSports } from '../../sport-hooks';
 import { Sport } from '../../../../shared/types';
+import SearchInput from '../../../../shared/components/form/SearchInput';
+import { useQuery } from '../../../../shared/hooks';
+import { useHistory } from 'react-router-dom';
+import qs from 'qs';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -13,15 +17,40 @@ const include = ['team'];
 const columns = 'repeat(6, 1fr)';
 
 function SportsView () {
+  const history = useHistory();
+  const query = useQuery();
   const [page, setPage] = useState(1);
-  const { items, count, loading, error } = useSports(page, include);
+  const { items, count, loading, filters, setFilters, error } = useSports(
+    page, 
+    include,
+    query
+  );
+
+  useEffect(() => {
+    const unlisten = history.listen((location) => {
+      setFilters(qs.parse(location.search, { ignoreQueryPrefix: true }));
+    });
+
+    return () => unlisten();
+  }, [history, setFilters])
+
+  const handleSearch = useCallback((value: string) => {    
+    history.push(`/admin/sports?${qs.stringify({
+      ...filters,
+      q: value ? value : undefined
+    })}`);
+  }, [history, filters]);
 
   return (
     <div style={{ padding: '24px' }}>
       <Card stretch>
         <Card.Header>
           <Card.Header.Left>
-            
+            <SearchInput
+              initialValue={query.q as string}
+              width={30}
+              onSearch={handleSearch}
+            />
           </Card.Header.Left>
           <Card.Header.Right gap="sm">
             <Button color="neutral">Create Sport</Button>
