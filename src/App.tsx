@@ -11,12 +11,14 @@ import AuthCallback from './modules/auth/components/AuthCallback';
 // import { AppDispatch } from './shared/types';
 import AppLoader from './shared/components/globals/AppLoader';
 // import { ThemeProvider } from '@material-ui/core/styles';
-// import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 // import { SnackbarProvider } from 'notistack';
 // import Dialog from './shared/components/globals/Dialog';
 // import { CssBaseline } from '@material-ui/core';
 // import theme from './shared/config/theme';
 // import store from './shared/config/redux';
+import 'react-toastify/dist/ReactToastify.css';
+import './shared/assets/css/toastify-override.css';
 
 // Pages
 import ProtectedRoute from './shared/components/utilities/ProtectedRoute';
@@ -55,6 +57,11 @@ function App () {
           </Switch>
         </Router>
       </AppLoader>
+      <ToastContainer 
+        autoClose={8000}
+        position="bottom-left"
+        limit={5}
+      />
     </BoostProvider>
   );
 

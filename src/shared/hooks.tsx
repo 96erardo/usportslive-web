@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { EventStore, EventResult } from './types';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import qs from 'qs';
 
 /**
@@ -35,7 +35,16 @@ export function useSubscription<R>(
 
 export function useQuery () {
   const location = useLocation();
-  const [query] = useState(qs.parse(location.search, { ignoreQueryPrefix: true }));
+  const history = useHistory();
+  const [query, setQuery] = useState(qs.parse(location.search, { ignoreQueryPrefix: true }));
+
+  useEffect(() => {
+    const unlisten = history.listen((location) => {
+      setQuery(qs.parse(location.search));
+    });
+
+    return () => unlisten();
+  });
 
   return query;
 }

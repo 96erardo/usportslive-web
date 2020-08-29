@@ -1,3 +1,18 @@
 body {
   background-color: #e1e9eb;
 }
+
+:root {
+  --color-blue-1: #384a59;
+  --color-blue-2: #1e4358;
+  --color-blue-3: #323c47;
+  --color-yellow: #f6c01e;
+  --color-yellow-1: #e4cc58;
+  --color-gray: #5e6c74;
+  --color-gray-2: #9b9b9b;
+  --color-primary: #3db4aa;
+  --color-red: #ff0000;
+  --color-white: #fcfcfc;
+  --color-gray-2: #aeb7be;
+  --color-blue-light: #62abfe;
+}

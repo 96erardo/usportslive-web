@@ -11,6 +11,20 @@ export interface PaginatedListState<T> {
   last: boolean
 }
 
+export type QueryResult <T> = [Error | null, boolean?, T?];
+
+export type MutationResult <T> = [Error | null, T?];
+
+export type RequestError = {
+  error?: any,
+  error_description?: string,
+  errors: {
+    [key: string]: {
+      msg: string
+    }
+  }
+}
+
 export interface PaginatedResponse<T> {
   count: number,
   items: Array<T>
@@ -62,6 +76,7 @@ export interface Team {
   id: number,
   name: string,
   sportId: number,
+  sport?: Sport
 }
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';

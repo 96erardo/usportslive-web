@@ -61,6 +61,7 @@ export function useSports (page: number = 1, include: Array<string> = [], initia
 
   return {
     ...state,
+    fetch,
     filters,
     setFilters
   }

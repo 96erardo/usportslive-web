@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Row, Button, Table, Pagination, styled } from '@8base/boost';
+import { Row, Table, Pagination, styled } from '@8base/boost';
+import CreateSportButton from './CreateSportButton';
 import Card from '../../../../shared/components/globals/Card';
 import SportsTableRow from './SportsTableRow';
 import { useSports } from '../../sport-hooks';
@@ -20,19 +21,15 @@ function SportsView () {
   const history = useHistory();
   const query = useQuery();
   const [page, setPage] = useState(1);
-  const { items, count, loading, filters, setFilters, error } = useSports(
+  const { items, count, loading, filters, setFilters, fetch } = useSports(
     page, 
     include,
     query
   );
 
   useEffect(() => {
-    const unlisten = history.listen((location) => {
-      setFilters(qs.parse(location.search, { ignoreQueryPrefix: true }));
-    });
-
-    return () => unlisten();
-  }, [history, setFilters])
+    setFilters(query);
+  }, [query, setFilters])
 
   const handleSearch = useCallback((value: string) => {    
     history.push(`/admin/sports?${qs.stringify({
@@ -53,7 +50,7 @@ function SportsView () {
             />
           </Card.Header.Left>
           <Card.Header.Right gap="sm">
-            <Button color="neutral">Create Sport</Button>
+            <CreateSportButton afterCreate={() => fetch()}/>
           </Card.Header.Right>
         </Card.Header>
         <Card.Body padding="none">

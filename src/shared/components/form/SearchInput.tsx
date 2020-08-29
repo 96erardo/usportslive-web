@@ -5,6 +5,7 @@ const SearchInput: React.FC<Props> = ({
   initialValue = '',
   stretch = false, 
   width,
+  placeholder = '',
   onSearch
 }) => {
   const [search, setSearch] = useState(initialValue);
@@ -19,6 +20,7 @@ const SearchInput: React.FC<Props> = ({
       stretch={stretch}
       name="search"
       value={search}
+      placeholder={placeholder}
       onChange={setSearch}
       rightIcon={
         <Icon 
@@ -34,8 +36,9 @@ const SearchInput: React.FC<Props> = ({
 
 type Props = {
   initialValue?: string,
-  width: number,
+  width?: number,
   stretch?: boolean,
+  placeholder?: string,
   onSearch: (value: string) => void
 }
 

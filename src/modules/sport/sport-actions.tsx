@@ -1,5 +1,6 @@
-import { request } from '../../shared/config/axios';
-import { Sport, PaginatedResponse } from '../../shared/types';
+import { request, authenticated } from '../../shared/config/axios';
+import { useAuthStore } from '../auth/auth-store';
+import { Sport, PaginatedResponse, MutationResult } from '../../shared/types';
 import Logger from 'js-logger';
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import qs from 'qs';
@@ -22,8 +23,6 @@ export async function fetchSports (
   const filters = createFilter(data);
   const query: string = qs.stringify({ first, skip, include, filters }, { encode: false, arrayFormat: 'brackets' })
   
-  Logger.info('fetchSports', { data, first, skip, include, filters, query });
-
   try {
     const res: AxiosResponse<PaginatedResponse<Sport>> = await request.get(`/api/sports?${query}`, {
       cancelToken: source ? source.token : undefined,
@@ -46,6 +45,13 @@ export async function fetchSports (
   }
 }
 
+/**
+ * Created a filter for fetching sports
+ * 
+ * @param {SportFilter} data - The data to create the filter from
+ * 
+ * @returns {object} The filter
+ */
 function createFilter (data: SportFilter) {
   const filters = {
     ...(data.q ? {
@@ -55,6 +61,39 @@ function createFilter (data: SportFilter) {
   ;
   
   return filters; 
+}
+
+/**
+ * Creates a new sport
+ * 
+ * @param {CreateSportInput} data - Input needed to create the sport
+ * 
+ * @returns {Promise<MutationResult<Sport>>} The created sport
+ */
+export async function createSport (data: CreateSportInput): Promise<MutationResult<Sport>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Sport> = await authenticated.post(`/api/sports`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('createSport', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('createSport', e);
+
+    return [e];
+  }
+}
+
+export type CreateSportInput = {
+  name: string,
+  color: string
 }
 
 export type SportFilter = {
