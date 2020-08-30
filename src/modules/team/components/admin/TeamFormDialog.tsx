@@ -87,7 +87,10 @@ export default function TeamFormDialog (props: Props) {
 
   return (
     <Dialog size="sm" isOpen={isOpen}>
-      <Dialog.Header title="Nuevo Equipo" onClose={() => closeModal(modalId.current)} />
+      <Dialog.Header 
+        title={props.type === 'create' ? 'Nuevo Equipo' : 'Editar Equipo'} 
+        onClose={() => closeModal(modalId.current)} 
+      />
       <Dialog.Body>
         <Column stretch gap="lg">
           <Row stretch alignItems="center" justifyContent="between" gap="lg">

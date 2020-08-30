@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, Table, Row, Pagination, styled } from '@8base/boost';
+import { Table, Row, Pagination, styled } from '@8base/boost';
 import Card from '../../../../shared/components/globals/Card';
 import SearchInput from '../../../../shared/components/form/SearchInput';
 import { useQuery } from '../../../../shared/hooks';
@@ -7,6 +7,7 @@ import { useTeams } from '../../team-hooks';
 import { Team } from '../../../../shared/types';
 import TeamTableRow from './TeamTableRow';
 import CreateTeamButton from './CreateTeamButton';
+import TeamFormDialog from './TeamFormDialog';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -80,6 +81,7 @@ function TeamsView () {
           </Table>
         </Card.Body>
       </Card>
+      <TeamFormDialog type="update" onFinished={fetch} />
     </div>
   )
 }

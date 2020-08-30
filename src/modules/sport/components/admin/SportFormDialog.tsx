@@ -94,7 +94,10 @@ export default function SportFormDialog (props: Props) {
 
   return (
     <Dialog size="sm" isOpen={isOpen}>
-      <Dialog.Header title="New Sport" onClose={() => closeModal(modalId.current)} />
+      <Dialog.Header 
+        title={props.type === 'create' ? 'Nuevo Deporte' : 'Editar Deporte'}
+        onClose={() => closeModal(modalId.current)} 
+      />
       <Dialog.Body>
         <Column stretch gap="lg">
           <Row stretch alignItems="center" justifyContent="between" gap="lg">
