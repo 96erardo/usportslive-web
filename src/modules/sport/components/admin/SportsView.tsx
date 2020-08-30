@@ -8,9 +8,8 @@ import { Sport } from '../../../../shared/types';
 import SearchInput from '../../../../shared/components/form/SearchInput';
 import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
 import { useQuery } from '../../../../shared/hooks';
-import { useHistory } from 'react-router-dom';
 import SportFormDialog, { } from './SportFormDialog';
-import qs from 'qs';
+import { SportFilter } from '../../sport-actions';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -20,8 +19,7 @@ const include = ['team'];
 const columns = '100px 1fr 150px repeat(2, 1fr) 150px';
 
 function SportsView () {
-  const history = useHistory();
-  const query = useQuery();
+  const [query, setQuery] = useQuery<SportFilter>();
   const [page, setPage] = useState(1);
   const { items, count, loading, filters, setFilters, fetch } = useSports(
     page, 
@@ -33,12 +31,12 @@ function SportsView () {
     setFilters(query);
   }, [query, setFilters])
 
-  const handleSearch = useCallback((value: string) => {    
-    history.push(`/admin/sports?${qs.stringify({
+  const handleSearch = useCallback((value: string) => {
+    setQuery('/admin/sports', {
       ...filters,
       q: value ? value : undefined
-    })}`);
-  }, [history, filters]);
+    });
+  }, [filters, setQuery]);
 
   return (
     <div style={{ padding: '24px' }}>

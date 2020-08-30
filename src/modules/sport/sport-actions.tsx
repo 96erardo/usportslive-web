@@ -4,7 +4,6 @@ import { Sport, PaginatedResponse, MutationResult } from '../../shared/types';
 import Logger from 'js-logger';
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import qs from 'qs';
-import { access } from 'fs';
 
 /**
  * Fetches the sports from the api

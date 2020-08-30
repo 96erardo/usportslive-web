@@ -40,7 +40,7 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
     toast.success('Deporte eliminado correctament');
 
     afterUpdate();
-  }, [sport, closeModal]);
+  }, [sport, closeModal, afterUpdate]);
 
   const onDelete = useCallback(() => {
     openModal(decisionModalId, {
@@ -52,12 +52,12 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
       onCancel: () => closeModal(decisionModalId),
       onConfirm: confirmDelete
     });
-  }, [openModal, confirmDelete]);
+  }, [openModal, closeModal, confirmDelete]);
 
   const updateAssignedTeam = useCallback(async (team: Team) => {
     setLoading(true);
 
-    const [err, data] = await assignTeamToSport(sport.id, team.id);
+    const [err] = await assignTeamToSport(sport.id, team.id);
 
     setLoading(false);
 
@@ -68,7 +68,7 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
     toast.success('Equipo asignado correctamente');
 
     afterUpdate();
-  }, [sport])
+  }, [sport, afterUpdate])
 
   return (
     <Table.BodyRow columns={columns}>

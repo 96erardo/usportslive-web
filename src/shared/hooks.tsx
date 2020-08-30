@@ -33,18 +33,22 @@ export function useSubscription<R>(
   }, [onHandler]);
 }
 
-export function useQuery () {
+export function useQuery<T>(): [qs.ParsedQs, (path: string, filters: T) => void] {
   const location = useLocation();
   const history = useHistory();
   const [query, setQuery] = useState(qs.parse(location.search, { ignoreQueryPrefix: true }));
 
   useEffect(() => {
     const unlisten = history.listen((location) => {
-      setQuery(qs.parse(location.search));
+      setQuery(qs.parse(location.search, { ignoreQueryPrefix: true }));
     });
 
     return () => unlisten();
   });
 
-  return query;
+  const updateQuery = useCallback((path: string, filters: T) => {
+    history.push(`${path}?${qs.stringify(filters)}`);
+  }, [history]);
+
+  return [query, updateQuery];
 }
