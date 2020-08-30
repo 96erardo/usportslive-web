@@ -17,7 +17,7 @@ export const useAppStore = create(set => ({
     const { fetchAuthenticatedUser } = useAuthStore.getState();
 
     await fetchAuthenticatedUser();
-    const [err1, sports]  = await fetchSports();
+    const [err1,, sports]  = await fetchSports();
     const [err2, roles] = await fetchRoles();
 
     if (err1 || err2) {
@@ -30,7 +30,7 @@ export const useAppStore = create(set => ({
     return set({
       loading: false,
       error: null,
-      sports: sports.items,
+      sports: sports ? sports.items : [],
       roles: roles.items,
     });
   },

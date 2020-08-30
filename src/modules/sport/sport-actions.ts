@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';
 import { useAuthStore } from '../auth/auth-store';
-import { Sport, PaginatedResponse, MutationResult } from '../../shared/types';
+import { Sport, PaginatedResponse, MutationResult, QueryResult } from '../../shared/types';
 import Logger from 'js-logger';
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import qs from 'qs';
@@ -17,7 +17,7 @@ export async function fetchSports (
   include: Array<string> = [], 
   data = {}, 
   source?: CancelTokenSource
-) {
+): Promise<QueryResult<PaginatedResponse<Sport>>> {
   const first: number = 10;
   const skip: number = first * (page - 1);
   const filters = createFilter(data);
@@ -30,13 +30,13 @@ export async function fetchSports (
 
     Logger.info('fetchSports', res.data);
 
-    return [null, res.data];
+    return [null, false, res.data];
 
   } catch (e) {
     if (axios.isCancel(e)) {
       Logger.info('Request canceled', e);
 
-      return [e, null, true];
+      return [e, true];
     }
     
     Logger.error('fetchSports', e);

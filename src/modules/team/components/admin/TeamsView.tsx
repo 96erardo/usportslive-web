@@ -6,6 +6,7 @@ import { useQuery } from '../../../../shared/hooks';
 import { useTeams } from '../../team-hooks';
 import { Team } from '../../../../shared/types';
 import TeamTableRow from './TeamTableRow';
+import CreateTeamButton from './CreateTeamButton';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -46,9 +47,7 @@ function TeamsView () {
             />
           </Card.Header.Left>
           <Card.Header.Right>
-            <Button color="neutral">
-              Crear Equipo
-            </Button>
+            <CreateTeamButton afterCreate={fetch} />
           </Card.Header.Right>
         </Card.Header>
         <Card.Body padding="none">

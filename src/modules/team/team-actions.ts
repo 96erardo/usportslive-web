@@ -1,8 +1,10 @@
-import { request } from '../../shared/config/axios';  
+import { request, authenticated } from '../../shared/config/axios';  
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Team } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Team, MutationResult } from '../../shared/types';
 import Logger from 'js-logger';
 import qs from 'qs';
+import { useAuthStore } from '../auth/auth-store';
+import { access } from 'fs';
 
 /**
  * Fetches the team list
@@ -67,7 +69,93 @@ function createFilter (data: FilterData) {
   return filter;
 }
 
+/**
+ * Creates a new team
+ * 
+ * @param {CreateTeamInput} data - The data to create the team from
+ * 
+ * @returns {Promise<MutationResult<Team>>} The created team 
+ */
+export async function createTeam (data: CreateTeamInput): Promise<MutationResult<Team>> {
+  const { accessToken } = useAuthStore.getState();
+
+  const team = {
+    name: data.name,
+    sportId: data.sport
+  }
+
+  try {
+    const res: AxiosResponse<Team> = await authenticated.post(`/api/teams`, team, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('createTeam', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateSport', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Updates the specified team
+ * 
+ * @param {UpdateTeamInput} data - The data to update the specified team
+ * 
+ * @returns {Promise<MutationResult<Team>>} The updated team
+ */
+export async function updateTeam (data: UpdateTeamInput): Promise<MutationResult<Team>> {
+  const { accessToken } = useAuthStore.getState();
+  const team = { name: data.name };
+
+  try {
+    const res: AxiosResponse<Team> = await authenticated.patch(`/api/teams/${data.id}`, team, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateTeam', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateSport', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
 type FilterData = {
   sport?: number,
   q?: string,
+}
+
+type CreateTeamInput = {
+  name?: string,
+  sport?: number
+}
+
+type UpdateTeamInput = {
+  id?: number,
+  name?: string,
 }

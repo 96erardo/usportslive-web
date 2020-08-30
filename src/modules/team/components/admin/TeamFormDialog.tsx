@@ -1,21 +1,20 @@
 import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
-import { Dialog, Button, Column, Row, Icon, Input, useModal } from '@8base/boost';
-import Avatar from '../../../../shared/components/utilities/Avatar';
-import ColorPicker from '../../../../shared/components/form/ColorPicker';
+import { Dialog, Button, Column, Row, Input, Avatar, Icon, useModal } from '@8base/boost';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
-import TeamSelector from '../../../team/components/TeamSelector';
+// import TeamSelector from '../../../team/components/TeamSelector';
+import SportSelector from '../../../sport/components/SportSelector';
 import { Team, Sport } from '../../../../shared/types';
-import { createSport, updateSport } from '../../sport-actions';
+import { createTeam, updateTeam } from '../../team-actions';
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
 
 const initialForm = {
   name: '',
-  color: '#0874F9',
+  sport: null,
 }
 
-export default function SportFormDialog (props: Props) {
-  const modalId = useRef(`${props.type}-sport-dialog`);
+export default function TeamFormDialog (props: Props) {
+  const modalId = useRef(`${props.type}-team-dialog`);
   const nameRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<Form>(initialForm);
   const [loading, setLoading] = useState(false);
@@ -47,31 +46,25 @@ export default function SportFormDialog (props: Props) {
     }));
   }, [])
 
-  const handleTeamChange = useCallback((team: Team | null) => {
+  const handleSportChange = useCallback((sport: Sport | null) => {
     setForm(state => ({
       ...state,
-      team
+      sport
     }))
-  }, []);
-
-  const handleColor = useCallback((color: string) => {
-    setForm(state => ({
-      ...state,
-      color: color
-    }));
   }, []);
 
   const handleSubmit = useCallback(async () => {
     setLoading(true);
 
     const [err, data] = props.type === 'create' ? (
-      await createSport(form)
-    ) : (
-      await updateSport({
-        id: form.id ? form.id : 0,
+      await createTeam({
         name: form.name,
-        color: form.color,
-        team: form?.team === null ? null : form.team?.id,
+        sport: form.sport?.id,
+      })
+    ) : (
+      await updateTeam({
+        id: form.id,
+        name: form.name,
       })
     );
 
@@ -82,19 +75,19 @@ export default function SportFormDialog (props: Props) {
     }
 
     if (props.type === 'create') {
-      toast.success('Deporte creado con éxito');
+      toast.success('Equipo creado con éxito');
     } else {
-      toast.success('Deporte actualizado con éxito');
+      toast.success('Equipo actualizado con éxito');
     }
 
-    props.onFinished(data as Sport);
+    props.onFinished(data as Team);
 
     closeModal(modalId.current);
   }, [props, form, closeModal]);
 
   return (
     <Dialog size="sm" isOpen={isOpen}>
-      <Dialog.Header title="New Sport" onClose={() => closeModal(modalId.current)} />
+      <Dialog.Header title="Nuevo Equipo" onClose={() => closeModal(modalId.current)} />
       <Dialog.Body>
         <Column stretch gap="lg">
           <Row stretch alignItems="center" justifyContent="between" gap="lg">
@@ -103,7 +96,6 @@ export default function SportFormDialog (props: Props) {
                 size="md"
                 firstName={form.name[0]}
                 lastName={form.name[1]} 
-                background={form.color}
               />
             </div>
             <Input 
@@ -113,31 +105,26 @@ export default function SportFormDialog (props: Props) {
               insideRef={nameRef}
             />
           </Row>
-          {props.type === 'update' && 
-            <TeamSelector id="update-sport" onSelect={handleTeamChange}>
+          {props.type === 'create' && 
+            <SportSelector id="create-team" onSelect={handleSportChange}>
               {open => (
                 <Row stretch alignItems="center">
                   <ClickableInput
                     stretch
                     readOnly
-                    value={form.team ? form.team.name : ''}
-                    placeholder="Select a team"
+                    value={form.sport ? form.sport.name : ''}
+                    placeholder="Select a sport"
                     cursor="pointer"
                     onChange={() => {}}
-                    onClick={() => open({ sport: form.id })}
+                    onClick={open}
                   />
-                  <Button squared size="sm" color="neutral" onClick={() => handleTeamChange(null)}>
+                  <Button squared size="sm" color="neutral" onClick={() => handleSportChange(null)}>
                     <Icon name="Delete" />
                   </Button>
                 </Row>
               )}
-            </TeamSelector>
+            </SportSelector>
           }
-          <ColorPicker
-            color={form.color}
-            name="color"
-            onChange={handleColor}
-          />
         </Column>
       </Dialog.Body>
       <Dialog.Footer>
@@ -163,12 +150,11 @@ export default function SportFormDialog (props: Props) {
 
 type Props = {
   type: 'create' | 'update',
-  onFinished: (sport: Sport) => void
+  onFinished: (team: Team) => void
 };
 
 type Form = {
   id?: number,
   name: string,
-  color: string,
-  team?: Team | null
+  sport?: Sport | null
 }
