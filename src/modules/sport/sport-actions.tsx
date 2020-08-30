@@ -73,8 +73,13 @@ function createFilter (data: SportFilter) {
 export async function createSport (data: CreateSportInput): Promise<MutationResult<Sport>> {
   const { accessToken } = useAuthStore.getState();
 
+  const sport = {
+    name: data.name,
+    color: data.color
+  }
+
   try {
-    const res: AxiosResponse<Sport> = await authenticated.post(`/api/sports`, data, {
+    const res: AxiosResponse<Sport> = await authenticated.post(`/api/sports`, sport, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
@@ -91,9 +96,59 @@ export async function createSport (data: CreateSportInput): Promise<MutationResu
   }
 }
 
+/**
+ * Updates the specified sport
+ * 
+ * @param {UpdateSportInput} data - The data to update the sport
+ * 
+ * @returns {Promise<MutationResult<Sport>>} The request response
+ */
+export async function updateSport (data: UpdateSportInput): Promise<MutationResult<Sport>> {
+  const { accessToken } = useAuthStore.getState();
+
+  const sport = {
+    name: data.name,
+    color: data.color,
+    teamId: data.team
+  };
+
+  console.log('sport', sport);
+
+  try {
+    const res: AxiosResponse<Sport> = await authenticated.patch(`/api/sports/${data.id}`, sport, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateSport', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateSport', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
 export type CreateSportInput = {
   name: string,
   color: string
+}
+
+export type UpdateSportInput = {
+  id: number,
+  name: string,
+  color: string,
+  team: number | null | undefined
 }
 
 export type SportFilter = {

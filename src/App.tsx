@@ -5,7 +5,6 @@ import { BoostProvider } from '@8base/boost';
 import { useAppStore } from './modules/app/app-store';
 // import { Provider } from 'react-redux';
 // import LoggerProvider from './shared/components/globals/LoggerProvider';
-// import * as SnackbarIcons from './shared/components/globals/snackbar-icons';
 // import { loadAppResources } from './modules/app/app-actions';
 import AuthCallback from './modules/auth/components/AuthCallback';
 // import { AppDispatch } from './shared/types';

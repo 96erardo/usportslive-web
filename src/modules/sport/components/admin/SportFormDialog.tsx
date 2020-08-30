@@ -1,14 +1,12 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Dialog, Button, Column, Row, Input, useModal } from '@8base/boost';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
+import { Dialog, Button, Column, Row, Input, Icon, useModal } from '@8base/boost';
 import Avatar from '../../../../shared/components/utilities/Avatar';
 import ColorPicker from '../../../../shared/components/form/ColorPicker';
 import TeamSelector from '../../../team/components/TeamSelector';
 import { Team, Sport } from '../../../../shared/types';
-import { createSport } from '../../sport-actions';
+import { createSport, updateSport } from '../../sport-actions';
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
-
-export const modalId = 'sport-form-dialog';
 
 const initialForm = {
   name: '',
@@ -17,6 +15,7 @@ const initialForm = {
 
 export default function SportFormDialog (props: Props) {
   const modalId = useRef(`${props.type}-sport-dialog`);
+  const nameRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState<Form>(initialForm);
   const [loading, setLoading] = useState(false);
   const { isOpen, args, closeModal } = useModal(modalId.current);
@@ -29,6 +28,14 @@ export default function SportFormDialog (props: Props) {
       });
     }
   }, [isOpen, args]);
+  
+  useLayoutEffect(() => {
+    if (isOpen) {
+      if (nameRef.current !== null && args.name) {
+        nameRef.current.value = args.name;
+      }
+    }
+  }, [isOpen, args]);
 
   const handleChange = useCallback((event) => {
     event.persist();
@@ -39,7 +46,7 @@ export default function SportFormDialog (props: Props) {
     }));
   }, [])
 
-  const handleTeamChange = useCallback((team: Team) => {
+  const handleTeamChange = useCallback((team: Team | null) => {
     setForm(state => ({
       ...state,
       team
@@ -59,7 +66,12 @@ export default function SportFormDialog (props: Props) {
     const [err, data] = props.type === 'create' ? (
       await createSport(form)
     ) : (
-      await Promise.resolve([new Error(), null])
+      await updateSport({
+        id: form.id ? form.id : 0,
+        name: form.name,
+        color: form.color,
+        team: form?.team === null ? null : form.team?.id,
+      })
     );
 
     setLoading(false);
@@ -68,7 +80,11 @@ export default function SportFormDialog (props: Props) {
       return onError(err);
     }
 
-    toast.success('Deporte creado');
+    if (props.type === 'create') {
+      toast.success('Deporte creado con éxito');
+    } else {
+      toast.success('Deporte actualizado con éxito');
+    }
 
     props.onFinished(data as Sport);
 
@@ -93,23 +109,31 @@ export default function SportFormDialog (props: Props) {
               stretch
               name="name"
               onBlur={handleChange}
+              insideRef={nameRef}
             />
           </Row>
           {props.type === 'update' && 
             <TeamSelector onSelect={handleTeamChange}>
               {open => (
-                <Input
-                  stretch
-                  readOnly
-                  value={form.team?.name}
-                  placeholder="Select a team"
-                  onClick={() => open({ sport: form.id })}
-                />
+                <Row stretch alignItems="center">
+                  <Input
+                    stretch
+                    readOnly
+                    value={form.team ? form.team.name : ''}
+                    placeholder="Select a team"
+                    cursor="pointer"
+                    onChange={() => {}}
+                    onClick={() => open({ sport: form.id })}
+                  />
+                  <Button squared size="sm" color="neutral" onClick={() => handleTeamChange(null)}>
+                    <Icon name="Delete" />
+                  </Button>
+                </Row>
               )}
             </TeamSelector>
           }
           <ColorPicker
-            initialColor={form.color}
+            color={form.color}
             name="color"
             onChange={handleColor}
           />
@@ -145,5 +169,5 @@ type Form = {
   id?: number,
   name: string,
   color: string,
-  team?: Team
+  team?: Team | null
 }

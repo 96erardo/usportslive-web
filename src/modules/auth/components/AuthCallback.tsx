@@ -18,7 +18,7 @@ function AuthCallback (props: Props) {
     if (isLoggedIn) {
       props.history.replace('/');
     } else {
-      const q = qs.parse(props.location.search);
+      const q = qs.parse(props.location.search, { ignoreQueryPrefix: true });
 
       if (!q.code || !q.state) {
         props.history.replace('/');

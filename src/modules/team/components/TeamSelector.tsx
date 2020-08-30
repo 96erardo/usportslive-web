@@ -60,6 +60,8 @@ function TeamSelector (props: Props) {
       fetch();
   
       return () => cancelToken.current?.cancel();
+    } else {
+      setSelected(null);
     }
   }, [isOpen, fetch]);
 

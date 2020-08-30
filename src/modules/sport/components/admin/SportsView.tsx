@@ -8,6 +8,7 @@ import { Sport } from '../../../../shared/types';
 import SearchInput from '../../../../shared/components/form/SearchInput';
 import { useQuery } from '../../../../shared/hooks';
 import { useHistory } from 'react-router-dom';
+import SportFormDialog, { } from './SportFormDialog';
 import qs from 'qs';
 
 const Body = styled(Table.Body)`
@@ -15,7 +16,7 @@ const Body = styled(Table.Body)`
 `;
 
 const include = ['team'];
-const columns = 'repeat(6, 1fr)';
+const columns = '100px 1fr 150px repeat(2, 1fr) 150px';
 
 function SportsView () {
   const history = useHistory();
@@ -50,7 +51,7 @@ function SportsView () {
             />
           </Card.Header.Left>
           <Card.Header.Right gap="sm">
-            <CreateSportButton afterCreate={() => fetch()}/>
+            <CreateSportButton afterCreate={fetch}/>
           </Card.Header.Right>
         </Card.Header>
         <Card.Body padding="none">
@@ -59,8 +60,8 @@ function SportsView () {
               <Table.HeaderCell>Id</Table.HeaderCell>
               <Table.HeaderCell>Nombre</Table.HeaderCell>
               <Table.HeaderCell>Color</Table.HeaderCell>
-              <Table.HeaderCell>Fecha de Creación</Table.HeaderCell>
               <Table.HeaderCell>Equipo Oficial</Table.HeaderCell>
+              <Table.HeaderCell>Fecha de Creación</Table.HeaderCell>
               <Table.HeaderCell>Acciones</Table.HeaderCell>
             </Table.Header>
             <Body data={items} loading={loading}>
@@ -80,6 +81,10 @@ function SportsView () {
           </Table>
         </Card.Body>
       </Card>
+      <SportFormDialog 
+        type="update"
+        onFinished={fetch}
+      />
     </div>
   )
 }

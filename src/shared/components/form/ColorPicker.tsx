@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Input, Column, styled } from '@8base/boost';
 import { TwitterPicker, ColorResult } from 'react-color';
 
@@ -10,15 +10,12 @@ const ColorPreview = styled.span`
 `;
 
 function ColorPicker ({
-  initialColor = '#eee',
+  color = '#eee',
   name,
   onChange,
 }: Props) {
-  const [color, setColor] = useState<string>(initialColor);
-
   const handleChange = useCallback((color: ColorResult) => {
     onChange(color.hex);
-    setColor(color.hex);
   }, [onChange]);
 
   return (
@@ -40,7 +37,7 @@ function ColorPicker ({
 }
 
 type Props = {
-  initialColor?: string,
+  color?: string,
   name: string,
   onChange: (color: string) => void
 }
