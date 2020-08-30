@@ -19,7 +19,7 @@ const Body = styled(Card.Body)`
 `;
 
 function TeamSelector (props: Props) {
-  const { isOpen, args, closeModal, openModal } = useModal('team-selector');
+  const { isOpen, args, closeModal, openModal } = useModal(`${props.id}-team-selector`);
   const cancelToken = useRef<CancelTokenSource>();
   const [search, setSearch] = useState<string>('');
   const [selected, setSelected] = useState<Team | null>(null);
@@ -66,9 +66,9 @@ function TeamSelector (props: Props) {
   }, [isOpen, fetch]);
 
   
-  const close = useCallback(() => closeModal('team-selector'), [closeModal]);
+  const close = useCallback(() => closeModal(`${props.id}-team-selector`), [closeModal, props.id]);
   
-  const open = useCallback((args: DialogArgs) => openModal('team-selector', args), [openModal]);
+  const open = useCallback((args: DialogArgs) => openModal(`${props.id}-team-selector`, args), [openModal, props.id]);
   
   const handleSelect = useCallback(() => {
     props.onSelect(selected as Team);
@@ -111,7 +111,7 @@ function TeamSelector (props: Props) {
   }
 
   return (
-    <Row stretch>
+    <div style={{ width: '100%' }}>
       {props.children(open)}
       <Dialog size="md" isOpen={isOpen} onClose={close}>
         <Dialog.Header title="Elegir equipo" onClose={close}/>
@@ -138,11 +138,12 @@ function TeamSelector (props: Props) {
           </Row>
         </Dialog.Footer>
       </Dialog>
-    </Row>
+    </div>
   );
 }
 
 type Props = {
+  id: string,
   onSelect: (team: Team) => void,
   children: (open: (args: DialogArgs) => void) => React.ReactNode
 }

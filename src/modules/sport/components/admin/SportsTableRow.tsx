@@ -1,6 +1,10 @@
-import React, { useCallback } from 'react';
-import { Table, Text, Button, Row, Dropdown, Menu, Icon, useModal, styled } from '@8base/boost';
-import { Sport } from '../../../../shared/types';
+import React, { useState, useCallback } from 'react';
+import { Table, Text, Button, Row, Dropdown, Menu, Icon, Loader, useModal, styled } from '@8base/boost';
+import TeamSelector from '../../../team/components/TeamSelector';
+import { Sport, Team } from '../../../../shared/types';
+import { assignTeamToSport } from '../../sport-actions';
+import { onError } from '../../../../shared/mixins';
+import { toast } from 'react-toastify';
 
 const ColorPreview = styled.span`
   background-color: ${(props: any) => props.color};
@@ -9,8 +13,9 @@ const ColorPreview = styled.span`
   border-radius: 100%;
 `;
 
-function SportsTableRow ({ columns, sport }: Props) {
+function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
   const { openModal } = useModal('update-sport-dialog');
+  const [loading, setLoading] = useState(false);
 
   const onUpdate = useCallback(() => {
     openModal('update-sport-dialog', {
@@ -20,6 +25,22 @@ function SportsTableRow ({ columns, sport }: Props) {
       team: sport.team
     })
   }, [sport, openModal]);
+
+  const updateAssignedTeam = useCallback(async (team: Team) => {
+    setLoading(true);
+
+    const [err, data] = await assignTeamToSport(sport.id, team.id);
+
+    setLoading(false);
+
+    if (err) {
+      return onError(err);
+    }
+
+    toast.success('Equipo asignado correctamente');
+
+    afterUpdate();
+  }, [sport])
 
   return (
     <Table.BodyRow columns={columns}>
@@ -33,13 +54,23 @@ function SportsTableRow ({ columns, sport }: Props) {
           </Text>
         </Row>
       </Table.BodyCell>
-      <Table.BodyCell>
-        {sport.team ? sport.team.name : (
-          <Button color="primary" variant="link">
-            Asignar
-          </Button>
-        )}
-      </Table.BodyCell>
+      {loading ? (
+        <Row stretch alignItems="center" justifyContent="center">
+          <Loader size="sm" />
+        </Row>
+      ) : (
+        <Table.BodyCell>        
+          {sport.team ? sport.team.name : (
+            <TeamSelector id={sport.id.toString()} onSelect={updateAssignedTeam}>
+              {open => (
+                <Button onClick={() => open({ sport: sport.id })} color="primary" variant="link">
+                  Asignar
+                </Button>
+              )}
+            </TeamSelector>
+          )}
+        </Table.BodyCell>
+      )}
       <Table.BodyCell>{sport.createdAt}</Table.BodyCell>
       <Table.BodyCell>
         <Dropdown defaultOpen={false}>
@@ -65,6 +96,7 @@ function SportsTableRow ({ columns, sport }: Props) {
 type Props = {
   sport: Sport,
   columns: string,
+  afterUpdate: () => void
 }
 
 export default SportsTableRow;

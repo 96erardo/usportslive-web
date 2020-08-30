@@ -113,7 +113,7 @@ export default function SportFormDialog (props: Props) {
             />
           </Row>
           {props.type === 'update' && 
-            <TeamSelector onSelect={handleTeamChange}>
+            <TeamSelector id="update-sport" onSelect={handleTeamChange}>
               {open => (
                 <Row stretch alignItems="center">
                   <Input

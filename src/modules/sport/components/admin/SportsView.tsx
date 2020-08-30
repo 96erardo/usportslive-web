@@ -66,7 +66,11 @@ function SportsView () {
             </Table.Header>
             <Body data={items} loading={loading}>
               {(sport: Sport) => (
-                <SportsTableRow sport={sport} columns={columns} />
+                <SportsTableRow 
+                  sport={sport} 
+                  columns={columns}
+                  afterUpdate={fetch}
+                />
               )}
             </Body>
             <Table.Footer>

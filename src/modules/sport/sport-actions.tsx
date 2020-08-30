@@ -4,6 +4,7 @@ import { Sport, PaginatedResponse, MutationResult } from '../../shared/types';
 import Logger from 'js-logger';
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import qs from 'qs';
+import { access } from 'fs';
 
 /**
  * Fetches the sports from the api
@@ -139,6 +140,36 @@ export async function updateSport (data: UpdateSportInput): Promise<MutationResu
   }
 }
 
+export async function assignTeamToSport (sport: number, team: number): Promise<MutationResult<Sport>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Sport> = await authenticated.patch(`/api/sports/${sport}`, {
+      teamId: team
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('assignTeamToSport', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateSport', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
 export type CreateSportInput = {
   name: string,
   color: string
@@ -149,6 +180,10 @@ export type UpdateSportInput = {
   name: string,
   color: string,
   team: number | null | undefined
+}
+
+export type AssignTeamInput = {
+  teamId: number,
 }
 
 export type SportFilter = {
