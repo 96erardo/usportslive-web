@@ -2,8 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { Table, Text, Button, Row, Dropdown, Menu, Icon, Loader, useModal, styled } from '@8base/boost';
 import TeamSelector from '../../../team/components/TeamSelector';
 import { Sport, Team } from '../../../../shared/types';
-import { assignTeamToSport } from '../../sport-actions';
+import { assignTeamToSport, deleteSport } from '../../sport-actions';
 import { onError } from '../../../../shared/mixins';
+import { modalId as decisionModalId } from '../../../../shared/components/globals/DecisionDialog';
+import { } from '../../sport-actions';
 import { toast } from 'react-toastify';
 
 const ColorPreview = styled.span`
@@ -14,7 +16,7 @@ const ColorPreview = styled.span`
 `;
 
 function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
-  const { openModal } = useModal('update-sport-dialog');
+  const { openModal, closeModal } = useModal('update-sport-dialog');
   const [loading, setLoading] = useState(false);
 
   const onUpdate = useCallback(() => {
@@ -25,6 +27,32 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
       team: sport.team
     })
   }, [sport, openModal]);
+
+  const confirmDelete = useCallback(async () => {
+    const [err] = await deleteSport(sport.id);
+
+    closeModal(decisionModalId)
+
+    if (err) {
+      return onError(err)
+    };
+
+    toast.success('Deporte eliminado correctament');
+
+    afterUpdate();
+  }, [sport, closeModal]);
+
+  const onDelete = useCallback(() => {
+    openModal(decisionModalId, {
+      title: 'Eliminar deporte',
+      text: 'Está seguro de que desea eliminar este deporte ?',
+      confirmText: 'Si, Eliminar',
+      cancelText: 'Cancelar',
+      onClose: () => closeModal(decisionModalId),
+      onCancel: () => closeModal(decisionModalId),
+      onConfirm: confirmDelete
+    });
+  }, [openModal, confirmDelete]);
 
   const updateAssignedTeam = useCallback(async (team: Team) => {
     setLoading(true);
@@ -82,7 +110,7 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
               <Menu.Item onClick={onUpdate}>
                 Editar
               </Menu.Item>
-              <Menu.Item>
+              <Menu.Item onClick={onDelete}>
                 <Text color="DANGER">Eliminar</Text>
               </Menu.Item>
             </Menu>

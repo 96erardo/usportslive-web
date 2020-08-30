@@ -140,6 +140,14 @@ export async function updateSport (data: UpdateSportInput): Promise<MutationResu
   }
 }
 
+/**
+ * Assigns a team as the official one to a sport
+ * 
+ * @param {number} sport - The sport to update
+ * @param {number} team - The team to assign it
+ * 
+ * @returns {Promise<MutationResult<Sport>>} The request result
+ */
 export async function assignTeamToSport (sport: number, team: number): Promise<MutationResult<Sport>> {
   const { accessToken } = useAuthStore.getState();
 
@@ -170,6 +178,41 @@ export async function assignTeamToSport (sport: number, team: number): Promise<M
   }
 }
 
+/**
+ * Deletes the specified sport
+ * 
+ * @param {number} sport - The sport to delete
+ * 
+ * @returns {Promise<MutationResult<boolean>>}
+ */
+export async function deleteSport (sport: number): Promise<MutationResult<boolean>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<null> = await authenticated.delete(`/api/sports/${sport}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('deleteSport', res.data);
+
+    return [null, true];
+
+  } catch (e) {
+    Logger.error('updateSport', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
 export type CreateSportInput = {
   name: string,
   color: string
@@ -180,10 +223,6 @@ export type UpdateSportInput = {
   name: string,
   color: string,
   team: number | null | undefined
-}
-
-export type AssignTeamInput = {
-  teamId: number,
 }
 
 export type SportFilter = {

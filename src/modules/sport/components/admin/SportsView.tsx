@@ -6,6 +6,7 @@ import SportsTableRow from './SportsTableRow';
 import { useSports } from '../../sport-hooks';
 import { Sport } from '../../../../shared/types';
 import SearchInput from '../../../../shared/components/form/SearchInput';
+import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
 import { useQuery } from '../../../../shared/hooks';
 import { useHistory } from 'react-router-dom';
 import SportFormDialog, { } from './SportFormDialog';
@@ -89,6 +90,7 @@ function SportsView () {
         type="update"
         onFinished={fetch}
       />
+      <DecisionDialog />
     </div>
   )
 }
