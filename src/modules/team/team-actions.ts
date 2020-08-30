@@ -47,7 +47,13 @@ export async function fetchTeams (
   }
 }
 
-
+/**
+ * Creates the filter
+ * 
+ * @param {FilterData} data - The data to create the filters
+ * 
+ * @returns {object} The filters to fetch the teams
+ */
 function createFilter (data: FilterData) {
   const filter = {
     ...(data.sport ? {

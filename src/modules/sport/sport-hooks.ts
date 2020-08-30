@@ -13,6 +13,7 @@ const initialState = {
  * Fetches the sports list
  * 
  * @param {number} page - The page to fetch the sports from
+ * @param {Array<string>} include - the relations to include
  * @param {object} initialFilters - The filters to first apply to the page
  * 
  * @return {object} - The hook state

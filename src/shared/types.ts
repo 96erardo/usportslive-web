@@ -11,6 +11,13 @@ export interface PaginatedListState<T> {
   last: boolean
 }
 
+export type ListHooksState<T> = {
+  count: number,
+  items: Array<T>,
+  loading: boolean,
+  error: Error | null
+};
+
 export type QueryResult <T> = [Error | null, boolean?, T?];
 
 export type MutationResult <T> = [Error | null, T?];
@@ -76,7 +83,8 @@ export interface Team {
   id: number,
   name: string,
   sportId: number,
-  sport?: Sport
+  sport?: Sport,
+  createdAt: string
 }
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';

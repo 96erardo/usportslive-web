@@ -7,6 +7,7 @@ import { styled } from '@8base/boost';
 
 // Pages
 import SportsView from '../../../modules/sport/components/admin/SportsView';
+import TeamsView from '../../../modules/team/components/admin/TeamsView';
 
 const Container = styled.div`
   display: flex;
@@ -25,6 +26,7 @@ function Admin (props: Props) {
         <Content>
           <Switch>
             <ProtectedRoute perform="admin-page" exact path="/admin/sports" component={SportsView} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/teams" component={TeamsView} />
           </Switch>
         </Content>
       </Container>
