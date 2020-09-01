@@ -4,7 +4,6 @@ import { QueryResult, PaginatedResponse, Team, MutationResult } from '../../shar
 import Logger from 'js-logger';
 import qs from 'qs';
 import { useAuthStore } from '../auth/auth-store';
-import { access } from 'fs';
 
 /**
  * Fetches the team list
@@ -142,6 +141,34 @@ export async function updateTeam (data: UpdateTeamInput): Promise<MutationResult
     } else {
       return [e];
     }
+  }
+}
+
+/**
+ * Deletes the specified team
+ * 
+ * @param {number} id - The team to delete
+ * 
+ * @returns {Promise<MutationResult<boolean>>}
+ */
+export async function deleteTeam (id: number): Promise<MutationResult<boolean>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse = await authenticated.delete(`/api/teams/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('deleteTeam', res.data);
+
+    return [null, true];
+
+  } catch (e) {
+    Logger.error('deleteTeam', e);
+
+    return [e];
   }
 }
 

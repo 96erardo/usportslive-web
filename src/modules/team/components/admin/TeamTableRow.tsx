@@ -3,10 +3,14 @@ import { Table, Dropdown, Icon, Menu, Text, useModal } from '@8base/boost';
 import { Team } from '../../../../shared/types';
 import { DATE_FORMAT } from '../../../../shared/constants';
 import Link from '../../../../shared/components/buttons/Link';
+import { deleteTeam } from '../../team-actions';
+import { modalId as decisionModalId } from '../../../../shared/components/globals/DecisionDialog';
+import { onError } from '../../../../shared/mixins';
+import { toast } from 'react-toastify';
 import moment from 'moment';
 
-function TeamTableRow ({ columns, team }: Props) {
-  const { openModal } = useModal('update-team-dialog');
+function TeamTableRow ({ columns, team, afterUpdate }: Props) {
+  const { openModal, closeModal } = useModal('update-team-dialog');
 
   const onUpdate = useCallback(() => {
     openModal('update-team-dialog', {
@@ -14,6 +18,32 @@ function TeamTableRow ({ columns, team }: Props) {
       name: team.name,
     });
   }, [team, openModal]);
+
+  const confirmDelete = useCallback(async () => {
+    const [err] = await deleteTeam(team.id);
+
+    closeModal(decisionModalId);
+
+    if (err) {
+      return onError(err);
+    }
+
+    toast.success('Equipo eliminado correctamente');
+
+    afterUpdate();
+  }, [team]);
+
+  const onDelete = useCallback(() => {
+    openModal(decisionModalId, {
+      title: 'Eliminar equipos',
+      text: 'Está seguro de que desea eliminar este equipo ?',
+      confirmText: 'Si, Eliminar',
+      cancelText: 'Cancelar',
+      onClose: () => closeModal(decisionModalId),
+      onCancel: () => closeModal(decisionModalId),
+      onConfirm: confirmDelete
+    });
+  }, [openModal, closeModal, confirmDelete]);
 
   return (
     <Table.BodyRow columns={columns}>
@@ -35,7 +65,7 @@ function TeamTableRow ({ columns, team }: Props) {
           <Dropdown.Body>
             <Menu>
               <Menu.Item onClick={onUpdate}>Editar</Menu.Item>
-              <Menu.Item>
+              <Menu.Item onClick={onDelete}>
                 <Text color="DANGER">Eliminar</Text>
               </Menu.Item>
             </Menu>

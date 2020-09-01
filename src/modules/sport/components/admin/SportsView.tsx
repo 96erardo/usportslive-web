@@ -84,10 +84,7 @@ function SportsView () {
           </Table>
         </Card.Body>
       </Card>
-      <SportFormDialog 
-        type="update"
-        onFinished={fetch}
-      />
+      <SportFormDialog type="update" onFinished={fetch} />
       <DecisionDialog />
     </div>
   )

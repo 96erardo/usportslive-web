@@ -8,6 +8,7 @@ import { Team } from '../../../../shared/types';
 import TeamTableRow from './TeamTableRow';
 import CreateTeamButton from './CreateTeamButton';
 import TeamFormDialog from './TeamFormDialog';
+import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -82,6 +83,7 @@ function TeamsView () {
         </Card.Body>
       </Card>
       <TeamFormDialog type="update" onFinished={fetch} />
+      <DecisionDialog />
     </div>
   )
 }

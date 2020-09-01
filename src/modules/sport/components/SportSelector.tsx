@@ -19,7 +19,7 @@ const Body = styled(Card.Body)`
 `;
 
 function SportSelector (props: Props) {
-  const { isOpen, args, closeModal, openModal } = useModal(`${props.id}-sport-selector`);
+  const { isOpen, closeModal, openModal } = useModal(`${props.id}-sport-selector`);
   const cancelToken = useRef<CancelTokenSource>();
   const [search, setSearch] = useState<string>('');
   const [selected, setSelected] = useState<Sport | null>(null);
@@ -37,10 +37,6 @@ function SportSelector (props: Props) {
 
     const [error, canceled, data] = await fetchSports(1, [], { q: search });
 
-    console.log('error', error);
-    console.log('canceled', canceled);
-    console.log('data', data);
-
     if (canceled)
       return;
 
@@ -54,7 +50,7 @@ function SportSelector (props: Props) {
       count: data? data.count : 0,
     })
 
-  }, [search, args])
+  }, [search])
 
   useEffect(() => {
     if (isOpen) {
@@ -115,7 +111,7 @@ function SportSelector (props: Props) {
     <div style={{ width: '100%' }}>
       {props.children(open)}
       <Dialog size="md" isOpen={isOpen} onClose={close}>
-        <Dialog.Header title="Elegir equipo" onClose={close}/>
+        <Dialog.Header title="Elegir deporte" onClose={close}/>
         <Card.Section>
           <SearchInput 
             stretch
