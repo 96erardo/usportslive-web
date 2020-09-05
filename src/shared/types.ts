@@ -49,11 +49,25 @@ export interface ObjectRef<T> {
   id: T | null
 }
 
+export interface PersonHasTeam {
+  personId: number,
+  teamId: number,
+  number: number,
+  createdAt: Date,
+  leavedAt: Date | null,
+}
+
 export interface Person {
   id: number,
   name: string,
   lastname: string,
-  birthDate?: Date,
+  gender: string,
+  photo: string,
+  user?: User | null,
+  teams?: Array<Team>,
+  createdAt: Date,
+  deletedAt: Date
+  userId: number | null,
 }
 
 export interface Role {
@@ -84,6 +98,7 @@ export interface Team {
   name: string,
   sportId: number,
   sport?: Sport,
+  personHasTeam?: PersonHasTeam
   createdAt: string
 }
 

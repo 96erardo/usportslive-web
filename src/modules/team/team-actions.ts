@@ -2,8 +2,47 @@ import { request, authenticated } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import { QueryResult, PaginatedResponse, Team, MutationResult } from '../../shared/types';
 import Logger from 'js-logger';
-import qs from 'qs';
 import { useAuthStore } from '../auth/auth-store';
+import qs from 'qs';
+
+/**
+ * Fetches the specified team
+ * 
+ * @param {number} id - The id of the team to fetch
+ * @param {Array<string>} include - Relations to include with the team
+ * @param {CancelTokenSource} source - The cancel token to cancel de request if needed
+ * 
+ * @returns {Promise<QueryResult<{ team: Team|null }>>} The specified team
+ */
+export async function fetchTeam (
+  id: number, 
+  include: Array<string> = [], 
+  source?: CancelTokenSource
+): Promise<QueryResult<{ team: Team|null }>> {
+  
+  const query = qs.stringify({ include });
+
+  try {
+    const res: AxiosResponse<{ team: Team }> = await request.get(`/api/teams/${id}?${query}`, {
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchTeam', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchTeam (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchTeam', e);
+
+    return [e];
+  }
+}
 
 /**
  * Fetches the team list
@@ -11,7 +50,7 @@ import { useAuthStore } from '../auth/auth-store';
  * @param {number} page - The page to fetch the items from
  * @param {Array<string>} include - The relations to include in each team
  * @param {object} data - The data to create the filters from
- * @param {CancelTokenSource} source - The cancel token ton cancel de request if needed
+ * @param {CancelTokenSource} source - The cancel token to cancel de request if needed
  * 
  * @return {Promise<QueryResult<PaginatedResponse<Team>>>} The list of teams
  */
@@ -145,6 +184,42 @@ export async function updateTeam (data: UpdateTeamInput): Promise<MutationResult
 }
 
 /**
+ * Updates the specified team name
+ * 
+ * @param {number} id - Id of the team to update
+ * @param {string} name - New name of the team
+ * 
+ * @returns {Promise<MutationResult<Team>>} The updated team
+ */
+export async function updateTeamName (id: number, name: string): Promise<MutationResult<Team>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Team> = await authenticated.patch(`api/teams/${id}`, { name }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateTeamName', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateSport', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
  * Deletes the specified team
  * 
  * @param {number} id - The team to delete
@@ -171,6 +246,8 @@ export async function deleteTeam (id: number): Promise<MutationResult<boolean>> 
     return [e];
   }
 }
+
+export 
 
 type FilterData = {
   sport?: number,
