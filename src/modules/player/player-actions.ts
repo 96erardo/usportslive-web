@@ -1,8 +1,9 @@
-import { request } from '../../shared/config/axios';
-import { QueryResult, PaginatedResponse, Person as Player } from '../../shared/types';
+import { request, authenticated } from '../../shared/config/axios';
+import { QueryResult, PaginatedResponse, Person as Player, MutationResult } from '../../shared/types';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
+import { useAuthStore } from '../auth/auth-store';
 
 /**
  * Fetches the players of a team
@@ -73,6 +74,58 @@ function createFilter (data: CreatePlayerFilter) {
   return filter;
 }
 
+/**
+ * Creates a player in a team
+ * 
+ * @param {CreatePlayerInput} data - The data to create the player
+ * 
+ * @returns {Promise<MutationResult<Player>>} The created player
+ */
+export async function createPlayer (data: CreatePlayerInput): Promise<MutationResult<Player>> {
+  const { accessToken } = useAuthStore.getState();
+
+  const player = {
+    name: data.name,
+    lastname: data.lastname,
+    number: data.number,
+    gender: data.gender,
+    photo: data.photo,
+  };
+
+  try {
+    const res: AxiosResponse<Player> = await authenticated.post(`/api/teams/${data.teamId}/player`, player, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('createPlayer', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('createPlayer', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
 export type CreatePlayerFilter = {
   q?: string,
+}
+
+export type CreatePlayerInput = {
+  teamId: number,
+  name: string,
+  lastname: string,
+  number: number,
+  gender: string,
+  photo?: string,
 }

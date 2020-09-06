@@ -1,5 +1,4 @@
-import React, { useRef, useCallback, useState, useLayoutEffect, useEffect } from 'react';
-import { COLORS } from '@8base/boost';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import ContentEditable from 'react-contenteditable';
 
 const style = (props: Props) => ({
@@ -9,10 +8,6 @@ const style = (props: Props) => ({
   letterSpacing: '0.5px',
   padding: '0px 8px',
   fontFamily: 'Poppins',
-  ['&:hover']: {
-    backgroundColor: 'red',
-    outline: 'none'
-  }
 });
 
 const EditableTitle: React.FC<Props> = (props) => {
@@ -44,7 +39,7 @@ const EditableTitle: React.FC<Props> = (props) => {
     }
 
     setDisabled(false);
-  }, [props.value])
+  }, [props])
   
   return (
     <ContentEditable

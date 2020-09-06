@@ -31,7 +31,7 @@ function TeamTableRow ({ columns, team, afterUpdate }: Props) {
     toast.success('Equipo eliminado correctamente');
 
     afterUpdate();
-  }, [team]);
+  }, [team, afterUpdate, closeModal]);
 
   const onDelete = useCallback(() => {
     openModal(decisionModalId, {

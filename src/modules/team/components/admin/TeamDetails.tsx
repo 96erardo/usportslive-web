@@ -39,7 +39,7 @@ function TeamDetails () {
 
     setTeam((data && data.team) ? data.team : null);
     setLoading(false);
-  }, [id]);
+  }, [id, history]);
 
   const onNameChange = useCallback(async (name: string) => {
     const [err] = await updateTeamName(parseInt(id), name);

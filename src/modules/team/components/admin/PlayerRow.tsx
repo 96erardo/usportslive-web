@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Text, Avatar, styled } from '@8base/boost';
+import { Table, Text, Avatar, Icon, Dropdown, Menu, styled } from '@8base/boost';
 import { Person as Player } from '../../../../shared/types';
 import ShirtIcon from '../../../../shared/components/icons/ShirtIcon';
 
@@ -8,9 +8,7 @@ const Number = styled(Text)`
   font-size: 2rem;
 `;
 
-const columns = '100px 135px 1fr';
-
-const PlayerRow: React.FC<Props> = ({ player }) => {
+const PlayerRow: React.FC<Props> = ({ player, columns }) => {
   const [team] = player.teams ? player.teams : [];
 
   return (
@@ -41,12 +39,30 @@ const PlayerRow: React.FC<Props> = ({ player }) => {
           {player.name} {player.lastname}
         </Text>
       </Table.BodyCell>
+      <Table.BodyCell>
+        <Dropdown defaultOpen={false}>
+          <Dropdown.Head>
+            <Icon name="More" color="GRAY_40" />
+          </Dropdown.Head>
+          <Dropdown.Body>
+            <Menu>
+              <Menu.Item>
+                Editar
+              </Menu.Item>
+              <Menu.Item>
+                <Text color="DANGER">Eliminar</Text>
+              </Menu.Item>
+            </Menu>
+          </Dropdown.Body>
+        </Dropdown>
+      </Table.BodyCell>
     </Table.BodyRow>
   )
 }
 
 type Props = {
-  player: Player
+  player: Player,
+  columns: string
 }
 
 export default PlayerRow;
