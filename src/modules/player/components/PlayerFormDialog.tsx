@@ -1,23 +1,38 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Dialog, Avatar, Row, Button, SelectField, Column, useModal } from '@8base/boost';
 import { GENDERS, GENDER_OPTIONS } from '../../../shared/constants';
 import InputField from '../../../shared/components/form/InputField';
 import { onError } from '../../../shared/mixins';
-import { createPlayer } from '../player-actions';
+import { createPlayer, updatePlayer } from '../player-actions';
 import { toast } from 'react-toastify';
 
 const initialForm = {
+  id: null,
   name: '',
   lastname: '',
   number: 0,
   gender: GENDERS.MALE,
   photo: '',
+  user: null,
 };
 
 const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
-  const { isOpen, closeModal } = useModal(`${type}-player-form`);
+  const { isOpen, closeModal, args } = useModal(`${type}-player-form`);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(initialForm);
+
+  useEffect(() => {
+    if (isOpen) {
+      setForm({
+        ...initialForm,
+        ...args
+      })
+    }
+  }, [isOpen, args]);
+
+  const onPick = useCallback(() => {
+
+  }, []);
 
   const onChange = useCallback((name, value) => {
     setForm(state => ({
@@ -33,13 +48,28 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
   const onSubmit = useCallback(async () => {
     setLoading(true);
 
-    const [err] = await createPlayer({
-      teamId: id,
-      name: form.name,
-      lastname: form.lastname,
-      number: form.number,
-      gender: form.gender,
-    });
+    const [err] = type === 'create' ? (
+      await createPlayer({
+        teamId: id,
+        name: form.name,
+        lastname: form.lastname,
+        number: form.number,
+        gender: form.gender,
+      })
+    ) : form.user ? (
+      await updatePlayer(id, {
+        id: form.id,
+        number: form.number 
+      })
+    ) : (
+      await updatePlayer(id, {
+        id: form.id,
+        name: form.name,
+        lastname: form.lastname,
+        number: form.number,
+        gender: form.gender,
+      })
+    );
 
     setLoading(false);
 
@@ -47,12 +77,12 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
       return onError(err);
     }
 
-    toast.success('Jugador creado correctamente');
+    toast.success(type === 'create' ? 'Jugador creado correctamente' : 'Jugador editado correctamente');
 
     onFinished();
 
     closeModal(`${type}-player-form`);
-  }, [type, form, onFinished])
+  }, [id, type, form, closeModal, onFinished])
 
   return (
     <Dialog isOpen={isOpen}>
@@ -63,18 +93,22 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
       <Dialog.Body>
         <Column stretch alignItems="center">
           <Avatar
-            src=""
+            src={form.photo}
             size="xl"
             firstName={form.name}
             lastName={form.lastname}
+            pickLabel={form.user === null ? 'Cambiar' : null}
+            onPick={form.user === null ? onPick : null}
           />
           <InputField 
+            readOnly={form.user !== null}
             label="Nombre"
             name="name"
             initialValue={form.name}
             onChange={onChange}
           />
-          <InputField 
+          <InputField
+            readOnly={form.user !== null}
             label="Apellido"
             name="lastname"
             initialValue={form.lastname}
@@ -86,7 +120,8 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
             initialValue={form.number}
             onChange={onChange}
           />
-          <SelectField 
+          <SelectField
+            disabled={form.user !== null}
             label="Género"
             options={GENDER_OPTIONS}
             input={{

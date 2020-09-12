@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import {
   fetchTeamPlayers,
-  CreatePlayerFilter
+  FetchPlayerFilter
 } from './player-actions';
 import { ListHooksState, Person as Player } from '../../shared/types';
 import axios, { CancelTokenSource } from 'axios';
@@ -19,10 +19,10 @@ const initialState = {
  * @param {number} id - The id of the team to fetch the players from
  * @param {number} page - The page to fetch the players from
  * @param {Array<string>} include - The array of relations to include with the players
- * @param {CreatePlayerFilter} initialFilters - Initial filters 
+ * @param {FetchPlayerFilter} initialFilters - Initial filters 
   */
-export function useTeamPlayers (id: number, page: number = 1, include: Array<string> = [], initialFilters: CreatePlayerFilter = {}) {
-  const [filters, setFilters] = useState<CreatePlayerFilter>(initialFilters);
+export function useTeamPlayers (id: number, page: number = 1, include: Array<string> = [], initialFilters: FetchPlayerFilter = {}) {
+  const [filters, setFilters] = useState<FetchPlayerFilter>(initialFilters);
   const [state, setState] = useState<ListHooksState<Player>>(initialState);
   const cancelToken = useRef<CancelTokenSource>();
 

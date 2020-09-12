@@ -4,6 +4,7 @@ import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
 import { useAuthStore } from '../auth/auth-store';
+import { access } from 'fs';
 
 /**
  * Fetches the players of a team
@@ -18,7 +19,7 @@ export async function fetchTeamPlayers (
   id: number, 
   page: number = 1,
   include: Array<string> = [],
-  data: CreatePlayerFilter = {},
+  data: FetchPlayerFilter = {},
   source?: CancelTokenSource
 ): Promise<QueryResult<PaginatedResponse<Player>>> {
   
@@ -60,11 +61,11 @@ export async function fetchTeamPlayers (
 /**
  * Creates filter to fetch players
  * 
- * @param {CreatePlayerFilter} data - The data to create the filters
+ * @param {FetchPlayerFilter} data - The data to create the filters
  * 
  * @returns {object} The filter object
  */
-function createFilter (data: CreatePlayerFilter) {
+function createFilter (data: FetchPlayerFilter) {
   const filter = {
     ...(data.q ? {
       name: { like: data.q  }
@@ -117,7 +118,79 @@ export async function createPlayer (data: CreatePlayerInput): Promise<MutationRe
   }
 }
 
-export type CreatePlayerFilter = {
+/**
+ * Updates the specified player on the specified team
+ * 
+ * @param {string} teamId - The team id
+ * @param {UpdatePlayerInput} data - The data to update the specified player
+ * 
+ * @returns {Promise<MutationResult<Player>>} The updated player
+ */
+export async function updatePlayer (teamId: string | number, data: UpdatePlayerInput): Promise<MutationResult<Player>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Player> = await authenticated.patch(`/api/teams/${teamId}/player/${data.id}`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updatePlayer', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updatePlayer', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Removes the specified player from the specified team
+ * 
+ * @param {string | number} teamId - The team to remove the player from
+ * @param {string | number} playerId - The player to remove from the team
+ * 
+ * @returns {Promise<MutationResult<<boolean>>} The request result
+ */
+export async function removePlayerFromTeam (teamId: string | number, playerId: string | number): Promise<MutationResult<boolean>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse = await authenticated.delete(`/api/teams/${teamId}/player/${playerId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('removePlayer', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('removePlayer', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+export type FetchPlayerFilter = {
   q?: string,
 }
 
@@ -127,5 +200,14 @@ export type CreatePlayerInput = {
   lastname: string,
   number: number,
   gender: string,
+  photo?: string,
+}
+
+export type UpdatePlayerInput = {
+  id: null | number | string,
+  name?: string,
+  lastname?: string,
+  number?: number | string,
+  gender?: string,
   photo?: string,
 }

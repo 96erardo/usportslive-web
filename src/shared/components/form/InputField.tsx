@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { InputField as BoostInputField } from '@8base/boost';
 
 const InputField: React.FC<Props> = ({
@@ -7,9 +7,14 @@ const InputField: React.FC<Props> = ({
   label, 
   placeholder, 
   name,
+  readOnly = false,
   stretch = true
 }) => {
   const [value, setValue] = useState(initialValue);  
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   const handleBlur = useCallback((e) => {
     const { name, value } = e.target;
@@ -19,6 +24,7 @@ const InputField: React.FC<Props> = ({
 
   return (
     <BoostInputField 
+      readOnly={readOnly}
       stretch={stretch}
       label={label}
       type="text"
