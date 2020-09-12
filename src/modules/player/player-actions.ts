@@ -4,7 +4,6 @@ import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
 import { useAuthStore } from '../auth/auth-store';
-import { access } from 'fs';
 
 /**
  * Fetches the players of a team
@@ -119,6 +118,43 @@ export async function createPlayer (data: CreatePlayerInput): Promise<MutationRe
 }
 
 /**
+ * Adds a player in the specified team
+ * 
+ * @param {AddPlayerInput} data - Data needed to add a person into a team
+ * 
+ * @returns {Promise<MutationResult<Player>>} The request result
+ */
+export async function adddPlayerInTeam (data: AddPlayerInput): Promise<MutationResult<Player>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Player> = await authenticated.post(`/api/teams/${data.teamId}/player/${data.playerId}`, {
+      number: data.number
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('addPlayerInTeam', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('addPlayerInTeam', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
  * Updates the specified player on the specified team
  * 
  * @param {string} teamId - The team id
@@ -198,9 +234,15 @@ export type CreatePlayerInput = {
   teamId: number,
   name: string,
   lastname: string,
-  number: number,
+  number: number | string,
   gender: string,
   photo?: string,
+}
+
+export type AddPlayerInput = {
+  teamId: number | string,
+  playerId: number | string,
+  number: number | string,
 }
 
 export type UpdatePlayerInput = {

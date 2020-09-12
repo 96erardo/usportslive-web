@@ -28,7 +28,7 @@ const PlayerRow: React.FC<Props> = ({ player, columns, onMutation }) => {
     toast.success('Jugador eliminado del equipo correctamente');
 
     onMutation();
-  }, [player, closeModal, onMutation]);
+  }, [team.id, player, closeModal, onMutation]);
 
   const onDelete = useCallback(() => {
     openModal(modalId, {

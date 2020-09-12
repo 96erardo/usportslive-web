@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Table, Row, Button, Pagination } from '@8base/boost';
+import { Table, Row, Pagination } from '@8base/boost';
 import { useTeamPlayers } from '../../../player/player-hooks';
 import Card from '../../../../shared/components/globals/Card';
 import TableBody from '../../../../shared/components/globals/TableBody';
 import { Person as Player } from '../../../../shared/types';
+import AddPlayerButton from '../../../player/components/AddPlayerButton';
 import CreatePlayerButton from '../../../player/components/CreatePlayerButton';
 import PlayerFormDialog from '../../../player/components/PlayerFormDialog';
 import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
@@ -23,9 +24,10 @@ const PlayersTable: React.FC<Props> = (props: Props) => {
         <Card.Header.Left>          
         </Card.Header.Left>
         <Card.Header.Right>
-          <Button color="neutral">
-            Add Player
-          </Button>
+          <AddPlayerButton 
+            id={props.teamId}
+            onFinished={fetch}
+          />
           <CreatePlayerButton
             id={props.teamId}
             afterCreate={fetch}
