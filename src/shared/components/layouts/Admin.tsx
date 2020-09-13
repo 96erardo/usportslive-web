@@ -9,6 +9,7 @@ import { styled } from '@8base/boost';
 import SportsView from '../../../modules/sport/components/admin/SportsView';
 import TeamsView from '../../../modules/team/components/admin/TeamsView';
 import TeamDetails from '../../../modules/team/components/admin/TeamDetails';
+import CompetitionsView from '../../../modules/competition/components/admin/CompetitionsView';
 
 const Container = styled.div`
   display: flex;
@@ -29,6 +30,7 @@ function Admin (props: Props) {
             <ProtectedRoute perform="admin-page" exact path="/admin/sports" component={SportsView} />
             <ProtectedRoute perform="admin-page" exact path="/admin/teams" component={TeamsView} />
             <ProtectedRoute perform="admin-page" exact path="/admin/team/:id" component={TeamDetails} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/competitions" component={CompetitionsView} />
           </Switch>
         </Content>
       </Container>

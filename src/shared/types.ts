@@ -102,4 +102,16 @@ export interface Team {
   createdAt: string
 }
 
+export interface Competition {
+  id: number,
+  name: string,
+  startDate: string,
+  matchTime: number,
+  quantityOfTeams: number,
+  quantityOfPlayers: number,
+  status: string,
+  sportId: number,
+  sport?: Sport
+}
+
 export type Size = 'xs' | 'sm' | 'md' | 'lg';

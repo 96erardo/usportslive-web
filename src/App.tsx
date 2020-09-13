@@ -29,11 +29,15 @@ import Home from './modules/app/components/Home';
 import { ReactComponent as WhiteSoccer } from './shared/assets/images/white-soccer.svg';
 import { ReactComponent as WhiteTrophy } from './shared/assets/images/white-trophy.svg';
 import { ReactComponent as WhiteProfile } from './shared/assets/images/white-profile.svg';
+import { ReactComponent as BlackFilter } from './shared/assets/images/black-filter.svg';
+import { ReactComponent as BlueFilter } from './shared/assets/images/blue-filter.svg';
 
 const icons = {
   WhiteSoccer,
   WhiteTrophy,
   WhiteProfile,
+  BlackFilter,
+  BlueFilter
 };
 
 Logger.useDefaults({ defaultLevel: Logger[process.env.REACT_APP_LOG_LEVEL] });
