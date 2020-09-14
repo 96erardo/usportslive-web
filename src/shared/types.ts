@@ -49,6 +49,13 @@ export interface ObjectRef<T> {
   id: T | null
 }
 
+export type CalendarEvent = {
+  id?: number,
+  title: string,
+  start: string,
+  end: string
+}
+
 export interface PersonHasTeam {
   personId: number,
   teamId: number,
@@ -112,6 +119,21 @@ export interface Competition {
   status: string,
   sportId: number,
   sport?: Sport
+}
+
+export interface Game {
+  id: number,
+  date: string,
+  isLive: boolean,
+  isFinished: boolean,
+  competitionId: number,
+  localId: number,
+  visitorId: number,
+  competition?: Competition,
+  local?: Team,
+  visitor?: Team,
+  createdAt: string,
+  deletedAt: string | null,
 }
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';

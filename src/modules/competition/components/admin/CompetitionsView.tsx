@@ -8,6 +8,7 @@ import { useQuery } from '../../../../shared/hooks';
 import { Competition } from '../../../../shared/types';
 import CompetitionTableRow from './CompetitionTableRow';
 import { FilterData } from '../../competition-actions';
+import { useHistory } from 'react-router-dom';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -17,6 +18,7 @@ const include = ['sport'];
 const columns = '80px 1fr 150px 150px 250px 1fr 100px 100px';
 
 const CompetitionView: React.FC = () => {
+  const history = useHistory();
   const [query, setQuery] = useQuery();
   const [page, setPage] = useState(1);
   const { items, count, loading, filters, setFilters } = useCompetitions(page, include, query);
@@ -24,6 +26,10 @@ const CompetitionView: React.FC = () => {
   useEffect(() => {
     setFilters(query);
   }, [query, setFilters]);
+
+  const handleCreate = useCallback(() => {
+    history.push('/admin/competition');
+  }, [history]);
 
   const handleFilter = useCallback((data: FilterData) => {
     setQuery('/admin/competitions', {
@@ -59,7 +65,7 @@ const CompetitionView: React.FC = () => {
             />
           </Card.Header.Left>
           <Card.Header.Right>
-            <Button color="neutral">
+            <Button color="neutral" onClick={handleCreate}>
               Crear Torneo
             </Button>
           </Card.Header.Right>

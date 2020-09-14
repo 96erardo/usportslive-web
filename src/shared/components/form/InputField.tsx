@@ -8,7 +8,9 @@ const InputField: React.FC<Props> = ({
   placeholder, 
   name,
   readOnly = false,
-  stretch = true
+  stretch = true,
+  type = 'text',
+  ...rest
 }) => {
   const [value, setValue] = useState(initialValue);  
 
@@ -19,8 +21,11 @@ const InputField: React.FC<Props> = ({
   const handleBlur = useCallback((e) => {
     const { name, value } = e.target;
 
-    onChange(name, value);
-  }, [onChange])
+    onChange(
+      name, 
+      typeof initialValue === 'number' ? parseInt(value) : value
+    );
+  }, [initialValue, onChange])
 
   return (
     <BoostInputField 
@@ -30,11 +35,13 @@ const InputField: React.FC<Props> = ({
       type="text"
       placeholder={placeholder}
       input={{
+        type: type,
         value,
         name,
         onChange: setValue,
         onBlur: handleBlur
       }}
+      {...rest}
     />
   );
 }
@@ -42,9 +49,10 @@ const InputField: React.FC<Props> = ({
 type Props = {
   label?: string,
   name: string,
+  type?: string,
   placeholder?: string,
   initialValue?: string | number,
-  onChange: (name: string, value: string) => void,
+  onChange: (name: string, value: string | number) => void,
   stretch?: boolean,
   readOnly?: boolean,
 }

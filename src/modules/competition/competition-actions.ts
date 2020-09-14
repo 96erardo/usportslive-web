@@ -1,6 +1,7 @@
 import { request, authenticated } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Competition } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Competition, MutationResult } from '../../shared/types';
+import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
 import qs from 'qs';
 
@@ -63,4 +64,69 @@ export type FilterData = {
   sport?: number | string,
   startsAfter?: string,
   startsBefore?: string,
+}
+
+
+/**
+ * Creates a new competition with its games
+ * 
+ * @param {CreateCompetitionInput} data - The data needed to create the competition
+ * 
+ * @returns {Promise<MutationResult<Competition>>} The created competition
+ */
+export async function createCompetition (data: CreateCompetitionInput): Promise<MutationResult<{ competition: Competition, success: boolean }>> {
+  const { accessToken } = useAuthStore.getState();
+  const { games, ...rest } = data;
+  let competition: Competition;
+
+  try {
+    const res: AxiosResponse<Competition> = await authenticated.post('/api/competitions', rest, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('createCompetition', res.data);
+
+    competition = res.data;
+
+  } catch (e) {
+    Logger.error('createCompetition', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+
+  if (games.length > 0) {
+    try {
+      await authenticated.post(`/api/competitions/${competition.id}/games`, {
+        dates: games,
+      }, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+
+    } catch (e) {
+      Logger.error('createCompetition', e);
+
+      return [null, { competition, success: false }];
+    }
+  }
+
+  return [null, { competition, success: true }];
+}
+
+export type CreateCompetitionInput = {
+  name: string,
+  startDate: string,
+  matchTime: number,
+  quantityOfTeams: number,
+  quantityOfPlayers: number,
+  sportId: number,
+  games: Array<string>
 }
