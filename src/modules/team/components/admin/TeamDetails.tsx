@@ -62,6 +62,8 @@ function TeamDetails () {
 
   useEffect(() => {
     fetch();
+
+    return () => cancelToken.current?.cancel()
   }, [fetch]);
 
   if (loading || !team) {

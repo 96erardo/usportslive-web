@@ -1,10 +1,17 @@
-import React from 'react';
-import { Table, Dropdown, Icon } from '@8base/boost';
+import React, { useCallback } from 'react';
+import { Table, Dropdown, Icon, Menu, Text } from '@8base/boost';
+import { useHistory } from 'react-router';
 import { Competition } from '../../../../shared/types';
 import { DATE_FORMAT } from '../../../../shared/constants';
 import moment from 'moment';
 
 const CompetitionTableRow: React.FC<Props> = ({ columns, competition }) => {
+  const history = useHistory();
+
+  const onUpdate = useCallback(() => {
+    history.push(`/admin/competition/${competition.id}`);
+  }, [competition, history]);
+  
   return (
     <Table.BodyRow columns={columns}>
       <Table.BodyCell>
@@ -29,10 +36,20 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition }) => {
         {competition.status}
       </Table.BodyCell>
       <Table.BodyCell>
-        <Dropdown>
+        <Dropdown defaultOpen={false}>
           <Dropdown.Head>
             <Icon color="GRAY_40" name="More" />
           </Dropdown.Head>
+          <Dropdown.Body>
+            <Menu>
+              <Menu.Item onClick={onUpdate}>
+                Editar
+              </Menu.Item>
+              <Menu.Item>
+                <Text color="DANGER">Eliminar</Text>
+              </Menu.Item>
+            </Menu>
+          </Dropdown.Body>
         </Dropdown>
       </Table.BodyCell>
     </Table.BodyRow>

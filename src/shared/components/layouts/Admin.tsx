@@ -32,7 +32,7 @@ function Admin (props: Props) {
             <ProtectedRoute perform="admin-page" exact path="/admin/teams" component={TeamsView} />
             <ProtectedRoute perform="admin-page" exact path="/admin/team/:id" component={TeamDetails} />
             <ProtectedRoute perform="admin-page" exact path="/admin/competitions" component={CompetitionsView} />
-            <ProtectedRoute perform="admin-page" exact path="/admin/competition" component={Competition} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/competition/:id?" component={Competition} />
           </Switch>
         </Content>
       </Container>

@@ -66,6 +66,35 @@ export type FilterData = {
   startsBefore?: string,
 }
 
+export async function fetchCompetition (
+  id: number, 
+  include: Array<string> = [], 
+  source?: CancelTokenSource
+): Promise<QueryResult<{ competition: Competition | null }>> {  
+  const query = qs.stringify({ include });
+
+  try {
+    const res: AxiosResponse<{ competition: Competition | null }> = await request.get(`/api/competitions/${id}?${query}`, {
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchCompetition', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchCompetitions(Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchCompetitions', e);
+
+    return [e];
+  }
+}
+
 
 /**
  * Creates a new competition with its games

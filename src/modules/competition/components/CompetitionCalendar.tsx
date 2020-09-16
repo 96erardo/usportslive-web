@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useModal } from '@8base/boost';
-import FullCalendar, { EventInput, EventClickArg } from '@fullcalendar/react';
+import FullCalendar, { EventInput, EventClickArg, DatesSetArg } from '@fullcalendar/react';
 import GameFormDialog, { Form } from '../../game/components/admin/GameFormDialog';
+import { useCalendarGames } from '../../game/game-hooks';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Competition } from '../../../shared/types';
@@ -16,6 +17,20 @@ const CompetitionCalendar: React.FC<Props> = ({
   onRemoveNewGame
 }) => {
   const { openModal, closeModal } = useModal(`calendar-game-form-dialog`);
+  const [month, setMonth] = useState({ isAfter: '', isBefore: '' });
+  const { items, fetch } = useCalendarGames();
+
+  const refresh = useCallback(() => {
+    if (competition.id) {
+      fetch(competition.id, month.isAfter, month.isBefore);
+    }
+  }, [fetch, competition, month, fetch]);
+
+  useEffect(() => {
+    if (competition.id && month.isAfter && month.isBefore) {
+      fetch(competition.id, month.isAfter, month.isBefore);
+    }
+  }, [competition, month, fetch]);
 
   const onCreate = useCallback((form: Form) => {
     const date = moment(form.date);
@@ -48,38 +63,64 @@ const CompetitionCalendar: React.FC<Props> = ({
     closeModal(`calendar-game-form-dialog`);
   }, [onRemoveNewGame, closeModal]);
 
+  const handleMonthChange = useCallback((arg: DatesSetArg) => {
+    setMonth({
+      isAfter: arg.startStr,
+      isBefore: arg.endStr
+    });
+  }, [])
+
   const handleDateClick = useCallback((info) => {
     if (!competition.startDate) {
       return toast.error('Elija una fecha para el torneo antes de crear partidos');
     }
 
     openModal(`calendar-game-form-dialog`, {
-      type: 'create',
+      type: competition.id ? 'create' : 'before-create',
       date: info.date.toISOString(),
       onSubmit: onCreate
     });
   }, [competition, onCreate, openModal]);
 
   const handleEventClick = useCallback(({ event }: EventClickArg) => {
+    const game = items.find(item => item.id.toString() === event.id);
+
     openModal(`calendar-game-form-dialog`, {
-      type: 'mock-update',
+      type: game ? 'update' : 'before-create-update',
       id: event.id,
       date: event.start?.toISOString(),
+      local: game?.local,
+      visitor: game?.visitor,
+      competition: competition.id,
       onSubmit: onUpdate,
       onDelete: onDelete
     })
-  }, [openModal, onUpdate, onDelete]);
+  }, [items, competition, openModal, onUpdate, onDelete]);
+
+  const events = useMemo(() => items.map(game => ({
+    id: game.id.toString(),
+    title: (game.local && game.visitor) ? `${game.local.name} vs ${game.visitor.name}` : 'Partido',
+    start: game.date,
+    end: moment(game.date).add(competition.matchTime, 'minutes').toISOString()
+  })), [items, competition.matchTime]);
 
   return (
     <>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
-        events={newEvents}
+        events={[
+          ...events,
+          ...newEvents,
+        ]}
+        datesSet={handleMonthChange}
         dateClick={handleDateClick}
         eventClick={handleEventClick}
       />
-      <GameFormDialog id="calendar" />
+      <GameFormDialog 
+        id="calendar" 
+        afterMutation={refresh}
+      />
     </>
   );
 }

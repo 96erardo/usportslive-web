@@ -64,6 +64,9 @@ export async function fetchTeams (
   const skip = first * (page - 1);
   const filters = createFilter(data);
   const query = qs.stringify({ first, skip, include, filters }, { encode: false, arrayFormat: 'brackets' })
+
+  console.log('data', data);
+  console.log('filters', filters);
   
   try {
     const res: AxiosResponse<PaginatedResponse<Team>> = await request.get(`/api/teams?${query}`, {
@@ -101,7 +104,10 @@ function createFilter (data: FilterData) {
     } : {}),
     ...(data.q ? {
       name: { like: data.q } 
-    }: {})
+    }: {}),
+    ...(data.competition ? {
+      competition: { id: { eq: data.competition } }
+    } : {})
   }
 
   return filter;
@@ -252,6 +258,7 @@ export
 type FilterData = {
   sport?: number,
   q?: string,
+  competition?: number,
 }
 
 type CreateTeamInput = {
