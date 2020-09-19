@@ -42,7 +42,7 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutat
       onCancel: () => closeModal(modalId),
       onConfirm: handleDelete
     });
-  }, [handleDelete, closeModal]);
+  }, [handleDelete, openModal, closeModal]);
   
   return (
     <Table.BodyRow columns={columns}>

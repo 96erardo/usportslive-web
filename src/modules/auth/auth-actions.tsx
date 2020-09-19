@@ -38,7 +38,14 @@ export async function exchageCodeForToken (
   } catch (e) {
     Logger.error('exchangeCodeForToken', e);
 
-    return [e];
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
   }
 };
 

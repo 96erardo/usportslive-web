@@ -3,19 +3,9 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Logger from 'js-logger';
 import { BoostProvider } from '@8base/boost';
 import { useAppStore } from './modules/app/app-store';
-// import { Provider } from 'react-redux';
-// import LoggerProvider from './shared/components/globals/LoggerProvider';
-// import { loadAppResources } from './modules/app/app-actions';
 import AuthCallback from './modules/auth/components/AuthCallback';
-// import { AppDispatch } from './shared/types';
 import AppLoader from './shared/components/globals/AppLoader';
-// import { ThemeProvider } from '@material-ui/core/styles';
 import { ToastContainer } from 'react-toastify';
-// import { SnackbarProvider } from 'notistack';
-// import Dialog from './shared/components/globals/Dialog';
-// import { CssBaseline } from '@material-ui/core';
-// import theme from './shared/config/theme';
-// import store from './shared/config/redux';
 import 'react-toastify/dist/ReactToastify.css';
 import './shared/assets/css/toastify-override.css';
 
@@ -67,24 +57,6 @@ function App () {
       />
     </BoostProvider>
   );
-
-  // return (
-  //   <Provider store={store}>
-  //     <ThemeProvider theme={theme}>
-  //       <SnackbarProvider 
-  //         maxSnack={4}
-  //         iconVariant={SnackbarIcons}
-  //       >
-  //         <LoggerProvider level={level}>
-  //           <AppLoader loading={loading} error={error}>
-  //           </AppLoader>
-  //         </LoggerProvider>
-  //         <CssBaseline />
-  //         <Dialog />
-  //       </SnackbarProvider>
-  //     </ThemeProvider>
-  //   </Provider>
-  // );
 }
 
 export default App;

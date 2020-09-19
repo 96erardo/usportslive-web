@@ -4,7 +4,6 @@ import { QueryResult, PaginatedResponse, Competition, Team, MutationResult } fro
 import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
 import qs from 'qs';
-import { access } from 'fs';
 
 /**
  * Fetches the team list

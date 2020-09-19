@@ -21,7 +21,7 @@ const TeamRow: React.FC<Props> = ({ id, team, columns, afterMutation }) => {
     toast.success('El equipo ya no pertenece al torneo');    
     
     afterMutation();
-  }, [openModal, closeModal, id, team, afterMutation]);
+  }, [closeModal, id, team, afterMutation]);
   
   const handleClick = useCallback(() => {
     openModal(modalId, {

@@ -78,7 +78,7 @@ export interface Person {
 }
 
 export interface Role {
-  id: string,
+  id: number,
   name: string
 }
 
@@ -87,6 +87,8 @@ export interface User {
   username: string,
   email: string,
   streamKey?: string,
+  roleId: number,
+  personId: number,
   person: Person,
   role: Role,
   createdAt: string,

@@ -11,6 +11,7 @@ import TeamsView from '../../../modules/team/components/admin/TeamsView';
 import TeamDetails from '../../../modules/team/components/admin/TeamDetails';
 import CompetitionsView from '../../../modules/competition/components/admin/CompetitionsView';
 import Competition from '../../../modules/competition/components/admin/Competition';
+import UsersView from '../../../modules/user/components/admin/UsersView';
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ function Admin (props: Props) {
             <ProtectedRoute perform="admin-page" exact path="/admin/team/:id" component={TeamDetails} />
             <ProtectedRoute perform="admin-page" exact path="/admin/competitions" component={CompetitionsView} />
             <ProtectedRoute perform="admin-page" exact path="/admin/competition/:id?" component={Competition} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/users" component={UsersView} />
           </Switch>
         </Content>
       </Container>
