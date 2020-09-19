@@ -4,6 +4,7 @@ import { QueryResult, PaginatedResponse, Competition, Team, MutationResult } fro
 import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
 import qs from 'qs';
+import { access } from 'fs';
 
 /**
  * Fetches the team list
@@ -160,6 +161,14 @@ export type CreateCompetitionInput = {
   games: Array<string>
 }
 
+/**
+ * Adds the specified team in the specified competition
+ * 
+ * @param {number} competition - The competition id
+ * @param {number} team - The team id
+ * 
+ * @returns {Promise<MutationResult<Team>>} The request response
+ */
 export async function addTeamInCompetition (competition: number, team: number): Promise<MutationResult<Team>> {
   const { accessToken } = useAuthStore.getState();
 
@@ -178,7 +187,43 @@ export async function addTeamInCompetition (competition: number, team: number): 
     Logger.error('addTeamInCompetition', e);
 
     if (e.response) {
-      return [e.response.data]
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Removes the specified team from the competition
+ * 
+ * @param {number} competition - The competition id
+ * @param {number} team - The team id
+ * 
+ * @returns {Promise<MutationResult<void>>} The request response
+ */
+export async function removeTeamFromCompetition (competition: number, team: number): Promise<MutationResult<void>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<void> = await authenticated.delete(`/api/competitions/${competition}/team/${team}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('removeTeamFromCompetition', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('removeTeamFromCompetition', e);
+
+    if (e.response) {
+      return [e.response.data];
     
     } else if (e.request) {
       return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]

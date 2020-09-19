@@ -8,7 +8,7 @@ export const modalId = 'decision-dialog';
  *
  * @returns {React.FC} The component to render
  */
-function DecisionDialog() {
+function DecisionDialog () {
   const { isOpen, args } = useModal(modalId);
   const [loading, setLoading] = useState(false);
 

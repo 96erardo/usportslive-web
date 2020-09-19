@@ -7,6 +7,7 @@ import TeamRow from './TeamRow';
 import { onError } from '../../../../shared/mixins';
 import AddTeamButton from './AddTeamButton';
 import Card from '../../../../shared/components/globals/Card';
+import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
 
 const include: Array<string> = [];
 
@@ -49,8 +50,10 @@ const CompetitionTeamsTable: React.FC<Props> = ({ sportId, competitionId }) => {
           <Body data={items} loading={loading}>
             {(team: Team) => (
               <TeamRow 
+                id={competitionId}
                 team={team}
                 columns={columns}
+                afterMutation={fetch}
               />
             )}
           </Body>
@@ -64,6 +67,7 @@ const CompetitionTeamsTable: React.FC<Props> = ({ sportId, competitionId }) => {
           </Table.Footer>
         </Table>
       </Card.Body>
+      <DecisionDialog />
     </Card>
   );
 }
