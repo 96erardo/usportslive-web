@@ -24,7 +24,7 @@ const CompetitionCalendar: React.FC<Props> = ({
     if (competition.id) {
       fetch(competition.id, month.isAfter, month.isBefore);
     }
-  }, [fetch, competition, month, fetch]);
+  }, [competition, month, fetch]);
 
   useEffect(() => {
     if (competition.id && month.isAfter && month.isBefore) {
@@ -77,6 +77,7 @@ const CompetitionCalendar: React.FC<Props> = ({
 
     openModal(`calendar-game-form-dialog`, {
       type: competition.id ? 'create' : 'before-create',
+      competition: competition.id,
       date: info.date.toISOString(),
       onSubmit: onCreate
     });

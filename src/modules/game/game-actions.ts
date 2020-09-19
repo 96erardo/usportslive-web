@@ -74,6 +74,48 @@ export type FilterData = {
 }
 
 /**
+ * Creates a new game object
+ * 
+ * @param {CreateGameInput} data - The data needed to create the gmae
+ * 
+ * @returns {Promise<MutationResult<Game>>} The request result
+ */
+export async function createGame (data: CreateGameInput): Promise<MutationResult<Game>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Game> = await authenticated.post('/api/games', data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('createGame', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('createGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+export type CreateGameInput = {
+  date: string,
+  competitionId: number | string,
+  localId?: number | null,
+  visitorId?: number | null,
+}
+
+/**
  * Updates the specified game registry
  * 
  * @param {UpdateGameInput} data - Data needed to update a game object

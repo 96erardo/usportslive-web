@@ -4,6 +4,7 @@ import CompetitionTeamSelector from '../../../competition/components/admin/Compe
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
 import { updateGame, deleteGame } from '../../game-actions';
 import { toast } from 'react-toastify';
+import { createGame } from '../../game-actions';
 import { Team } from '../../../../shared/types';
 import { onError } from '../../../../shared/mixins';
 
@@ -66,8 +67,27 @@ const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
   }, [args, form]);
 
   const onGameCreate = useCallback(async () => {
+    setSubmitting(true);
 
-  }, [form]);
+    const [err] = await createGame({
+      competitionId: form.competition ? form.competition : '',
+      date: form.date,
+      localId: form.local ? form.local.id : null,
+      visitorId: form.visitor ? form.visitor.id : null,
+    });
+
+    setSubmitting(false);
+
+    if (err) {
+      return onError(err);
+    }
+
+    toast.success('Patido creado correctamente');
+
+    afterMutation();
+
+    closeModal(`${id}-game-form-dialog`);
+  }, [id, form, afterMutation, closeModal]);
 
   const onGameUpdate = useCallback(async () => {
     setSubmitting(true);
@@ -126,6 +146,8 @@ const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
   }, [])
 
   const title = (args.type === 'create' || args.type === 'before-create') ? 'Crear Partido' : 'Editar Partido';
+
+  console.log('args', args);
   
   return (
     <Dialog isOpen={isOpen}>
@@ -162,7 +184,7 @@ const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
                       placeholder="Elige un equipo"
                       name="visitor"
                       value={form.visitor ? form.visitor.name : ''}
-                      onClick={open}
+                      onClick={() => open({ competition: parseInt(form.competition as string) })}
                     />
                     <Button squared size="sm" color="neutral" onClick={() => handleVisitor(null)}>
                       <Icon name="Delete" />
@@ -200,7 +222,7 @@ const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
             </Button>
           }
           {args.type === 'create' && 
-            <Button disabled={deleting} loading={submitting} color="primary" onClick={onGameUpdate}>
+            <Button disabled={deleting} loading={submitting} color="primary" onClick={onGameCreate}>
               Guardar
             </Button>
           }
