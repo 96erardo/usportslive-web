@@ -162,6 +162,41 @@ export type CreateCompetitionInput = {
 }
 
 /**
+ * Deletes the specified competition
+ * 
+ * @param {number} competition - The competition id
+ * 
+ * @returns {Promise<MutationResult<Competition>>} The request result
+ */
+export async function deleteCompetition (competition: number): Promise<MutationResult<void>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<void> = await authenticated.delete(`/api/competitions/${competition}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('deleteCompetition', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('deleteCompetition', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
  * Adds the specified team in the specified competition
  * 
  * @param {number} competition - The competition id

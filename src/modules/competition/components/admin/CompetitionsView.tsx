@@ -9,6 +9,7 @@ import { Competition } from '../../../../shared/types';
 import CompetitionTableRow from './CompetitionTableRow';
 import { FilterData } from '../../competition-actions';
 import { useHistory } from 'react-router-dom';
+import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -21,7 +22,7 @@ const CompetitionView: React.FC = () => {
   const history = useHistory();
   const [query, setQuery] = useQuery();
   const [page, setPage] = useState(1);
-  const { items, count, loading, filters, setFilters } = useCompetitions(page, include, query);
+  const { items, count, loading, filters, setFilters, fetch } = useCompetitions(page, include, query);
 
   useEffect(() => {
     setFilters(query);
@@ -87,6 +88,7 @@ const CompetitionView: React.FC = () => {
                 <CompetitionTableRow
                   columns={columns}
                   competition={competition}
+                  afterMutation={fetch}
                 />
               )}
             </Body>
@@ -102,6 +104,7 @@ const CompetitionView: React.FC = () => {
           </Table>
         </Card.Body>
       </Card>
+      <DecisionDialog />
     </div>
   );
 }

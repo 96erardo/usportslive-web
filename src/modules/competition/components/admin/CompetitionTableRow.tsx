@@ -1,16 +1,48 @@
 import React, { useCallback } from 'react';
-import { Table, Dropdown, Icon, Menu, Text } from '@8base/boost';
+import { Table, Dropdown, Icon, Menu, Text, useModal } from '@8base/boost';
 import { useHistory } from 'react-router';
 import { Competition } from '../../../../shared/types';
 import { DATE_FORMAT } from '../../../../shared/constants';
+import { deleteCompetition } from '../../competition-actions';
+import { modalId } from '../../../../shared/components/globals/DecisionDialog';
+import { onError } from '../../../../shared/mixins';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
-const CompetitionTableRow: React.FC<Props> = ({ columns, competition }) => {
+
+const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutation }) => {
+  const { openModal, closeModal } = useModal(modalId);
   const history = useHistory();
 
   const onUpdate = useCallback(() => {
     history.push(`/admin/competition/${competition.id}`);
   }, [competition, history]);
+
+  const handleDelete = useCallback(async () => {
+    const [err] = await deleteCompetition(competition.id);
+
+    closeModal(modalId);
+
+    if (err) {
+      return onError(err);
+    }
+
+    afterMutation();
+
+    toast.success('Torneo eliminado correctamente');   
+  }, [competition, closeModal, afterMutation]);
+
+  const onDeleteClick = useCallback(() => {
+    openModal(modalId, {
+      title: 'Eliminar torneo',
+      text: 'Está seguro de que desea eliminar el torneo ?',
+      confirmText: 'Si, Sacar',
+      cancelText: 'Cancelar',
+      onClose: () => closeModal(modalId),
+      onCancel: () => closeModal(modalId),
+      onConfirm: handleDelete
+    });
+  }, [handleDelete, closeModal]);
   
   return (
     <Table.BodyRow columns={columns}>
@@ -45,7 +77,7 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition }) => {
               <Menu.Item onClick={onUpdate}>
                 Editar
               </Menu.Item>
-              <Menu.Item>
+              <Menu.Item onClick={onDeleteClick}>
                 <Text color="DANGER">Eliminar</Text>
               </Menu.Item>
             </Menu>
@@ -58,7 +90,8 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition }) => {
 
 type Props = {
   columns: string,
-  competition: Competition
+  competition: Competition,
+  afterMutation: () => Promise<void>
 }
 
 export default CompetitionTableRow;
