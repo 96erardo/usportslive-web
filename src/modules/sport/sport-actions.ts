@@ -112,8 +112,6 @@ export async function updateSport (data: UpdateSportInput): Promise<MutationResu
     teamId: data.team
   };
 
-  console.log('sport', sport);
-
   try {
     const res: AxiosResponse<Sport> = await authenticated.patch(`/api/sports/${data.id}`, sport, {
       headers: {

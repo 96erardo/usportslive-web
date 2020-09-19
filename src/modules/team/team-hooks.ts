@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { fetchTeams } from './team-actions';
+import { fetchTeams, FilterData } from './team-actions';
 import axios, { CancelTokenSource } from 'axios';
 import { ListHooksState, Team } from '../../shared/types';
 
@@ -15,11 +15,11 @@ const initialState = {
  * 
  * @param {number} page - The page number
  * @param {Array<string>} include - the relations to include
- * @param {object} initialFilters - The filters to first apply to the page
+ * @param {FilterData} initialFilters - The filters to first apply to the page
  * 
  * @returns {object} The hook state
  */
-export function useTeams (page: number = 1, include: Array<string> = [], initialFilters = {}) {
+export function useTeams (page: number = 1, include: Array<string> = [], initialFilters: FilterData = {}) {
   const [filters, setFilters] = useState(initialFilters);
   const [state, setState] = useState<ListHooksState<Team>>(initialState);
   const cancelToken = useRef<CancelTokenSource>()

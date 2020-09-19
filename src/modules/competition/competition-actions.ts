@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Competition, MutationResult } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Competition, Team, MutationResult } from '../../shared/types';
 import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
 import qs from 'qs';
@@ -158,4 +158,32 @@ export type CreateCompetitionInput = {
   quantityOfPlayers: number,
   sportId: number,
   games: Array<string>
+}
+
+export async function addTeamInCompetition (competition: number, team: number): Promise<MutationResult<Team>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Team> = await authenticated.post(`api/competitions/${competition}/team/${team}`, {}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('addTeamInCompetition', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('addTeamInCompetition', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
 }

@@ -147,8 +147,6 @@ const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
 
   const title = (args.type === 'create' || args.type === 'before-create') ? 'Crear Partido' : 'Editar Partido';
 
-  console.log('args', args);
-  
   return (
     <Dialog isOpen={isOpen}>
       <Dialog.Header title={title} onClose={close}/>

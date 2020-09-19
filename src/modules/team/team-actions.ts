@@ -65,9 +65,6 @@ export async function fetchTeams (
   const filters = createFilter(data);
   const query = qs.stringify({ first, skip, include, filters }, { encode: false, arrayFormat: 'brackets' })
 
-  console.log('data', data);
-  console.log('filters', filters);
-  
   try {
     const res: AxiosResponse<PaginatedResponse<Team>> = await request.get(`/api/teams?${query}`, {
       cancelToken: source ? source.token : undefined

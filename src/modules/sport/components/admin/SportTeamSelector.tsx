@@ -22,13 +22,13 @@ const Container = styled.div`
   ${(props: Props) => props.stretch && 'width: 100%;'}
 `;
 
-function CompetitionTeamSelector ({
+function SportTeamSelector ({
   id,
   stretch = true,
   onSelect,
   children
 }: Props) {
-  const { isOpen, args, closeModal, openModal } = useModal(`${id}-competition-team-selector`);
+  const { isOpen, args, closeModal, openModal } = useModal(`${id}-sport-team-selector`);
   const cancelToken = useRef<CancelTokenSource>();
   const [search, setSearch] = useState<string>('');
   const [selected, setSelected] = useState<Team | null>(null);
@@ -46,7 +46,7 @@ function CompetitionTeamSelector ({
 
     const [error, canceled, data] = await fetchTeams(1, [], {
       q: search,
-      competition: args.competition ? args.competition : undefined
+      sport: args.sport ? args.sport : undefined
     });
 
     if (canceled)
@@ -75,9 +75,9 @@ function CompetitionTeamSelector ({
   }, [isOpen, fetch]);
 
   
-  const close = useCallback(() => closeModal(`${id}-competition-team-selector`), [closeModal, id]);
+  const close = useCallback(() => closeModal(`${id}-sport-team-selector`), [closeModal, id]);
   
-  const open = useCallback((args: DialogArgs) => openModal(`${id}-competition-team-selector`, args), [openModal, id]);
+  const open = useCallback((args: DialogArgs) => openModal(`${id}-sport-team-selector`, args), [openModal, id]);
   
   const handleSelect = useCallback(() => {
     onSelect(selected as Team);
@@ -159,7 +159,7 @@ type Props = {
 }
 
 export type DialogArgs = {
-  competition?: number,
+  sport?: number,
 };
 
-export default CompetitionTeamSelector;
+export default SportTeamSelector;
