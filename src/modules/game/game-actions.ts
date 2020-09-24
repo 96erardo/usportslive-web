@@ -61,9 +61,18 @@ function createFilter (data: FilterData) {
     ...(data.isAfter || data.isBefore ? {
       date: { 
         ...(data.isAfter ? { gte: data.isAfter } : {}),
-        ...(data.isBefore ? { let: data.isBefore } : {}),
-      }
+        ...(data.isBefore ? { lte: data.isBefore } : {}),
+      },
     } : {}),
+    ...(typeof data.isLive === 'boolean' ? {
+      isLive: { eq: data.isLive }
+    } : {}),
+    ...(data.local ? {
+      local: data.local
+    } : {}),
+    ...(data.visitor ? {
+      visitor: data.visitor
+    } : {})
   }
 }
 
@@ -71,6 +80,51 @@ export type FilterData = {
   competition?: number | string,
   isAfter?: string,
   isBefore?: string,
+  isLive?: boolean,
+  local?: {
+    ne?: number | null,
+    eq?: number | null,
+  },
+  visitor?: {
+    ne?: number | null,
+    eq?: number | null,
+  }
+}
+
+/**
+ * 
+ * @param {number} id - The id of the game to fetch
+ * @param {Array<string>} include - The relations to include with the game
+ * @param {CancelTokenSource} source - The token to cancel the request if needed
+ */
+export async function fetchGame (
+  id: number, 
+  include: Array<string> = [],
+  source?: CancelTokenSource
+): Promise<QueryResult<{ game: Game | null }>> {
+
+  const query = qs.stringify({ include });
+
+  try {
+    const res: AxiosResponse<{ game: Game | null }> = await request.get(`/api/games/${id}?${query}`, {
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchGame', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchGames (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchGames', e);
+
+    return [e];
+  }
 }
 
 /**

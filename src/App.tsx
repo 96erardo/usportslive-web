@@ -13,7 +13,7 @@ import './shared/assets/css/toastify-override.css';
 import ProtectedRoute from './shared/components/utilities/ProtectedRoute';
 // // import VisitorsRoute from './atoms/VisitorsRoute';
 import Admin from './shared/components/layouts/Admin';
-import Home from './modules/app/components/Home';
+import Social from './shared/components/layouts/Social';
 
 // Icons
 import { ReactComponent as WhiteSoccer } from './shared/assets/images/white-soccer.svg';
@@ -46,7 +46,7 @@ function App () {
           <Switch>
             <Route exact path="/oauth/callback" component={AuthCallback}/>
             <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
-            <Route exact path="/" component={Home}/>
+            <Route path="/" component={Social}/>
           </Switch>
         </Router>
       </AppLoader>

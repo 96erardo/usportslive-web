@@ -16,7 +16,9 @@
     "@types/query-string": "^5.1.0",
     "@types/react-color": "^3.0.4",
     "@types/react-redux": "^7.1.7",
+    "@types/video.js": "^7.3.11",
     "axios": "^0.19.2",
+    "bootstrap": "^4.5.2",
     "clsx": "^1.1.0",
     "js-logger": "^1.6.0",
     "moment": "2.24.0",
@@ -31,6 +33,7 @@
     "react-toastify": "^6.0.5",
     "react-transition-group": "^4.3.0",
     "typescript": "~3.7.2",
+    "video.js": "^7.8.4",
     "zustand": "^3.0.1"
   },
   "scripts": {

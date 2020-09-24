@@ -128,6 +128,7 @@ export interface Game {
   date: string,
   isLive: boolean,
   isFinished: boolean,
+  streamKey: string,
   competitionId: number,
   localId: number,
   visitorId: number,

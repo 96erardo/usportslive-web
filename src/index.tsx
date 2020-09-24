@@ -4,6 +4,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 import './index.css';
+import 'bootstrap/dist/css/bootstrap-grid.min.css';
+import 'video.js/dist/video-js.min.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
