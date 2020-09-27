@@ -5,6 +5,7 @@ import { fetchGame } from '../game-actions';
 import axios, { CancelTokenSource } from 'axios';
 import { useParams } from 'react-router-dom';
 import VideoPlayer from '../../../shared/components/globals/VideoPlayer';
+import TeamLive from '../../team/components/TeamLive';
 import { onError } from '../../../shared/mixins';
 
 const GameView: React.FC = () => {
@@ -38,18 +39,43 @@ const GameView: React.FC = () => {
     return () => cancelToken.current?.cancel()
   }, [fetch]);
 
-  return (
-    <div className="mt-5 container">
-      {loading && 
+  if (loading) {
+    return (
+      <div className="mt-5 container">
         <Row stretch alignItems="center" justifyContent="center">
           <Loader size="sm" />
         </Row>
-      }
-      {game !== null &&
-        <VideoPlayer
-          streamKey={game.streamKey}
-        />
-      }
+      </div>
+    );
+  }
+
+  if (game == null) {
+    return null;
+  }
+
+  return (
+    <div className="mt-5 container-fluid">
+      <div className="row">
+        <div className="col-12 col-lg-6 col-xl-3 order-2 order-xl-1 mb-4">
+          <TeamLive 
+            type="local"
+            id={game.localId} 
+            game={game}
+          />
+        </div>
+        <div className="col-12 col-xl-6 order-1 order-xl-2 mb-4">
+          <VideoPlayer
+            streamKey={game.streamKey}
+          />
+        </div>
+        <div className="col-12 col-lg-6 col-xl-3 order-3 order-xl-3 mb-4">
+          <TeamLive 
+            type="visitor"
+            id={game.visitorId} 
+            game={game}
+          />
+        </div>
+      </div>
     </div>
   );
 };

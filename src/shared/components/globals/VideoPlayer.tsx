@@ -49,17 +49,11 @@ class VideoPlayer extends React.Component<Props, State> {
   }
 
   render() {
-    return (
-      <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-10 col-lg-8 mx-auto mt-5">
-              {this.state.stream ? (
-                  <div data-vjs-player>
-                      <video ref={this.videoNode} className="video-js vjs-big-play-centered"/>
-                  </div>
-              ) : ' Loading ... '}
-          </div>
+    return this.state.stream ? (
+      <div data-vjs-player>
+        <video ref={this.videoNode} className="video-js vjs-big-play-centered"/>
       </div>
-    )
+    ) : ' Loading ... ';
   }
 }
 

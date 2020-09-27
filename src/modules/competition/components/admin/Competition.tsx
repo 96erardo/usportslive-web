@@ -263,7 +263,7 @@ const Competition: React.FC = () => {
                 <Button color="neutral">
                   Cancelar
                 </Button>
-                <Button color="primary" loading={submitting} setSubmitting={onSubmit}>
+                <Button color="primary" loading={submitting} onClick={onSubmit}>
                   Guardar Torneo
                 </Button>
               </Row>

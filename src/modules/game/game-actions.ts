@@ -1,6 +1,6 @@
 import { authenticated, request } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Game, MutationResult } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Game, Person as Player, MutationResult, Participation } from '../../shared/types';
 import Logger from 'js-logger';
 import qs from 'qs';
 import { useAuthStore } from '../auth/auth-store';
@@ -207,6 +207,14 @@ export async function updateGame (data: UpdateGameInput): Promise<MutationResult
   }
 }
 
+type UpdateGameInput = {
+  id: number,
+  date?: string,
+  competitionId: number,
+  localId?: number | null,
+  visitorId?: number | null,
+}
+
 /**
  * Deletes the specified game
  * 
@@ -242,10 +250,124 @@ export async function deleteGame (id: number): Promise<MutationResult<{ success:
   }
 }
 
-type UpdateGameInput = {
-  id: number,
-  date?: string,
-  competitionId: number,
-  localId?: number | null,
-  visitorId?: number | null,
+export async function addPlayerToGame (
+  playerId: number,
+  gameId: number,
+  teamId: number,
+): Promise<MutationResult<Participation>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Participation> = await authenticated.post(
+      `/api/games/${gameId}/team/${teamId}/player/${playerId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    Logger.info('addPlayerToGame', res.data);
+    
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('addPlayerToGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Fetches the team players in a game
+ * 
+ * @param {number} gameId - The game id
+ * @param {number} teamId - The team id
+ * 
+ * @returns {Promise<QueryResult<Player>>} The players in the game
+ */
+export async function fetchPlayersInGame (
+  gameId: number, 
+  teamId: number,
+  type: 'playing' | 'bench' | '' = '',
+  source?: CancelTokenSource
+): Promise<QueryResult<PaginatedResponse<Player>>> {
+
+  const query = qs.stringify({ type }, { encode: false, arrayFormat: 'brackets' })
+
+  try {
+    const res: AxiosResponse<PaginatedResponse<Player>> = await request.get(`/api/games/${gameId}/team/${teamId}?${query}`, {
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info(`fetchPlayersInGame [${type}]`, res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) { 
+
+    if (axios.isCancel(e)) {
+      Logger.error(`fetchPlayersInGame [${type}] (Canceled)`, e);
+
+      return [e, true];
+    }
+
+    Logger.error(`fetchPlayersInGame [${type}]`, e);
+
+    return [e];
+  }
+};
+
+/**
+ * Performs substitution in a game
+ * 
+ * @param {SubstituteData} data - The data needed to perform the substitution
+ * 
+ * @returns {Promise<MutationResult<void>>} The request result
+ */
+export async function performSubstitution (data: SubstituteData): Promise<MutationResult<void>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+
+    const { gameId, teamId, ...rest } = data;
+
+    const res: AxiosResponse<void> = await authenticated.post(`/api/games/${gameId}/team/${teamId}/substitution`, rest, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+
+    Logger.info('performSubstitution', res.data);
+
+    return [null];
+
+  } catch (e) {
+    Logger.error('performSubstitution', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+export type SubstituteData = {
+  gameId: number,
+  teamId: number,
+  in: number,
+  out: number,
+  minute: number,
 }

@@ -1,3 +1,5 @@
+import { User } from "../types"
+
 const rules: Rules = {
   Visitor: {
     static: [
@@ -22,7 +24,13 @@ const rules: Rules = {
       'stream:update',
       'game-point:create',
       'game-point:delete',
+      'game-player:substitution',
     ],
+    dynamic: {
+      'game-player:add': ({ user }: { user: User }) => {
+        return user.roleId > 1;
+      }
+    }
   },
   Teacher: {
     static: [
@@ -53,7 +61,13 @@ const rules: Rules = {
       'team-player:delete',
       'stream:create',
       'stream:update',
-    ]
+      'game-player:substitution',
+    ],
+    dynamic: {
+      'game-player:add': ({ user }: { user: User }) => {
+        return user.roleId > 1;
+      }
+    }
   },
   Administrator: {
     static: [
@@ -86,13 +100,11 @@ const rules: Rules = {
       'team-player:delete',
       'stream:create',
       'stream:update',
+      'game-player:substitution'
     ],
     dynamic: {
-      'user:update': (data) => {
-        if (data)
-          return true;
-
-        return false;
+      'game-player:add': ({ user }: { user: User }) => {
+        return user.roleId > 1;
       }
     }
   }
@@ -102,7 +114,7 @@ export type Rules = {
   [key: string]: {
     static?: Array<string>,
     dynamic?: {
-      [key: string]: (data: object) => boolean,
+      [key: string]: (data: any) => boolean,
     }
   }
 }

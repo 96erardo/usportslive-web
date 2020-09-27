@@ -56,6 +56,23 @@ export type CalendarEvent = {
   end: string
 }
 
+export interface Point {
+  id: number,
+  minute: number,
+  gameId: number,
+  personId: number,
+  teamId: number,
+  status: 'VALID' | 'CANCELED'
+}
+
+export interface Participation {
+  gameId: number,
+  teamId: number,
+  inMinute: number | null,
+  outMinute: number | null,
+  points: Array<Point>
+}
+
 export interface PersonHasTeam {
   personId: number,
   teamId: number,
@@ -75,6 +92,7 @@ export interface Person {
   createdAt: Date,
   deletedAt: Date
   userId: number | null,
+  participation: Participation
 }
 
 export interface Role {

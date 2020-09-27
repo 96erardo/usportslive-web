@@ -1,8 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { fetchGames } from './game-actions';
-import { Game, ListHooksState } from '../../shared/types';
+import { fetchGames, fetchPlayersInGame } from './game-actions';
+import { Game, Person as Player, ListHooksState } from '../../shared/types';
 import axios, { CancelTokenSource } from 'axios';
-import moment from 'moment';
 
 const initialState = {
   items: [],
@@ -69,7 +68,7 @@ export function useGamesFeed (page: number = 1) {
     setState(state => ({...state, loading: true }));
 
     const filters = {
-      isBefore: feedPage === 1 ? moment().toISOString() : moment(last.current).toISOString(),
+      // isBefore: feedPage === 1 ? moment().toISOString() : moment(last.current).toISOString(),
       local: { ne: null },
       visitor: { ne: null },
     };
@@ -115,4 +114,64 @@ export function useGamesFeed (page: number = 1) {
     ...state,
     fetch
   };
+}
+
+export function usePlayersInGameLive (gameId: number, teamId: number, type: 'playing' | 'bench' | '') {
+  const [state, setState] = useState<ListHooksState<Player>>(initialState);
+  const cancelToken = useRef<CancelTokenSource>();
+  const interval = useRef<number>();
+
+  const fetch = useCallback(async () => {
+    cancelToken.current?.cancel();
+
+    if (teamId === 0) {
+      return setState(state => ({
+        ...state,
+        loading: false,
+        count: 0,
+        items: [],
+        error: null,
+      }));
+    }
+
+    setState(state => ({...state, loading: true }));
+
+    cancelToken.current = axios.CancelToken.source();
+
+    const [err, canceled, data] = await fetchPlayersInGame(gameId, teamId, type, cancelToken.current);
+
+    if (canceled) {
+      return;
+    }
+
+    if (err) {
+      return setState(state => ({
+        ...state,
+        error: err,
+      }));
+    }
+
+    if (data) {
+      return setState(state => ({
+        ...state,
+        error: null,
+        loading: false,
+        count: data.count,
+        items: data.items,
+      }))
+    }
+  }, [gameId, teamId, type]);
+
+  useEffect(() => {
+    fetch();
+
+    interval.current = window.setInterval(fetch, 60000);
+
+    return () => clearInterval(interval.current);
+  }, [fetch]);
+
+  return {
+    ...state,
+    fetch
+  }
 }

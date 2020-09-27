@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { TopBar as TopBarBoost, Row, Avatar, styled } from '@8base/boost';
 import logo from '../../assets/images/logo_uneg.png';
 import { useAuthStore } from '../../../modules/auth/auth-store';
+import { useHistory } from 'react-router-dom';
 
 const TopBar = styled(TopBarBoost)`
   padding: 8px 0px;
@@ -14,6 +15,7 @@ const Brand = styled.div`
   width: 60px;
   height: 36px;
   padding: 0px 8px;
+  cursor: pointer;
 `;
 
 const Profile = styled.div`
@@ -21,12 +23,17 @@ const Profile = styled.div`
 `;
 
 function TopNavigation () {
+  const history = useHistory();
   const user = useAuthStore(state => state.user);
+
+  const onBrandClick = useCallback(() => {
+    history.push('/');
+  }, [history]);
 
   return (
     <TopBar color="WHITE">
       <Row stretch alignItems="center" justifyContent="between">
-        <Brand>
+        <Brand onClick={onBrandClick}>
           <img src={logo} alt="Logo" style={{ height: '100%' }} />
         </Brand>
         <Profile>
