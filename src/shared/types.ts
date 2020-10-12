@@ -56,14 +56,33 @@ export type CalendarEvent = {
   end: string
 }
 
-export interface Point {
+export interface Assist {
+  pointId: number,
+  personId: number,
+  person?: Person,
+  point?: Point,
+}
+
+export interface Point extends Event {
   id: number,
   minute: number,
   gameId: number,
   personId: number,
   teamId: number,
-  status: 'VALID' | 'CANCELED'
+  status: 'VALID' | 'CANCELED',
+  person?: Person,
+  assists?: Array<Assist>,
 }
+
+export interface PersonPlaysGame extends Event {
+  type?: 'in' | 'out',
+  gameId: number,
+  personId: number,
+  teamId: number,
+  inMinute: number,
+  outMinute: number,
+  person?: Person
+};
 
 export interface Participation {
   gameId: number,
@@ -126,6 +145,7 @@ export interface Team {
   sportId: number,
   sport?: Sport,
   personHasTeam?: PersonHasTeam
+  points?: Array<Point>,
   createdAt: string
 }
 
@@ -153,8 +173,13 @@ export interface Game {
   competition?: Competition,
   local?: Team,
   visitor?: Team,
+  points?: Array<Point>,
   createdAt: string,
   deletedAt: string | null,
+}
+
+export interface Event {
+  type?: 'in' | 'out' | 'point'
 }
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg';

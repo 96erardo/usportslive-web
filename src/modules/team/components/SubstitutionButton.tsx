@@ -12,7 +12,7 @@ const SubstitutionButton: React.FC<Props> = ({ id, gameId, teamId, afterSubstitu
   return (
     <>
       <Button color="primary" onClick={handleClick}>
-        Substituir
+        Sustituir
       </Button>
       <SubstitutionDialog 
         id={id}

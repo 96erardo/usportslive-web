@@ -1,0 +1,84 @@
+import React from 'react';
+import { 
+  Avatar, 
+  Card,
+  Row, 
+  Column, 
+  Heading as BoostHeading, 
+  COLORS, 
+  Loader,
+  styled 
+} from '@8base/boost';
+import { PointFormDialog } from '../../point/components/PointFormDialog';
+import { Paper } from '../../../shared/components/globals/Paper';
+import { useLiveScore } from '../hooks/useLiveScore';
+import GameEvents from './GameEvents';
+
+const Body = styled(Card.Body)`
+  & > *:not(:last-child) {
+    border-bottom: 2px solid #495661 !important;
+  }
+`;
+
+const Events = styled(Column)`
+  height: 200px;
+  max-height: 400px;
+  overflow: auto;
+`;
+
+const Heading = styled(BoostHeading)`
+  ${({ color }: { color: string }) => color && `color: ${color};`}
+`;
+
+const LiveScore: React.FC<Props> = ({ gameId }) => {
+  const { local, visitor, loading } = useLiveScore(gameId);
+
+  if (loading) {
+    return (
+      <Paper stretch background={COLORS.BLACK}>
+        <Row className="p-4" alignItems="center" justifyContent="center">
+          <Loader size="md" color="WHITE" />
+        </Row>
+      </Paper>
+    );
+  }
+
+  if (!local || !visitor) {
+    return null;
+  }
+
+  return (
+    <Paper stretch background={COLORS.BLACK}>
+      <Body padding="none">
+        <Row stretch className="py-4" alignItems="center" justifyContent="center" gap="md">
+          <Avatar 
+            firstName={local?.name[0]}
+            lastName={local?.name[1]}
+          />
+          <Heading type="h1" color={COLORS.WHITE}>  
+            {local?.points?.length} : {visitor?.points?.length}
+          </Heading>
+          <Avatar 
+            firstName={visitor?.name[0]}
+            lastName={visitor?.name[1]}
+          />
+        </Row>
+        <Events 
+          className="py-4"
+          stretch
+          gap="sm" 
+          alignItems="start" 
+        >
+          <GameEvents gameId={gameId} />
+        </Events>
+      </Body>
+      <PointFormDialog id="score" />
+    </Paper>
+  );
+}
+
+type Props = {
+  gameId: number,
+}
+
+export default LiveScore;

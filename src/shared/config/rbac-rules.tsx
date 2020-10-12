@@ -1,4 +1,4 @@
-import { User } from "../types"
+import { User, Game } from "../types"
 
 const rules: Rules = {
   Visitor: {
@@ -29,6 +29,9 @@ const rules: Rules = {
     dynamic: {
       'game-player:add': ({ user }: { user: User }) => {
         return user.roleId > 1;
+      },
+      'game-point:update': ({ game }: { game: Game }) => {
+        return game.isLive;
       }
     }
   },
@@ -66,6 +69,9 @@ const rules: Rules = {
     dynamic: {
       'game-player:add': ({ user }: { user: User }) => {
         return user.roleId > 1;
+      },
+      'game-point:update': ({ game }: { game: Game }) => {
+        return game.isLive;
       }
     }
   },
@@ -105,6 +111,9 @@ const rules: Rules = {
     dynamic: {
       'game-player:add': ({ user }: { user: User }) => {
         return user.roleId > 1;
+      },
+      'game-point:update': ({ game }: { game: Game }) => {
+        return game.isLive || game.isFinished;
       }
     }
   }

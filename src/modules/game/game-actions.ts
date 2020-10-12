@@ -1,6 +1,6 @@
 import { authenticated, request } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Game, Person as Player, MutationResult, Participation } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Game, Person as Player, MutationResult, Participation, PersonPlaysGame, Point } from '../../shared/types';
 import Logger from 'js-logger';
 import qs from 'qs';
 import { useAuthStore } from '../auth/auth-store';
@@ -111,6 +111,41 @@ export async function fetchGame (
     });
 
     Logger.info('fetchGame', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchGames (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchGames', e);
+
+    return [e];
+  }
+}
+
+/**
+ * Fetches all the game events
+ * 
+ * @param {string} id - The game id
+ * @param {CancelTokenSource} source - The cancel token
+ * 
+ * @returns {Promise} - The request result
+ */
+export async function fetchGameEvents (
+  id: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<PaginatedResponse<Point | PersonPlaysGame>>> {
+
+  try {
+    const res: AxiosResponse<PaginatedResponse<Point | PersonPlaysGame>> = await request.get(`/api/games/${id}/events`, {
+      cancelToken: source ? source.token : undefined,
+    });
+
+    Logger.info('fetchGameEvents', res.data);
 
     return [null, false, res.data];
 
@@ -370,4 +405,54 @@ export type SubstituteData = {
   in: number,
   out: number,
   minute: number,
+}
+
+/**
+ * Updates the specified substitution minute
+ * 
+ * @param {UpdateSubMinuteData} data - The data needed to update the substitution minute
+ * 
+ * @returns {Promise<MutationResult<PersonPlaysGame>>} The request result
+ */
+export async function updateSubstitutionMinute (data: UpdateSubMinuteData): Promise<MutationResult<PersonPlaysGame>> {
+  const { accessToken } = useAuthStore.getState();
+  const { game, team, player, minute, type } = data;
+
+  try {
+    const res: AxiosResponse<PersonPlaysGame> = await authenticated.patch(
+      `/api/games/${game}/team/${team}/player/${player}/substitution`,
+      {
+        [type]: minute,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    );
+
+    Logger.info('updateSubstitutionMinute', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('performSubstitution', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+export type UpdateSubMinuteData ={
+  game: number,
+  team: number,
+  player: number,
+  minute: number,
+  type: 'inMinute' | 'outMinute'
 }

@@ -5,6 +5,7 @@ import Can from '../../../shared/components/utilities/Can';
 import PlayerPlaysButton from '../../player/components/PlayerPlaysButton';
 import PlayerLiveItem from '../../player/components/PlayerLiveItem';
 import SubstitutionButton from './SubstitutionButton';
+import { PointFormDialog } from '../../point/components/PointFormDialog';
 import { usePlayersInGameLive } from '../../game/game-hooks';
 import { Game } from '../../../shared/types';
 
@@ -39,12 +40,18 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
 
   const substitutes = benchState.items.map(player => (
     <PlayerLiveItem
+      key={player.id}
+      type="bench"
+      teamId={id ? id : 0}
       player={player}
     />
   ));
 
   const players = fieldState.items.map(player => (
     <PlayerLiveItem
+      key={player.id}
+      type="playing"
+      teamId={id ? id : 0}
       player={player}
     />
   ));
@@ -62,41 +69,45 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
           {players}
         </Section>
         {!isFinished &&
-          <Row className="p-2" stretch alignItems="center" justifyContent="end">
-            {!isLive &&
-              <Can 
-                perform="game-player:add"
-                onNo={() => null}
-                onYes={() => (
-                  <PlayerPlaysButton 
-                    id={type} 
-                    teamId={id as number} 
-                    gameId={game.id}
-                    onFinished={refresh}
-                  />
-                )}
-              />
-            }
-            {isLive &&
-              <Can
-                perform="game-player:substitution"
-                onNo={() => null}
-                onYes={() => (
-                  <SubstitutionButton 
-                    id={type}
-                    teamId={id as number}
-                    gameId={game.id}
-                    afterSubstitution={refresh}
-                  />
-                )}
-              />
-            }
+          <Row className="p-2" stretch alignItems="center" justifyContent="between">
+            <Text color="WHITE">Suplentes</Text>
+            <div>
+              {!isLive &&
+                <Can
+                  perform="game-player:add"
+                  onNo={() => null}
+                  onYes={() => (
+                    <PlayerPlaysButton 
+                      id={type} 
+                      teamId={id as number} 
+                      gameId={game.id}
+                      onFinished={refresh}
+                    />
+                  )}
+                />
+              }
+              {isLive &&
+                <Can
+                  perform="game-player:substitution"
+                  onNo={() => null}
+                  onYes={() => (
+                    <SubstitutionButton 
+                      id={type}
+                      teamId={id as number}
+                      gameId={game.id}
+                      afterSubstitution={refresh}
+                    />
+                  )}
+                />
+              }
+            </div>
           </Row>
         }
         <Section padding="none">
           {substitutes}
         </Section>
       </Body>
+      <PointFormDialog id={type} />
     </Paper>
   );
 };

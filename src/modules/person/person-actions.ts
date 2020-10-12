@@ -1,6 +1,6 @@
 import { request } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { PaginatedResponse, Person } from '../../shared/types';
+import { PaginatedResponse, Person, QueryResult } from '../../shared/types';
 import Logger from 'js-logger';
 import qs from 'qs';
 
@@ -56,3 +56,42 @@ function createFilter (data: PersonFilterData) {
 export type PersonFilterData = {
   q?: string
 };
+
+/**
+ * Fetches the specified person
+ * 
+ * @param {number} id - The id of the person to fetch
+ * @param {Array<string>} include - The relations to include with the person
+ * @param {CancelTokenSource} source - The token to cancel the request if needed
+ * 
+ * @returns {Promise<QueryResult<{ person: Person | null }>>} The request result
+ */
+export async function fetchPerson (
+  id: number,
+  include: Array<string> = [],
+  source?: CancelTokenSource
+): Promise<QueryResult<{ person: Person | null }>> {
+
+  const query: string = qs.stringify({ include }, { encode: false, arrayFormat: 'brackets' });
+
+  try {
+    const res: AxiosResponse<{ person: Person | null }> = await request.get(`/api/persons/${id}?${query}`, {
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPerson', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.info('Request canceled', e);
+
+      return [e, true];
+    }
+    
+    Logger.error('fetchSports', e);
+
+    return [e];
+  }
+}

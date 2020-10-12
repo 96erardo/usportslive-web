@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Row, Loader } from '@8base/boost';
+import { Row, Column, Loader } from '@8base/boost';
 import { Game } from '../../../shared/types';
 import { fetchGame } from '../game-actions';
 import axios, { CancelTokenSource } from 'axios';
 import { useParams } from 'react-router-dom';
 import VideoPlayer from '../../../shared/components/globals/VideoPlayer';
 import TeamLive from '../../team/components/TeamLive';
+import LiveScore from './LiveScore';
+import { GameProvider } from '../contexts/GameContext';
 import { onError } from '../../../shared/mixins';
 
 const GameView: React.FC = () => {
@@ -54,29 +56,36 @@ const GameView: React.FC = () => {
   }
 
   return (
-    <div className="mt-5 container-fluid">
-      <div className="row">
-        <div className="col-12 col-lg-6 col-xl-3 order-2 order-xl-1 mb-4">
-          <TeamLive 
-            type="local"
-            id={game.localId} 
-            game={game}
-          />
-        </div>
-        <div className="col-12 col-xl-6 order-1 order-xl-2 mb-4">
-          <VideoPlayer
-            streamKey={game.streamKey}
-          />
-        </div>
-        <div className="col-12 col-lg-6 col-xl-3 order-3 order-xl-3 mb-4">
-          <TeamLive 
-            type="visitor"
-            id={game.visitorId} 
-            game={game}
-          />
+    <GameProvider game={game}>
+      <div className="mt-5 container-fluid">
+        <div className="row">
+          <div className="col-12 col-lg-6 col-xl-3 order-2 order-xl-1 mb-4">
+            <TeamLive 
+              type="local"
+              id={game.localId} 
+              game={game}
+            />
+          </div>
+          <div className="col-12 col-xl-6 order-1 order-xl-2 mb-4">
+            <Column>
+              <VideoPlayer 
+                streamKey={game.streamKey}
+              />
+              <LiveScore 
+                gameId={game.id} 
+              />
+            </Column>
+          </div>
+          <div className="col-12 col-lg-6 col-xl-3 order-3 order-xl-3 mb-4">
+            <TeamLive 
+              type="visitor"
+              id={game.visitorId} 
+              game={game}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </GameProvider>
   );
 };
 

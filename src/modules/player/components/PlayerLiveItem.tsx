@@ -1,9 +1,23 @@
-import React from 'react';
-import { Avatar, Grid, Icon, Text, Tooltip } from '@8base/boost';
+import React, { useCallback, useContext } from 'react';
+import { Avatar, Grid, Icon, Text, Dropdown, Menu, Tooltip, useModal } from '@8base/boost';
 import { Person as Player } from '../../../shared/types';
+import { GameContext } from '../../game/contexts/GameContext';
+import { modalId } from '../../point/components/PointFormDialog';
 
-const PlayerLiveItem: React.FC<Props> = ({ player }) => {
+const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
+  const { openModal } = useModal();
   const { inMinute, outMinute, points } = player.participation;
+  const game = useContext(GameContext);
+
+  const onScore = useCallback(() => {
+    const team = game?.localId === teamId ? 'local' : 'visitor';
+
+    openModal(`${team}-${modalId}`, {
+      gameId: game?.id,
+      teamId: teamId,
+      scorerId: player.id,
+    });
+  }, [game, teamId, player, openModal]);
 
   const on = inMinute !== null && inMinute > 0 && outMinute === null;
   const off = outMinute !== null;
@@ -53,13 +67,35 @@ const PlayerLiveItem: React.FC<Props> = ({ player }) => {
             </Text>
           </Grid.Box>
         )}
+        <Grid.Box area="actions" direction="row" alignItems="center" justifyContent="flex-end">
+          <Dropdown defaultOpen={false}>
+            <Dropdown.Head>
+              <Icon name="More" color="WHITE" />
+            </Dropdown.Head>
+            <Dropdown.Body>
+              <Menu>
+                <Menu.Item>
+                  Titular
+                </Menu.Item>
+                <Menu.Item>
+                  Suplente
+                </Menu.Item>
+                <Menu.Item onClick={onScore}>
+                  Anotación
+                </Menu.Item>
+              </Menu>
+            </Dropdown.Body>
+          </Dropdown>
+        </Grid.Box>
       </Grid.Layout>
     </div>
   );
 }
 
 type Props = {
+  type: 'playing' | 'bench',
   player: Player,
+  teamId: number,
 }
 
 export default PlayerLiveItem;
