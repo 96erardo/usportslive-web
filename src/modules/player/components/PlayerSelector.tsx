@@ -108,7 +108,7 @@ const PlayerSelector: React.FC<Props> = (props) => {
   }
 
   return (
-    <div>
+    <>
       {props.children(open)}
       <Dialog size="md" isOpen={isOpen} onClose={close}>
         <Dialog.Header title="Elegir jugador" onClose={close}/>
@@ -135,7 +135,7 @@ const PlayerSelector: React.FC<Props> = (props) => {
           </Row>
         </Dialog.Footer>
       </Dialog>
-    </div>
+    </>
   );
 }
 

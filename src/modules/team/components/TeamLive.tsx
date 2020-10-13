@@ -31,7 +31,7 @@ const bench = 'bench';
 const TeamLive: React.FC<Props> = ({ id, type, game }) => {
   const benchState = usePlayersInGameLive(game.id, id ? id : 0, bench);
   const fieldState = usePlayersInGameLive(game.id, id ? id : 0, playing);
-  const { isLive, isFinished } = game;
+  const { isFinished } = game;
 
   const refresh = useCallback(() => {
     benchState.fetch();
@@ -68,41 +68,37 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
         <Section padding="none">
           {players}
         </Section>
-        {!isFinished &&
-          <Row className="p-2" stretch alignItems="center" justifyContent="between">
-            <Text color="WHITE">Suplentes</Text>
-            <div>
-              {!isLive &&
-                <Can
-                  perform="game-player:add"
-                  onNo={() => null}
-                  onYes={() => (
-                    <PlayerPlaysButton 
-                      id={type} 
-                      teamId={id as number} 
-                      gameId={game.id}
-                      onFinished={refresh}
-                    />
-                  )}
+        <Row gap="sm" className="p-2" stretch alignItems="center" justifyContent="between">
+          <Text color="WHITE">Suplentes</Text>
+          <Row alignItems="center" justifyContent="end">
+            <Can
+              perform="game-player:add"
+              data={{ game }}
+              onNo={() => null}
+              onYes={() => (
+                <PlayerPlaysButton 
+                  id={type} 
+                  teamId={id as number} 
+                  gameId={game.id}
+                  onFinished={refresh}
                 />
-              }
-              {isLive &&
-                <Can
-                  perform="game-player:substitution"
-                  onNo={() => null}
-                  onYes={() => (
-                    <SubstitutionButton 
-                      id={type}
-                      teamId={id as number}
-                      gameId={game.id}
-                      afterSubstitution={refresh}
-                    />
-                  )}
+              )}
+            />
+            <Can
+              perform="game-player:substitute"
+              data={{ game }}
+              onNo={() => null}
+              onYes={() => (
+                <SubstitutionButton 
+                  id={type}
+                  teamId={id as number}
+                  gameId={game.id}
+                  afterSubstitution={refresh}
                 />
-              }
-            </div>
+              )}
+            />
           </Row>
-        }
+        </Row>
         <Section padding="none">
           {substitutes}
         </Section>

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Dialog, Row, Column, Button, InputField, Label, SelectField, useModal } from '@8base/boost';
+import { Dialog, Row, Column, Button, InputField, Label, SelectField, Icon, useModal } from '@8base/boost';
 import { PlayingSelector } from '../../player/components/PlayingSelector';
 import ClickableInput from '../../../shared/components/form/ClickableInput';
 import { Person } from '../../../shared/types';
@@ -167,15 +167,20 @@ export const PointFormDialog: React.FC<Props> = ({ id }) => {
           <Label text="Asistidor" />
           <PlayingSelector id={`${id}-goal-assister`} onSelect={(player: Person) => handleChange('assister', player)}>
             {open => (
-              <ClickableInput 
-                stretch
-                readOnly
-                value={form.assister ? form.assister.name : ''}
-                placeholder="Select a player"
-                cursor="pointer"
-                onChange={() => {}}
-                onClick={() => open(args.gameId, args.teamId)}
-              />
+              <Row stretch alignItems="center">
+                <ClickableInput 
+                  stretch
+                  readOnly
+                  value={form.assister ? form.assister.name : ''}
+                  placeholder="Select a player"
+                  cursor="pointer"
+                  onChange={() => {}}
+                  onClick={() => open(args.gameId, args.teamId)}
+                />
+                <Button squared size="sm" color="neutral" onClick={() => handleChange('assister', null)}>
+                  <Icon name="Delete" />
+                </Button>
+              </Row>
             )}
           </PlayingSelector>
           {form.id &&

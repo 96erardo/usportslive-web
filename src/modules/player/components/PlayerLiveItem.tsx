@@ -3,6 +3,7 @@ import { Avatar, Grid, Icon, Text, Dropdown, Menu, Tooltip, useModal } from '@8b
 import { Person as Player } from '../../../shared/types';
 import { GameContext } from '../../game/contexts/GameContext';
 import { modalId } from '../../point/components/PointFormDialog';
+import Can from '../../../shared/components/utilities/Can';
 
 const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
   const { openModal } = useModal();
@@ -67,26 +68,45 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
             </Text>
           </Grid.Box>
         )}
-        <Grid.Box area="actions" direction="row" alignItems="center" justifyContent="flex-end">
-          <Dropdown defaultOpen={false}>
-            <Dropdown.Head>
-              <Icon name="More" color="WHITE" />
-            </Dropdown.Head>
-            <Dropdown.Body>
-              <Menu>
-                <Menu.Item>
-                  Titular
-                </Menu.Item>
-                <Menu.Item>
-                  Suplente
-                </Menu.Item>
-                <Menu.Item onClick={onScore}>
-                  Anotación
-                </Menu.Item>
-              </Menu>
-            </Dropdown.Body>
-          </Dropdown>
-        </Grid.Box>
+        <Can 
+          perform="game-player:actions"
+          data={{ game, status: type }}
+          onYes={() => (
+            <Grid.Box area="actions" direction="row" alignItems="center" justifyContent="flex-end">
+              <Dropdown defaultOpen={false}>
+                <Dropdown.Head>
+                  <Icon name="More" color="WHITE" />
+                </Dropdown.Head>
+                <Dropdown.Body>
+                  <Menu>
+                    <Can 
+                      perform="game-player:initial"
+                      data={{ game }}
+                      onYes={() => type === 'playing' ? (
+                        <Menu.Item>
+                          Suplente
+                        </Menu.Item>
+                      ) : (
+                        <Menu.Item>
+                          Titular
+                        </Menu.Item>
+                      )}
+                    />
+                    <Can 
+                      perform="game-point:create"
+                      data={{ game, status: type }}
+                      onYes={() => (
+                        <Menu.Item onClick={onScore}>
+                          Anotación
+                        </Menu.Item>
+                      )}
+                    />
+                  </Menu>
+                </Dropdown.Body>
+              </Dropdown>
+            </Grid.Box>
+          )}
+        />
       </Grid.Layout>
     </div>
   );

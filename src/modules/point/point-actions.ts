@@ -120,7 +120,7 @@ export async function deletePoint (id: number): Promise<MutationResult<void>> {
   try {
     const res: AxiosResponse<void> = await authenticated.delete(`/api/games/point/${id}`, {
       headers: {
-        Authorization: accessToken,
+        Authorization: `Bearer ${accessToken}`,
       }
     });
 

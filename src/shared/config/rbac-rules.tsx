@@ -20,19 +20,32 @@ const rules: Rules = {
       'admin-page:visit',
       'dashboard-page:visit',
       // Actions
-      'stream:create',
-      'stream:update',
-      'game-point:create',
-      'game-point:delete',
-      'game-player:substitution',
     ],
     dynamic: {
-      'game-player:add': ({ user }: { user: User }) => {
-        return user.roleId > 1;
+      'game-player:actions': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (
+          (!game.isFinished && !game.isLive) ||
+          (game.isLive && status === 'playing')
+        );
+      },
+      'game-player:initial': ({ game }: { game: Game }) => {
+        return !game.isFinished && !game.isLive;
+      },
+      'game-player:add': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
+      'game-player:substitute': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (game.isLive && status === 'playing');
       },
       'game-point:update': ({ game }: { game: Game }) => {
         return game.isLive;
-      }
+      },
+      'game-point:delete': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
     }
   },
   Teacher: {
@@ -40,39 +53,26 @@ const rules: Rules = {
       // Page visits
       'admin-page:visit',
       'dashboard-page:visit',
-      // Actions
-      'sport:create',
-      'sport:update',
-      'competition:create',
-      'competition:update',
-      'competition:delete',
-      'team:create',
-      'team:update',
-      'team:delete',
-      'competition-team:create',
-      'competition-team:remove',
-      'competition-game:create',
-      'competition-game:create-many',
-      'competition-game:update',
-      'competition-game:delete',
-      'game-point:create',
-      'game-point:delete',
-      'user-person:assign',
-      'team-player:create',
-      'team-player:add',
-      'team-player:update',
-      'team-player:delete',
-      'stream:create',
-      'stream:update',
-      'game-player:substitution',
     ],
     dynamic: {
-      'game-player:add': ({ user }: { user: User }) => {
-        return user.roleId > 1;
+      'game-player:actions': ({ game }: { game: Game }) => {
+        return !game.isFinished;
+      },
+      'game-player:initial': ({ game }: { game: Game }) => {
+        return !game.isFinished && !game.isLive;
+      },
+      'game-player:add': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
+      'game-player:substitute': ({ game }: { game: Game }) => {
+        return game.isLive;
       },
       'game-point:update': ({ game }: { game: Game }) => {
         return game.isLive;
-      }
+      },
+      'game-point:delete': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
     }
   },
   Administrator: {
@@ -81,40 +81,17 @@ const rules: Rules = {
       'admin-page:visit',
       'dashboard-page:visit',
       // Actions
-      'sport:create',
-      'sport:update',
-      'sport:delete',
-      'competition:create',
-      'competition:update',
-      'competition:delete',
-      'team:create',
-      'team:update',
-      'team:delete',
-      'user:suspend',
-      'competition-team:create',
-      'competition-team:remove',
-      'competition-game:create',
-      'competition-game:create-many',
-      'competition-game:update',
-      'competition-game:delete',
+      'game-player:actions',
+      'game-player:add',
+      'game-player:substitute',
       'game-point:create',
+      'game-point:update',
       'game-point:delete',
-      'user-person:assign',
-      'team-player:create',
-      'team-player:add',
-      'team-player:update',
-      'team-player:delete',
-      'stream:create',
-      'stream:update',
-      'game-player:substitution'
     ],
     dynamic: {
-      'game-player:add': ({ user }: { user: User }) => {
-        return user.roleId > 1;
+      'game-player:initial': ({ game }: { game: Game }) => {
+        return !game.isFinished && !game.isLive;
       },
-      'game-point:update': ({ game }: { game: Game }) => {
-        return game.isLive || game.isFinished;
-      }
     }
   }
 };

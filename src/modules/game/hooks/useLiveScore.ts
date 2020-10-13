@@ -58,11 +58,11 @@ export function useLiveScore (game: number): State {
         game: game,
         local: (game && game.local) ? {
           ...game.local,
-          points: game && game.points ? game.points.filter(point => point.teamId === game.local?.id) : [],
+          points: game && game.points ? game.points.filter(point => (point.teamId === game.local?.id) && point.status === 'VALID') : [],
         } : null,
         visitor: (game && game.visitor) ? {
           ...game.visitor,
-          points: game && game.points ? game.points.filter(point => point.teamId === game.visitor?.id) : [],
+          points: game && game.points ? game.points.filter(point => (point.teamId === game.visitor?.id) && point.status === 'VALID') : [],
         } : null,
         points: game && game.points ? game.points : [],
       }))
