@@ -1,78 +1,44 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { RouteComponentProps } from 'react-router-dom';
-import { AppBar, Toolbar, IconButton } from '@material-ui/core';
-import { Switch, Route } from 'react-router-dom';
-import AppsIcon from '@material-ui/icons/Apps';
-import SearchIcon from '@material-ui/icons/Search';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import DropdownMenu from './DropdownMenu';
+import React from 'react';
+import { RouteComponentProps, Switch } from 'react-router-dom';
+import ProtectedRoute from '../utilities/ProtectedRoute';
+import AdminNavigation from './AdminNavigation';
+import TopNavigation from './TopNavigation';
+import { styled } from '@8base/boost';
 
-import AdminSports from '../../../modules/sport/components/AdminSports';
+// Pages
+import SportsView from '../../../modules/sport/components/admin/SportsView';
+import TeamsView from '../../../modules/team/components/admin/TeamsView';
+import TeamDetails from '../../../modules/team/components/admin/TeamDetails';
+import CompetitionsView from '../../../modules/competition/components/admin/CompetitionsView';
+import Competition from '../../../modules/competition/components/admin/Competition';
+import UsersView from '../../../modules/user/components/admin/UsersView';
 
-const useStyles = makeStyles((theme: Theme) => 
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2)
-    },
-    title: {
-      // flexGrow: 1,
-      fontWeight: 700,
-    }
-  })
-)
+const Container = styled.div`
+  display: flex;
+`;
+
+const Content = styled.div`
+  width: 100%;
+`;
 
 function Admin (props: Props) {
-  const classes = useStyles();
-  const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
-
-  const toggle = useCallback(() => {
-    setMenuOpen(!isMenuOpen);
-  }, [isMenuOpen, setMenuOpen])
-
-  useEffect(() => {
-    const unsubscribe = props.history.listen(() => {
-      if (isMenuOpen) {
-        setMenuOpen(false);
-      }
-    })
-
-    return () => unsubscribe();
-  }, [props.history, isMenuOpen])
-
   return (
-    <div className={classes.root}>
-      <DropdownMenu 
-        isOpen={isMenuOpen}
-      />
-      <AppBar position="sticky" color="default">
-        <Toolbar>
-          <Grid container alignItems="center" justify="space-between">
-            <IconButton 
-              onClick={toggle}
-              aria-label="menu"
-            >
-              <AppsIcon />
-            </IconButton>
-            <Typography align="center" className={classes.title} variant="h5">
-              Inicio
-            </Typography>
-            <IconButton
-              aria-label="menu"
-            >
-              <SearchIcon />
-            </IconButton>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-      <Switch>
-        <Route path="/admin/sports" component={AdminSports} />
-      </Switch>
-    </div>
+    <>
+      <TopNavigation />
+      <Container>
+        <AdminNavigation />
+        <Content>
+          <Switch>
+            <ProtectedRoute perform="admin-page" exact path="/admin/sports" component={SportsView} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/teams" component={TeamsView} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/team/:id" component={TeamDetails} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/competitions" component={CompetitionsView} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/competition/:id?" component={Competition} />
+            <ProtectedRoute perform="admin-page" exact path="/admin/users" component={UsersView} />
+          </Switch>
+        </Content>
+      </Container>
+    </>
   );
 }
 

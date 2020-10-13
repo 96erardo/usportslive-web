@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react';
-import { useTypedSelector } from '../../../shared/utils';
 import { RouteComponentProps } from 'react-router';
-import { useDispatch } from 'react-redux';
-import { exchageCodeForToken } from '../auth-actions';
-import { AppDispatch } from '../../../shared/types';
 import { } from '../../../shared/config/axios';
-import qs from 'query-string';
+import { useAuthStore } from '../auth-store';
+import qs from 'qs';
 
 const {
   REACT_APP_OAUTH_GRANT: grant,
@@ -14,24 +11,28 @@ const {
 } = process.env;
 
 function AuthCallback (props: Props) {
-  const isLoggedIn: boolean = useTypedSelector(state => state.auth.isLoggedIn);
-  const dispatch: AppDispatch = useDispatch();
-  const q = qs.parse(props.location.search);
+  const isLoggedIn: boolean = useAuthStore(state => state.isLoggedIn);
+  const authenticate = useAuthStore(state => state.authenticate);
 
   useEffect(() => {
     if (isLoggedIn) {
       props.history.replace('/');
     } else {
+      const q = qs.parse(props.location.search, { ignoreQueryPrefix: true });
 
       if (!q.code || !q.state) {
         props.history.replace('/');
       }
 
-      dispatch(exchageCodeForToken(q.code, grant as string, q.state, redirectUri as string, clientId as string))
-        .then(() => console.log('authenticated'))
-        .catch(() => console.log('error'));
+      authenticate(
+        q.code as string, 
+        grant as string, 
+        q.state as string, 
+        redirectUri as string, 
+        clientId as string
+      );
     }
-  }, [isLoggedIn, props.history, q, dispatch]);
+  }, [isLoggedIn, authenticate, props]);
   
   return <p>Loading...</p>
 }

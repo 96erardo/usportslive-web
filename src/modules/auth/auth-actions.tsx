@@ -1,16 +1,6 @@
-import { request, authenticated } from '../../shared/config/axios';
-import qs from 'query-string';
-import {
-  LogoutUserAction,
-  SetAuthTokensAction,
-  SetUserDataAction,
-  SET_AUTH_TOKENS,
-  LOGOUT_USER,
-  SET_USER_DATA
-} from './auth-action-types';
-import { AppThunk, User } from '../../shared/types';
-import { RootState } from '../../shared/config/redux/reducers';
-import { AxiosResponse } from 'axios';
+import { request } from '../../shared/config/axios';
+import qs from 'qs';
+import Logger from 'js-logger';
 
 /**
  * Exchanges the authorization code with access and refresh token 
@@ -24,89 +14,46 @@ import { AxiosResponse } from 'axios';
  * 
  * @returns {AppThunk<Promise<void>>}
  */
-export const exchageCodeForToken = (
+export async function exchageCodeForToken (
   code: string, 
   grantType: string, 
   state: String, 
   redirectUri: string, 
   clientId: string
-): AppThunk<Promise<void>> => {
-  return (dispatch): Promise<void> => {
-    return request.post('/oauth/token', qs.stringify({
+) {
+  try {
+    
+    const response = await request.post('/oauth/token', qs.stringify({
       code,
       grant_type: grantType,
       state,
       redirect_uri: redirectUri,
       client_id: clientId
-    }), { 
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    })
-    .then((res: AxiosResponse) => {
-      dispatch(setAuthTokens(res.data.access_token, res.data.refresh_token));
+    }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
 
-      return authenticated.get('/api/users/', { headers: { Authorization: `Bearer ${res.data.access_token}`}});
-    })
-    .then((res: AxiosResponse) => {
-      dispatch(setUserData(res.data));
-    });
-  };
+    Logger.info('exchangeCodeForToken', response.data);
+
+    return [null, response.data];
+        
+  } catch (e) {
+    Logger.error('exchangeCodeForToken', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
 };
 
 /**
  * Logs the user out
  * 
- * @returns {AppThunk<Promise<void>>}
+ * @returns {Promise}
  */
-export const signout = () : AppThunk<Promise<void>> => {
-  return async (dispatch, getState): Promise<void> => {
-    const { auth }: RootState = getState();
-    let response = null;
-
-    try {
-      
-      response = await request.post('/oauth/logout', { refreshToken: auth.refreshToken }, {
-        headers: {
-          Authorization: `Bearer ${auth.accessToken}`
-        }
-      });
-      
-    } catch (e) {
-      throw e;
-    }
-
-    if (response) {
-      dispatch(logout());
-    }
-  }
+export async function signout () {
+  
 }
-
-/**
- * Created an action object based on the given tokens
- * 
- * @param {string} accessToken - User's access token
- * @param {string} refreshToken - User's refresh token
- * 
- * @returns {SetAuthTokensAction} The action object
- */
-export const setAuthTokens = (accessToken: string, refreshToken: string) : SetAuthTokensAction => {
-  return {
-    type: SET_AUTH_TOKENS,
-    payload: {
-      accessToken,
-      refreshToken
-    }
-  };
-};
-
-export const setUserData = (user: User): SetUserDataAction =>  {
-  return {
-    type: SET_USER_DATA,
-    payload: user
-  };
-};
-
-export const logout = (): LogoutUserAction => {
-  return {
-    type: LOGOUT_USER
-  };
-}; 

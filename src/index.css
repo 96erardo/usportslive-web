@@ -1,0 +1,62 @@
+body {
+  background-color: #e1e9eb;
+}
+
+:root {
+  --color-blue-1: #384a59;
+  --color-blue-2: #1e4358;
+  --color-blue-3: #323c47;
+  --color-yellow: #f6c01e;
+  --color-yellow-1: #e4cc58;
+  --color-gray: #5e6c74;
+  --color-gray-2: #9b9b9b;
+  --color-primary: #00bb6e;
+  --color-red: #ff0000;
+  --color-white: #fcfcfc;
+  --color-gray-2: #aeb7be;
+  --color-blue-light: #62abfe;
+}
+
+/**
+ * React Calendar Customization
+ */
+table .fc-col-header {
+  width: 100% !important;
+}
+
+.fc .fc-daygrid-body {
+  width: 100% !important;
+}
+
+.fc .fc-daygrid-body > table {
+  width: 100% !important;
+}
+
+.fc .fc-button-primary {
+  background-color: #0874F9;
+  border-color: #0874F9;
+  outline: none;
+  appearance: none;
+  font-size: 1.4rem;
+  line-height: 2rem;
+  font-weight: 600;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #238BFF;
+  border-color: #238BFF;
+  box-shadow: 0 2px 4px 0 rgba(50,50,93,0.2);
+}
+
+.fc .fc-button-primary:disabled {
+  color: #CFD7DE;
+  background-color: #E8EFF5;
+  border-color: #CFD7DE;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.fc-theme-standard td, .fc-theme-standard th {
+  border-color: #CFD7DE;
+
+}

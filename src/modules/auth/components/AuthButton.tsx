@@ -1,9 +1,6 @@
 import React, { useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import Button from '@material-ui/core/Button';
-import { RootState } from '../../../shared/config/redux/reducers';
-import { signout } from '../auth-actions';
-import { AppDispatch } from '../../../shared/types';
+import { Button } from '@8base/boost';
+import { useAuthStore } from '../auth-store';
 
 const {
   REACT_APP_API_SERVER: server,
@@ -13,26 +10,22 @@ const {
 } = process.env;
 
 const redirect: string = encodeURIComponent(redirectUri ? redirectUri : '');
-const url: string = `${server}/oauth/authenticate?client_id=${clientId}&grant_type=${grant}&redirect_uri=${redirect}&response_type=code`;
+const url: string = `${server}/oauth/authenticate?client_id=${clientId}&grant_type=${grant}&redirect_uri=${redirect}&response_type=code&state=myState`;
 
 function AuthButton () {
-  const isLoggedIn = useSelector<RootState>(state => state.auth.isLoggedIn);
-  const dispatch: AppDispatch = useDispatch();
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+  const logout = useAuthStore(state => state.logout);
 
   const onClick = useCallback(() => {
     if (isLoggedIn) {
-      dispatch(signout());
+      logout();
     } else {
       window.location.href = url;
     }
-  }, [isLoggedIn, dispatch]);
+  }, [logout, isLoggedIn]);
 
   return (
-    <Button
-      color="primary"
-      variant="outlined"
-      onClick={onClick}
-    >
+    <Button onClick={onClick}>
         {isLoggedIn ? 'Cerrar Sesión' : 'Iniciar Sesión'}
     </Button>
   );

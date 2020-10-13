@@ -1,3 +1,5 @@
+import { User, Game } from "../types"
+
 const rules: Rules = {
   Visitor: {
     static: [
@@ -18,42 +20,60 @@ const rules: Rules = {
       'admin-page:visit',
       'dashboard-page:visit',
       // Actions
-      'stream:create',
-      'stream:update',
-      'game-point:create',
-      'game-point:delete',
     ],
+    dynamic: {
+      'game-player:actions': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (
+          (!game.isFinished && !game.isLive) ||
+          (game.isLive && status === 'playing')
+        );
+      },
+      'game-player:initial': ({ game }: { game: Game }) => {
+        return !game.isFinished && !game.isLive;
+      },
+      'game-player:add': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
+      'game-player:substitute': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (game.isLive && status === 'playing');
+      },
+      'game-point:update': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
+      'game-point:delete': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
+    }
   },
   Teacher: {
     static: [
       // Page visits
       'admin-page:visit',
       'dashboard-page:visit',
-      // Actions
-      'sport:create',
-      'sport:update',
-      'competition:create',
-      'competition:update',
-      'competition:delete',
-      'team:create',
-      'team:update',
-      'team:delete',
-      'competition-team:create',
-      'competition-team:remove',
-      'competition-game:create',
-      'competition-game:create-many',
-      'competition-game:update',
-      'competition-game:delete',
-      'game-point:create',
-      'game-point:delete',
-      'user-person:assign',
-      'team-player:create',
-      'team-player:add',
-      'team-player:update',
-      'team-player:delete',
-      'stream:create',
-      'stream:update',
-    ]
+    ],
+    dynamic: {
+      'game-player:actions': ({ game }: { game: Game }) => {
+        return !game.isFinished;
+      },
+      'game-player:initial': ({ game }: { game: Game }) => {
+        return !game.isFinished && !game.isLive;
+      },
+      'game-player:add': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
+      'game-player:substitute': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
+      'game-point:update': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
+      'game-point:delete': ({ game }: { game: Game }) => {
+        return game.isLive;
+      },
+    }
   },
   Administrator: {
     static: [
@@ -61,39 +81,17 @@ const rules: Rules = {
       'admin-page:visit',
       'dashboard-page:visit',
       // Actions
-      'sport:create',
-      'sport:update',
-      'sport:delete',
-      'competition:create',
-      'competition:update',
-      'competition:delete',
-      'team:create',
-      'team:update',
-      'team:delete',
-      'user:suspend',
-      'competition-team:create',
-      'competition-team:remove',
-      'competition-game:create',
-      'competition-game:create-many',
-      'competition-game:update',
-      'competition-game:delete',
+      'game-player:actions',
+      'game-player:add',
+      'game-player:substitute',
       'game-point:create',
+      'game-point:update',
       'game-point:delete',
-      'user-person:assign',
-      'team-player:create',
-      'team-player:add',
-      'team-player:update',
-      'team-player:delete',
-      'stream:create',
-      'stream:update',
     ],
     dynamic: {
-      'user:update': (data) => {
-        if (data)
-          return true;
-
-        return false;
-      }
+      'game-player:initial': ({ game }: { game: Game }) => {
+        return !game.isFinished && !game.isLive;
+      },
     }
   }
 };
@@ -102,7 +100,7 @@ export type Rules = {
   [key: string]: {
     static?: Array<string>,
     dynamic?: {
-      [key: string]: (data: object) => boolean,
+      [key: string]: (data: any) => boolean,
     }
   }
 }
