@@ -31,7 +31,6 @@ const bench = 'bench';
 const TeamLive: React.FC<Props> = ({ id, type, game }) => {
   const benchState = usePlayersInGameLive(game.id, id ? id : 0, bench);
   const fieldState = usePlayersInGameLive(game.id, id ? id : 0, playing);
-  const { isFinished } = game;
 
   const refresh = useCallback(() => {
     benchState.fetch();

@@ -1,4 +1,4 @@
-import { User, Game } from "../types"
+import { Game } from "../types"
 
 const rules: Rules = {
   Visitor: {

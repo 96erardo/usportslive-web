@@ -178,6 +178,18 @@ export interface Game {
   deletedAt: string | null,
 }
 
+export interface Image {
+  id: number,
+  url: string,
+  mediumUrl: string,
+  smallUrl: string,
+  width: number,
+  height: number,
+  user?: User, // The user that uploaded the image
+  createdAt: string,
+  createdBy: number,  
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

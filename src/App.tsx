@@ -21,13 +21,23 @@ import { ReactComponent as WhiteTrophy } from './shared/assets/images/white-trop
 import { ReactComponent as WhiteProfile } from './shared/assets/images/white-profile.svg';
 import { ReactComponent as BlackFilter } from './shared/assets/images/black-filter.svg';
 import { ReactComponent as BlueFilter } from './shared/assets/images/blue-filter.svg';
+import { ReactComponent as GreyImage } from './shared/assets/images/grey-image.svg';
+import { ReactComponent as GreyCircle } from './shared/assets/images/grey-circle.svg';
+import { ReactComponent as PrimaryCircle } from './shared/assets/images/primary-circle.svg';
+import { ReactComponent as GreyRect } from './shared/assets/images/grey-square.svg';
+import { ReactComponent as PrimaryRect } from './shared/assets/images/primary-square.svg';
 
 const icons = {
   WhiteSoccer,
   WhiteTrophy,
   WhiteProfile,
   BlackFilter,
-  BlueFilter
+  BlueFilter,
+  GreyImage,
+  GreyCircle,
+  PrimaryCircle,
+  GreyRect,
+  PrimaryRect,
 };
 
 Logger.useDefaults({ defaultLevel: Logger[process.env.REACT_APP_LOG_LEVEL] });
