@@ -52,6 +52,7 @@ const LiveScore: React.FC<Props> = ({ gameId }) => {
       <Body padding="none">
         <Row stretch className="py-4" alignItems="center" justifyContent="center" gap="md">
           <Avatar 
+            src={local.logo?.url}
             firstName={local?.name[0]}
             lastName={local?.name[1]}
           />
@@ -59,6 +60,7 @@ const LiveScore: React.FC<Props> = ({ gameId }) => {
             {local?.points?.length} : {visitor?.points?.length}
           </Heading>
           <Avatar 
+            src={visitor.logo?.url}
             firstName={visitor?.name[0]}
             lastName={visitor?.name[1]}
           />

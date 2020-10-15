@@ -12,7 +12,7 @@ const initialState = {
   points: [],
 }
 
-const include = ['points', 'local', 'visitor'];
+const include = ['points', 'local', 'visitor', 'local.logo', 'visitor.logo'];
 
 /**
  * Hooks that returns a game live score

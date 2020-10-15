@@ -105,7 +105,6 @@ export interface Person {
   name: string,
   lastname: string,
   gender: string,
-  photo: string,
   user?: User | null,
   teams?: Array<Team>,
   createdAt: Date,
@@ -148,7 +147,9 @@ export interface Team {
   id: number,
   name: string,
   sportId: number,
+  logoId: number,
   sport?: Sport,
+  logo?: Image | null,
   personHasTeam?: PersonHasTeam
   points?: Array<Point>,
   createdAt: string

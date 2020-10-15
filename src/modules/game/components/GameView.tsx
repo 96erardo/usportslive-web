@@ -20,7 +20,7 @@ const GameView: React.FC = () => {
     cancelToken.current = axios.CancelToken.source();
     setLoading(true);
 
-    const [err, canceled, data] = await fetchGame(parseInt(id), ['competition', 'local', 'visitor']);
+    const [err, canceled, data] = await fetchGame(parseInt(id), ['competition', 'local', 'visitor', 'local.logo', 'visitor.logo']);
 
     if (canceled) {
       return;

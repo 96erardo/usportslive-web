@@ -50,6 +50,7 @@ const PlayerRow: React.FC<Props> = ({ player, columns, onMutation }) => {
       gender: player.gender,
       number: team.personHasTeam?.number,
       user: player.user,
+      avatar: player.avatar
     });
   }, [openModal, player, team]);
 
@@ -58,7 +59,7 @@ const PlayerRow: React.FC<Props> = ({ player, columns, onMutation }) => {
       <Table.BodyCell>
         <Avatar
           size="sm"
-          src={player.photo}
+          src={player.avatar?.smallUrl}
           firstName={player.name}
           lastName={player.lastname}
         />

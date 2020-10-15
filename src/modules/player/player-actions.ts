@@ -89,7 +89,7 @@ export async function createPlayer (data: CreatePlayerInput): Promise<MutationRe
     lastname: data.lastname,
     number: data.number,
     gender: data.gender,
-    photo: data.photo,
+    avatarId: data.avatar,
   };
 
   try {
@@ -236,7 +236,7 @@ export type CreatePlayerInput = {
   lastname: string,
   number: number | string,
   gender: string,
-  photo?: string,
+  avatar: number | null,
 }
 
 export type AddPlayerInput = {
@@ -251,5 +251,5 @@ export type UpdatePlayerInput = {
   lastname?: string,
   number?: number | string,
   gender?: string,
-  photo?: string,
+  avatarId?: number | null,
 }

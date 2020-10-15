@@ -14,7 +14,7 @@ const Body = styled(Table.Body)`
   min-height: 500px;
 `;
 
-const include = ['sport'];
+const include = ['sport', 'logo'];
 const columns = '100px 1fr 300px 200px 150px';
 
 function TeamsView () {
