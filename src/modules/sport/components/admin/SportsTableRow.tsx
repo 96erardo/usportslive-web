@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Table, Text, Button, Row, Dropdown, Menu, Icon, Loader, useModal, styled } from '@8base/boost';
+import { Avatar, Table, Text, Button, Row, Dropdown, Menu, Icon, Loader, useModal, styled } from '@8base/boost';
 import TeamSelector from '../../../team/components/TeamSelector';
 import { Sport, Team } from '../../../../shared/types';
 import { assignTeamToSport, deleteSport } from '../../sport-actions';
@@ -26,7 +26,8 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
       id: sport.id,
       name: sport.name,
       color: sport.color,
-      team: sport.team
+      team: sport.team,
+      icon: sport.icon
     })
   }, [sport, openModal]);
 
@@ -74,8 +75,17 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
 
   return (
     <Table.BodyRow columns={columns}>
-      <Table.BodyCell>{sport.id}</Table.BodyCell>
-      <Table.BodyCell>{sport.name}</Table.BodyCell>
+      <Table.BodyCell>
+        <Avatar
+          size="sm"
+          src={sport.icon?.smallUrl}
+          firstName={sport.name[0]}
+          lastName={sport.name[1]}
+        />
+      </Table.BodyCell>
+      <Table.BodyCell>
+        {sport.name}
+      </Table.BodyCell>
       <Table.BodyCell>
         <Row stretch alignItems="center" justifyContent="start">
           <ColorPreview color={sport.color} /> 

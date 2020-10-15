@@ -39,6 +39,7 @@ function TopNavigation () {
         <Profile>
           <Avatar
             size="sm"
+            src={user?.person.avatar?.smallUrl}
             firstName={user?.person.name}
             lastName={user?.person.lastname}
           />

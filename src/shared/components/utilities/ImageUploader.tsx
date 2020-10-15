@@ -94,6 +94,12 @@ export const ImageUploader: React.FC<Props> = ({ id, children, onSelect }) => {
 
   const close = useCallback(() => closeModal(`${id}-${modalId}`), [id, closeModal]);
 
+  const onRemove = useCallback(() => {
+    onSelect(null);
+
+    close();
+  }, [close, onSelect]);
+
   const onSubmit = useCallback(async () => {
     setLoading(true);
 
@@ -185,6 +191,13 @@ export const ImageUploader: React.FC<Props> = ({ id, children, onSelect }) => {
               Cancelar
             </Button>
             <Button 
+              disabled={loading}
+              color="danger" 
+              onClick={onRemove}
+            >
+              Quitar Foto
+            </Button>
+            <Button 
               disabled={loading || image.file === null} 
               loading={loading} 
               color="primary" 
@@ -201,7 +214,7 @@ export const ImageUploader: React.FC<Props> = ({ id, children, onSelect }) => {
 
 type Props = {
   id: string,
-  onSelect: (image: Image) => void,
+  onSelect: (image: Image | null) => void,
   children: (open: () => void) => React.ReactNode,
 }
 

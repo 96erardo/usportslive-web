@@ -15,7 +15,7 @@ const Body = styled(Table.Body)`
   min-height: 500px;
 `;
 
-const include = ['team'];
+const include = ['team', 'icon'];
 const columns = '100px 1fr 150px repeat(2, 1fr) 150px';
 
 function SportsView () {

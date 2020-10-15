@@ -56,7 +56,7 @@ export default function SportFormDialog (props: Props) {
     }))
   }, []);
 
-  const handleAvatarChange = useCallback((image: Image) => {
+  const handleAvatarChange = useCallback((image: Image | null) => {
     setForm(state => ({
       ...state,
       icon: image
@@ -74,13 +74,18 @@ export default function SportFormDialog (props: Props) {
     setLoading(true);
 
     const [err, data] = props.type === 'create' ? (
-      await createSport(form)
+      await createSport({
+        name: form.name,
+        color: form.color,
+        iconId: form.icon ? form.icon.id : null,
+      })
     ) : (
       await updateSport({
         id: form.id ? form.id : 0,
         name: form.name,
         color: form.color,
         team: form?.team === null ? null : form.team?.id,
+        icon: form.icon ? form.icon.id : null,
       })
     );
 
@@ -190,5 +195,5 @@ type Form = {
   name: string,
   color: string,
   team?: Team | null,
-  icon?: Image
+  icon?: Image | null
 }

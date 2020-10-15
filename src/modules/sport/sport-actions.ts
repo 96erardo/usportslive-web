@@ -109,7 +109,8 @@ export async function updateSport (data: UpdateSportInput): Promise<MutationResu
   const sport = {
     name: data.name,
     color: data.color,
-    teamId: data.team
+    teamId: data.team,
+    iconId: data.icon
   };
 
   try {
@@ -212,14 +213,16 @@ export async function deleteSport (sport: number): Promise<MutationResult<boolea
 
 export type CreateSportInput = {
   name: string,
-  color: string
+  color: string,
+  iconId: number | null
 }
 
 export type UpdateSportInput = {
   id: number,
   name: string,
   color: string,
-  team: number | null | undefined
+  team: number | null | undefined,
+  icon: number | null | undefined,
 }
 
 export type SportFilter = {

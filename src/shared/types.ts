@@ -111,6 +111,8 @@ export interface Person {
   createdAt: Date,
   deletedAt: Date
   userId: number | null,
+  avatarId: number | null,
+  avatar?: Image,
   participation: Participation
 }
 
@@ -135,7 +137,10 @@ export interface Sport {
   id: number,
   name: string,
   color: string,
+  iconId: number | null,
+  teamId: number | null,
   team?: Team,
+  icon?: Image,
   createdAt?: string
 }
 
