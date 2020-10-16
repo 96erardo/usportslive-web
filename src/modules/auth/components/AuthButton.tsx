@@ -12,7 +12,7 @@ const {
 const redirect: string = encodeURIComponent(redirectUri ? redirectUri : '');
 const url: string = `${server}/oauth/authenticate?client_id=${clientId}&grant_type=${grant}&redirect_uri=${redirect}&response_type=code&state=myState`;
 
-function AuthButton () {
+function AuthButton (props: Props) {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
   const logout = useAuthStore(state => state.logout);
 
@@ -25,10 +25,14 @@ function AuthButton () {
   }, [logout, isLoggedIn]);
 
   return (
-    <Button onClick={onClick}>
+    <Button onClick={onClick} {...props}>
         {isLoggedIn ? 'Cerrar Sesión' : 'Iniciar Sesión'}
     </Button>
   );
+}
+
+type Props = {
+  [key: string]: any
 }
 
 export default AuthButton;

@@ -10,16 +10,15 @@ const rules: Rules = {
   },
   Normal: {
     static: [
-      // Page visits
       'dashboard-page:visit',
+      'user:authenticated'
     ]
   },
   Audiovisual: {
     static: [
-      // Page visits
       'admin-page:visit',
       'dashboard-page:visit',
-      // Actions
+      'user:authenticated'
     ],
     dynamic: {
       'game-player:actions': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
@@ -50,8 +49,8 @@ const rules: Rules = {
   },
   Teacher: {
     static: [
-      // Page visits
       'admin-page:visit',
+      'user:authenticated',
       'dashboard-page:visit',
     ],
     dynamic: {
@@ -77,7 +76,7 @@ const rules: Rules = {
   },
   Administrator: {
     static: [
-      // Page visits
+      'user:authenticated',
       'admin-page:visit',
       'dashboard-page:visit',
       // Actions

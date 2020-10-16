@@ -49,7 +49,7 @@ function Home (props: Props) {
 
   return (
     <div>
-      <div className="p-5">
+      {/* <div className="p-5">
         <Row stretch alignItems="center" justifyContent="between">
           <AuthButton />
           <Can
@@ -64,8 +64,8 @@ function Home (props: Props) {
             )}
           />
         </Row>
-      </div>
-      <div className="container">
+      </div> */}
+      <div className="container mt-5">
         <Column stretch gap="lg">
           {content}
           {(!loading && items.length < count) &&

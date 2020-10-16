@@ -117,7 +117,7 @@ export interface Person {
 
 export interface Role {
   id: number,
-  name: string
+  name: 'Normal' | 'Audiovisual' | 'Teacher' | 'Administrator'
 }
 
 export interface User {
