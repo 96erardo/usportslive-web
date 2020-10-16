@@ -16,6 +16,7 @@ function TeamTableRow ({ columns, team, afterUpdate }: Props) {
     openModal('update-team-dialog', {
       id: team.id,
       name: team.name,
+      logo: team.logo,
     });
   }, [team, openModal]);
 

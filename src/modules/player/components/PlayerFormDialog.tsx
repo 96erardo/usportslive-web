@@ -118,7 +118,7 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
   return (
     <Dialog isOpen={isOpen}>
       <Dialog.Header 
-        title={type === 'create' ? 'Crear Jugador' : 'Editar Jugador'}
+        title={type === 'create' ? 'Crear Jugador' : type === 'add' ? 'Agregar Jugador' : 'Editar Jugador'}
         onClose={onClose}
       />
       <Dialog.Body>

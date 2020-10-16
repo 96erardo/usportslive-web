@@ -4,6 +4,7 @@ import { QueryResult, PaginatedResponse, Competition, Team, MutationResult } fro
 import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
 import qs from 'qs';
+import moment from 'moment';
 
 /**
  * Fetches the team list
@@ -158,6 +159,54 @@ export type CreateCompetitionInput = {
   quantityOfPlayers: number,
   sportId: number,
   games: Array<string>
+}
+
+/**
+ * Updates the specified competition
+ * 
+ * @param {UpdateCompetitionInput} data - The data needed to update the competition
+ * 
+ * @returns {Promise<MutationResult<Competition>>} The updated competition
+ */
+export async function updateCompetition (data: UpdateCompetitionInput): Promise<MutationResult<{ competition: Competition, success: boolean }>> {
+  const { accessToken } = useAuthStore.getState();
+  const { id, ...competition } = data;
+
+  try {
+    const res: AxiosResponse<Competition> = await authenticated.patch(`/api/competitions/${id}`, {
+      ...competition,
+      startDate: moment(competition.startDate).toISOString()
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateCompetition', res.data);
+
+    return [null, { competition: res.data, success: true }];
+
+  } catch (e) {
+    Logger.error('updateCompetition', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+export type UpdateCompetitionInput = {
+  id: number,
+  name: string,
+  startDate: string,
+  matchTime: number,
+  quantityOfTeams: number,
+  quantityOfPlayers: number,
 }
 
 /**

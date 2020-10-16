@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, styled } from '@8base/boost';
+import { Avatar, Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, styled } from '@8base/boost';
 import { fetchTeamPlayers } from '../player-actions';
 import SearchInput from '../../../shared/components/form/SearchInput';
 import axios, { CancelTokenSource } from 'axios';
 import { Person as Player } from '../../../shared/types';
+import PersonSelector from '../../person/components/PersonSelector';
 
 const Option = styled(Card.Section)`
   cursor: pointer;
@@ -35,7 +36,7 @@ const PlayerSelector: React.FC<Props> = (props) => {
     setSelected(null);
     setPersons(state => ({...state, loading: true }));
 
-    const [error, canceled, data] = await fetchTeamPlayers(args.id as number, 1, [], { q: search });
+    const [error, canceled, data] = await fetchTeamPlayers(args.id as number, 1, ['avatar'], { q: search });
 
     if (canceled)
       return;
@@ -99,6 +100,12 @@ const PlayerSelector: React.FC<Props> = (props) => {
           {person.id === selected?.id && 
             <Icon name="Check" color="PRIMARY" />
           }
+          <Avatar 
+            size="sm"
+            src={person.avatar?.smallUrl}
+            firstName={person.name}
+            lastName={person.lastname}
+          />
           <Text>
             {person.name} {person.lastname}
           </Text>

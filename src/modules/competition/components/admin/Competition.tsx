@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef, useEffect } from 'react';
-import { Card, Column, Grid, Button, Row, Icon, DateInputField, Loader, styled } from '@8base/boost';
+import { Card, Column, Grid, Button, Row, Icon, Input, DateInputField, Loader, styled } from '@8base/boost';
 import axios, { CancelTokenSource } from 'axios';
-import { createCompetition } from '../../competition-actions';
+import { createCompetition, updateCompetition } from '../../competition-actions';
 import InputField from '../../../../shared/components/form/InputField';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
 import SportSelector from '../../../sport/components/SportSelector';
@@ -13,6 +13,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { fetchCompetition } from '../../competition-actions';
 import { EventInput } from '@fullcalendar/react';
 import CompetitionTeamsTable from './CompetitionTeamsTable';
+import moment from 'moment';
 
 const TitleField = styled(InputField)`
   & input {
@@ -150,10 +151,21 @@ const Competition: React.FC = () => {
 
     const { competition, games  } = form;
 
-    const [err, data] = await createCompetition({
-      ...competition,
-      games: games.map(game => game.start as string)
-    });
+    const [err, data] = params.id ? (
+      await updateCompetition({
+        id: parseInt(params.id),
+        name: form.competition.name,
+        startDate: form.competition.startDate,
+        matchTime: form.competition.matchTime,
+        quantityOfTeams: form.competition.quantityOfTeams,
+        quantityOfPlayers: form.competition.quantityOfPlayers
+      })
+    ) : (
+      await createCompetition({
+        ...competition,
+        games: games.map(game => game.start as string)
+      })
+    );
 
     setSubmitting(false);
 
@@ -162,18 +174,19 @@ const Competition: React.FC = () => {
     }
 
     if (data) {
-      const { success } = data;
-      
-      toast.success('Torneo creado correctamente');
-
-      if (!success) {
+      if (!data.success) {
         toast.warning('Lo partidos no pudieron ser creados para la competición, intentelo nuevamente');
       }
 
-      history.push('/admin/competitions');
+      if (params.id) {
+        toast.success('Torneo actualizado correctamente');
+      } else {
+        toast.success('Torneo creado correctamente');        
+        history.push('/admin/competitions');
+      }
     }
 
-  }, [history, form]);
+  }, [history, form, params]);
 
   const { competition, games, sport } = form;
 
@@ -197,24 +210,32 @@ const Competition: React.FC = () => {
                 <Grid.Layout stretch gap="md" columns="minmax(300px, 400px) 1fr">
                   <Grid.Box>
                     <Column stretch gap="md">
-                      <SportSelector id="create-competition" onSelect={onSportSelect}>
-                        {open => (
-                          <Row stretch alignItems="center">
-                            <ClickableInput
-                              stretch
-                              readOnly
-                              value={sport ? sport.name : ''}
-                              placeholder="Select a sport"
-                              cursor="pointer"
-                              onChange={() => {}}
-                              onClick={open}
-                            />
-                            <Button squared size="sm" color="neutral" onClick={() => onSportSelect(null)}>
-                              <Icon name="Delete" />
-                            </Button>
-                          </Row>
-                        )}
-                      </SportSelector>
+                      {params.id ? (
+                        <Input 
+                          name="sport"
+                          value={sport ? sport.name : ''}
+                          readOnly
+                        />
+                      ) : (
+                        <SportSelector id="create-competition" onSelect={onSportSelect}>
+                          {open => (
+                            <Row stretch alignItems="center">
+                              <ClickableInput
+                                stretch
+                                readOnly
+                                value={sport ? sport.name : ''}
+                                placeholder="Select a sport"
+                                cursor="pointer"
+                                onChange={() => {}}
+                                onClick={open}
+                              />
+                              <Button squared size="sm" color="neutral" onClick={() => onSportSelect(null)}>
+                                <Icon name="Delete" />
+                              </Button>
+                            </Row>
+                          )}
+                        </SportSelector>
+                      )}
                       <DateInputField 
                         label="Fecha de inicio"
                         input={{

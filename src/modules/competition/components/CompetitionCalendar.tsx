@@ -24,13 +24,13 @@ const CompetitionCalendar: React.FC<Props> = ({
     if (competition.id) {
       fetch(competition.id, month.isAfter, month.isBefore);
     }
-  }, [competition, month, fetch]);
+  }, [competition.id, month, fetch]);
 
   useEffect(() => {
     if (competition.id && month.isAfter && month.isBefore) {
       fetch(competition.id, month.isAfter, month.isBefore);
     }
-  }, [competition, month, fetch]);
+  }, [competition.id, month, fetch]);
 
   const onCreate = useCallback((form: Form) => {
     const date = moment(form.date);
@@ -42,7 +42,7 @@ const CompetitionCalendar: React.FC<Props> = ({
     });
 
     closeModal(`calendar-game-form-dialog`);
-  }, [competition, onNewGame, closeModal]);
+  }, [competition.matchTime, onNewGame, closeModal]);
 
   const onUpdate = useCallback((form: Form) => {
     const date = moment(form.date);
@@ -55,7 +55,7 @@ const CompetitionCalendar: React.FC<Props> = ({
     });
 
     closeModal(`calendar-game-form-dialog`);
-  }, [competition, onUpdateNewGame, closeModal]);
+  }, [competition.matchTime, onUpdateNewGame, closeModal]);
   
   const onDelete = useCallback((id: string) => {
     onRemoveNewGame(id);
@@ -81,7 +81,7 @@ const CompetitionCalendar: React.FC<Props> = ({
       date: info.date.toISOString(),
       onSubmit: onCreate
     });
-  }, [competition, onCreate, openModal]);
+  }, [competition.id, competition.startDate, onCreate, openModal]);
 
   const handleEventClick = useCallback(({ event }: EventClickArg) => {
     const game = items.find(item => item.id.toString() === event.id);

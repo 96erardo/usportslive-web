@@ -56,7 +56,7 @@ function SportsView () {
         <Card.Body padding="none">
           <Table>
             <Table.Header columns={columns}>
-              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
               <Table.HeaderCell>Nombre</Table.HeaderCell>
               <Table.HeaderCell>Color</Table.HeaderCell>
               <Table.HeaderCell>Equipo Oficial</Table.HeaderCell>
