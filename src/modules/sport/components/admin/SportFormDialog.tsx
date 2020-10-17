@@ -4,10 +4,12 @@ import Avatar from '../../../../shared/components/utilities/Avatar';
 import ColorPicker from '../../../../shared/components/form/ColorPicker';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
 import TeamSelector from '../../../team/components/TeamSelector';
-import { Team, Sport } from '../../../../shared/types';
+import { Team, Sport, Image } from '../../../../shared/types';
 import { createSport, updateSport } from '../../sport-actions';
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
+import { ImageUploader } from '../../../../shared/components/utilities/ImageUploader';
+
 
 const initialForm = {
   name: '',
@@ -54,6 +56,13 @@ export default function SportFormDialog (props: Props) {
     }))
   }, []);
 
+  const handleAvatarChange = useCallback((image: Image | null) => {
+    setForm(state => ({
+      ...state,
+      icon: image
+    }))
+  }, []);
+
   const handleColor = useCallback((color: string) => {
     setForm(state => ({
       ...state,
@@ -65,13 +74,18 @@ export default function SportFormDialog (props: Props) {
     setLoading(true);
 
     const [err, data] = props.type === 'create' ? (
-      await createSport(form)
+      await createSport({
+        name: form.name,
+        color: form.color,
+        iconId: form.icon ? form.icon.id : null,
+      })
     ) : (
       await updateSport({
         id: form.id ? form.id : 0,
         name: form.name,
         color: form.color,
         team: form?.team === null ? null : form.team?.id,
+        icon: form.icon ? form.icon.id : null,
       })
     );
 
@@ -102,12 +116,19 @@ export default function SportFormDialog (props: Props) {
         <Column stretch gap="lg">
           <Row stretch alignItems="center" justifyContent="between" gap="lg">
             <div>
-              <Avatar 
-                size="md"
-                firstName={form.name[0]}
-                lastName={form.name[1]} 
-                background={form.color}
-              />
+              <ImageUploader id={`${props.type}-sport`} onSelect={handleAvatarChange}>
+                {open => (
+                  <Avatar 
+                    size="md"
+                    src={form.icon?.smallUrl}
+                    firstName={form.name[0]}
+                    lastName={form.name[1]} 
+                    background={form.color}
+                    pickLabel="Cambiar"
+                    onPick={open}
+                  />
+                )}
+              </ImageUploader>
             </div>
             <Input 
               stretch
@@ -173,5 +194,6 @@ type Form = {
   id?: number,
   name: string,
   color: string,
-  team?: Team | null
+  team?: Team | null,
+  icon?: Image | null
 }

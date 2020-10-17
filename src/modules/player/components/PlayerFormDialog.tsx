@@ -7,7 +7,8 @@ import InputField from '../../../shared/components/form/InputField';
 import { onError } from '../../../shared/mixins';
 import { createPlayer, updatePlayer, adddPlayerInTeam } from '../player-actions';
 import { toast } from 'react-toastify';
-import { Person, User } from '../../../shared/types';
+import { ImageUploader } from '../../../shared/components/utilities/ImageUploader';
+import { Image, Person, User } from '../../../shared/types';
 
 const initialForm = {
   id: null,
@@ -33,16 +34,19 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
     }
   }, [isOpen, args]);
 
-  const onPick = useCallback(() => {
-
-  }, []);
-
   const onChange = useCallback((name, value) => {
     setForm(state => ({
       ...state,
       [name]: value
     }));
-  }, [])
+  }, []);
+
+  const onAvatarChange = useCallback((avatar: Image | null) => {
+    setForm(state => ({
+      ...state,
+      avatar: avatar,
+    }))
+  }, []);
 
   const onClose = useCallback(() => {
     closeModal(`${type}-player-form`);
@@ -60,11 +64,12 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
         lastname: form.lastname,
         number: form.number,
         gender: form.gender,
+        avatar: form.avatar ? form.avatar.id : null
       });
     } else if (type === 'update' && form.user !== null) {
       result = await updatePlayer(id, {
         id: form.id,
-        number: form.number 
+        number: form.number,
       });
     } else if (type === 'update' && form.user === null) {
       result = await updatePlayer(id, {
@@ -73,6 +78,7 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
         lastname: form.lastname,
         number: form.number,
         gender: form.gender,
+        avatarId: form.avatar ? form.avatar.id : null,
       })
     } else {
       result = await adddPlayerInTeam({
@@ -104,7 +110,7 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
       name: person ? person.name : '',
       lastname: person ? person.lastname : '',
       gender: person ? person.gender : GENDERS.MALE,
-      photo: person ? person.photo : '',
+      avatar: person ? person.avatar : null,
       user: person ? person.user : null,
     }));
   }, [])
@@ -112,19 +118,23 @@ const PlayerFormDialog: React.FC<Props> = ({ id, type, onFinished }) => {
   return (
     <Dialog isOpen={isOpen}>
       <Dialog.Header 
-        title={type === 'create' ? 'Crear Jugador' : 'Editar Jugador'}
+        title={type === 'create' ? 'Crear Jugador' : type === 'add' ? 'Agregar Jugador' : 'Editar Jugador'}
         onClose={onClose}
       />
       <Dialog.Body>
         <Column stretch alignItems="center">
-          <Avatar
-            src={form.photo}
-            size="xl"
-            firstName={form.name}
-            lastName={form.lastname}
-            pickLabel={(form.user === null && type !== 'add') ? 'Cambiar' : null}
-            onPick={(form.user === null && type !== 'add') ? onPick : null}
-          />
+          <ImageUploader id={`${type}-player`} onSelect={onAvatarChange}>
+            {open => (
+              <Avatar
+                src={form.avatar?.url}
+                size="xl"
+                firstName={form.name}
+                lastName={form.lastname}
+                pickLabel={(form.user === null && type !== 'add') ? 'Cambiar' : null}
+                onPick={(form.user === null && type !== 'add') ? open : null}
+              />
+            )}
+          </ImageUploader>
           {type !== 'add' ? (
             <>
               <InputField 
@@ -207,7 +217,7 @@ type Form = {
   lastname: string,
   number: string | number,
   gender: 'Masculino' | 'Femenino' | 'Otro' | string,
-  photo: string,
+  avatar?: Image | null,
   user: User | null | undefined,
 }
 

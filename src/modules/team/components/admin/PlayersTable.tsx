@@ -10,7 +10,7 @@ import PlayerFormDialog from '../../../player/components/PlayerFormDialog';
 import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
 import PlayerRow from './PlayerRow';
 
-const include = ['user'];
+const include = ['user', 'avatar'];
 
 const columns = '100px 135px 1fr 1fr 150px';
 

@@ -31,7 +31,6 @@ const bench = 'bench';
 const TeamLive: React.FC<Props> = ({ id, type, game }) => {
   const benchState = usePlayersInGameLive(game.id, id ? id : 0, bench);
   const fieldState = usePlayersInGameLive(game.id, id ? id : 0, playing);
-  const { isFinished } = game;
 
   const refresh = useCallback(() => {
     benchState.fetch();
@@ -61,7 +60,12 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
       <Body padding="none">
         <Row className="p-4" stretch alignItems="center" justifyContent="between">
           <Row gap="md" alignItems="center">
-            <Avatar size="sm" firstName={game[type]?.name[0]} lastName={game[type]?.name[0]} />
+            <Avatar
+              size="sm"
+              src={game[type]?.logo?.mediumUrl}
+              firstName={game[type]?.name[0]}
+              lastName={game[type]?.name[0]}
+            />
             <Text color="WHITE">{game[type]?.name}</Text>
           </Row>
         </Row>
@@ -77,8 +81,8 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
               onNo={() => null}
               onYes={() => (
                 <PlayerPlaysButton 
-                  id={type} 
-                  teamId={id as number} 
+                  id={type}
+                  teamId={id as number}
                   gameId={game.id}
                   onFinished={refresh}
                 />
@@ -89,7 +93,7 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
               data={{ game }}
               onNo={() => null}
               onYes={() => (
-                <SubstitutionButton 
+                <SubstitutionButton
                   id={type}
                   teamId={id as number}
                   gameId={game.id}

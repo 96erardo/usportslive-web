@@ -105,18 +105,19 @@ export interface Person {
   name: string,
   lastname: string,
   gender: string,
-  photo: string,
   user?: User | null,
   teams?: Array<Team>,
   createdAt: Date,
   deletedAt: Date
   userId: number | null,
+  avatarId: number | null,
+  avatar?: Image,
   participation: Participation
 }
 
 export interface Role {
   id: number,
-  name: string
+  name: 'Normal' | 'Audiovisual' | 'Teacher' | 'Administrator'
 }
 
 export interface User {
@@ -135,7 +136,10 @@ export interface Sport {
   id: number,
   name: string,
   color: string,
+  iconId: number | null,
+  teamId: number | null,
   team?: Team,
+  icon?: Image,
   createdAt?: string
 }
 
@@ -143,7 +147,9 @@ export interface Team {
   id: number,
   name: string,
   sportId: number,
+  logoId: number,
   sport?: Sport,
+  logo?: Image | null,
   personHasTeam?: PersonHasTeam
   points?: Array<Point>,
   createdAt: string
@@ -176,6 +182,18 @@ export interface Game {
   points?: Array<Point>,
   createdAt: string,
   deletedAt: string | null,
+}
+
+export interface Image {
+  id: number,
+  url: string,
+  mediumUrl: string,
+  smallUrl: string,
+  width: number,
+  height: number,
+  user?: User, // The user that uploaded the image
+  createdAt: string,
+  createdBy: number,  
 }
 
 export interface Event {

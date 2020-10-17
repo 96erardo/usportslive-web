@@ -37,7 +37,7 @@ export default function PlayerCard ({ player }: Props): React.ReactElement {
           <div>
             <Avatar 
               size="lg"
-              src={player.photo} 
+              src={player.avatar?.mediumUrl} 
               firstName={player.name} 
               lastName={player.lastname} 
             />

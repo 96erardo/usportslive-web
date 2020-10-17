@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Table, Dropdown, Menu, Text, Icon, useModal } from '@8base/boost';
+import { Avatar, Table, Dropdown, Menu, Text, Icon, useModal } from '@8base/boost';
 import { modalId } from '../../../../shared/components/globals/DecisionDialog';
 import { removeTeamFromCompetition } from '../../competition-actions';
 import { Team } from '../../../../shared/types';
@@ -37,7 +37,14 @@ const TeamRow: React.FC<Props> = ({ id, team, columns, afterMutation }) => {
 
   return (
     <Table.BodyRow columns={columns}>
-      <Table.BodyCell>{team.id}</Table.BodyCell>
+      <Table.BodyCell>
+        <Avatar 
+          size="sm"
+          src={team.logo?.smallUrl}
+          firstName={team.name[0]}
+          lastName={team.name[1]}
+        />
+      </Table.BodyCell>
       <Table.BodyCell>{team.name}</Table.BodyCell>
       <Table.BodyCell>
         <Dropdown defaultOpen={false}>

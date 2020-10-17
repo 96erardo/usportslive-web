@@ -122,7 +122,8 @@ export async function createTeam (data: CreateTeamInput): Promise<MutationResult
 
   const team = {
     name: data.name,
-    sportId: data.sport
+    sportId: data.sport,
+
   }
 
   try {
@@ -159,7 +160,10 @@ export async function createTeam (data: CreateTeamInput): Promise<MutationResult
  */
 export async function updateTeam (data: UpdateTeamInput): Promise<MutationResult<Team>> {
   const { accessToken } = useAuthStore.getState();
-  const team = { name: data.name };
+  const team = { 
+    name: data.name,
+    logoId: data.logo
+  };
 
   try {
     const res: AxiosResponse<Team> = await authenticated.patch(`/api/teams/${data.id}`, team, {
@@ -260,10 +264,12 @@ type FilterData = {
 
 type CreateTeamInput = {
   name?: string,
-  sport?: number
+  sport?: number,
+  logo: number | null,
 }
 
 type UpdateTeamInput = {
   id?: number,
   name?: string,
+  logo: number | null,
 }

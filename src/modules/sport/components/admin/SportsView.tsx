@@ -15,7 +15,7 @@ const Body = styled(Table.Body)`
   min-height: 500px;
 `;
 
-const include = ['team'];
+const include = ['team', 'icon'];
 const columns = '100px 1fr 150px repeat(2, 1fr) 150px';
 
 function SportsView () {
@@ -56,7 +56,7 @@ function SportsView () {
         <Card.Body padding="none">
           <Table>
             <Table.Header columns={columns}>
-              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
               <Table.HeaderCell>Nombre</Table.HeaderCell>
               <Table.HeaderCell>Color</Table.HeaderCell>
               <Table.HeaderCell>Equipo Oficial</Table.HeaderCell>

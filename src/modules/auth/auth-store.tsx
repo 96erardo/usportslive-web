@@ -33,7 +33,7 @@ export const useAuthStore = create<Store>(save((set: SetState<Store>, get: GetSt
      * if it is
      */
     fetchAuthenticatedUser: async () => {
-      const [err, data] = await fetchUser(0, ['role', 'person']);
+      const [err, data] = await fetchUser(0, ['role', 'person', 'person.avatar']);
 
       if (err || !data.user) {
         return get().logout();

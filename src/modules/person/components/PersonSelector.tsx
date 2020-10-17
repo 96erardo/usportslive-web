@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, styled } from '@8base/boost';
+import { Dialog, Button, Card, Icon, Row, Text, Avatar, Loader, NoData, useModal, styled } from '@8base/boost';
 import { fetchPersons } from '../person-actions';
 import SearchInput from '../../../shared/components/form/SearchInput';
 import axios, { CancelTokenSource } from 'axios';
@@ -35,7 +35,7 @@ const PersonSelector: React.FC<Props> = (props) => {
     setSelected(null);
     setPersons(state => ({...state, loading: true }));
 
-    const [error, canceled, data] = await fetchPersons(1, [], { q: search });
+    const [error, canceled, data] = await fetchPersons(1, ['avatar'], { q: search });
 
     if (canceled)
       return;
@@ -99,6 +99,12 @@ const PersonSelector: React.FC<Props> = (props) => {
           {person.id === selected?.id && 
             <Icon name="Check" color="PRIMARY" />
           }
+          <Avatar 
+            size="sm"
+            src={person.avatar?.smallUrl}
+            firstName={person.name}
+            lastName={person.lastname}
+          />
           <Text>
             {person.name}
           </Text>

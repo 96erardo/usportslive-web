@@ -14,7 +14,7 @@ const Body = styled(Table.Body)`
   min-height: 500px;
 `;
 
-const include = ['sport'];
+const include = ['sport', 'logo'];
 const columns = '100px 1fr 300px 200px 150px';
 
 function TeamsView () {
@@ -55,7 +55,7 @@ function TeamsView () {
         <Card.Body padding="none">
           <Table>
             <Table.Header columns={columns}>
-              <Table.HeaderCell>Id</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
               <Table.HeaderCell>Nombre</Table.HeaderCell>
               <Table.HeaderCell>Deporte</Table.HeaderCell>
               <Table.HeaderCell>Fecha de Creación</Table.HeaderCell>

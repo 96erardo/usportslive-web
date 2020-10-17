@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Table, Dropdown, Link, Icon, Menu, Loader, Row } from '@8base/boost';
+import { Avatar, Table, Dropdown, Link, Icon, Menu, Loader, Row } from '@8base/boost';
 import { updateUserRole } from '../../user-actions';
 import { User } from '../../../../shared/types';
 import { DATE_FORMAT } from '../../../../shared/constants';
@@ -36,7 +36,14 @@ function UserTableRow ({ columns, user, afterUpdate }: Props) {
 
   return (
     <Table.BodyRow columns={columns}>
-      <Table.BodyCell>{user.id}</Table.BodyCell>
+      <Table.BodyCell>
+        <Avatar 
+          size="sm"
+          src={user.person.avatar?.smallUrl}
+          firstName={user.person.name}
+          lastName={user.person.lastname}
+        />
+      </Table.BodyCell>
       <Table.BodyCell>
         <Link to={`/admin/user/${user.id}`} color="primary" variant="link">
           {`${user.person.name} ${user.person.lastname}`}

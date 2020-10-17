@@ -9,7 +9,7 @@ import AddTeamButton from './AddTeamButton';
 import Card from '../../../../shared/components/globals/Card';
 import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
 
-const include: Array<string> = [];
+const include: Array<string> = ['logo'];
 
 const columns = '100px 1fr 200px';
 
@@ -43,7 +43,7 @@ const CompetitionTeamsTable: React.FC<Props> = ({ sportId, competitionId }) => {
       <Card.Body>
         <Table>
           <Table.Header columns={columns}>
-            <Table.HeaderCell>Id</Table.HeaderCell>
+            <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell>Nombre</Table.HeaderCell>
             <Table.HeaderCell>Acciones</Table.HeaderCell>
           </Table.Header>

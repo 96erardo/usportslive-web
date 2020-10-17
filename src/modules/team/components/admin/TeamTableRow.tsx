@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Table, Dropdown, Icon, Menu, Text, useModal } from '@8base/boost';
+import { Table, Dropdown, Icon, Menu, Text, Avatar, useModal } from '@8base/boost';
 import { Team } from '../../../../shared/types';
 import { DATE_FORMAT } from '../../../../shared/constants';
 import Link from '../../../../shared/components/buttons/Link';
@@ -16,6 +16,7 @@ function TeamTableRow ({ columns, team, afterUpdate }: Props) {
     openModal('update-team-dialog', {
       id: team.id,
       name: team.name,
+      logo: team.logo,
     });
   }, [team, openModal]);
 
@@ -47,7 +48,14 @@ function TeamTableRow ({ columns, team, afterUpdate }: Props) {
 
   return (
     <Table.BodyRow columns={columns}>
-      <Table.BodyCell>{team.id}</Table.BodyCell>
+      <Table.BodyCell>
+        <Avatar 
+          size="sm"
+          src={team.logo?.smallUrl}
+          firstName={team.name[0]}
+          lastName={team.name[1]}
+        />
+      </Table.BodyCell>
       <Table.BodyCell>
         <Link to={`/admin/team/${team.id}`} color="primary" variant="link">
           {team.name}

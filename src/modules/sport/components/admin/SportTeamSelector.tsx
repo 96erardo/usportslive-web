@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, styled } from '@8base/boost';
+import { Avatar, Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, styled } from '@8base/boost';
 import SearchInput from '../../../../shared/components/form/SearchInput';
 import { fetchTeams } from '../../../team/team-actions';
 import axios, { CancelTokenSource } from 'axios';
@@ -44,7 +44,7 @@ function SportTeamSelector ({
     setSelected(null);
     setTeams(state => ({...state, loading: true }));
 
-    const [error, canceled, data] = await fetchTeams(1, [], {
+    const [error, canceled, data] = await fetchTeams(1, ['logo'], {
       q: search,
       sport: args.sport ? args.sport : undefined
     });
@@ -111,6 +111,12 @@ function SportTeamSelector ({
           {team.id === selected?.id && 
             <Icon name="Check" color="PRIMARY" />
           }
+          <Avatar 
+            size="sm"
+            src={team.logo?.smallUrl}
+            firstName={team.name[0]}
+            lastName={team.name[1]}
+          />
           <Text>
             {team.name}
           </Text>

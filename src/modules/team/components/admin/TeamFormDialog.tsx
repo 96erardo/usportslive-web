@@ -1,12 +1,13 @@
 import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
 import { Dialog, Button, Column, Row, Input, Avatar, Icon, useModal } from '@8base/boost';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
-// import TeamSelector from '../../../team/components/TeamSelector';
+import { ImageUploader } from '../../../../shared/components/utilities/ImageUploader';
 import SportSelector from '../../../sport/components/SportSelector';
-import { Team, Sport } from '../../../../shared/types';
+import { Team, Sport, Image } from '../../../../shared/types';
 import { createTeam, updateTeam } from '../../team-actions';
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
+import { logDOM } from '@testing-library/react';
 
 const initialForm = {
   name: '',
@@ -46,6 +47,13 @@ export default function TeamFormDialog (props: Props) {
     }));
   }, [])
 
+  const handleLogoChange = useCallback((logo: Image | null) => {
+    setForm(state => ({
+      ...state,
+      logo
+    }))
+  }, []);
+
   const handleSportChange = useCallback((sport: Sport | null) => {
     setForm(state => ({
       ...state,
@@ -60,11 +68,13 @@ export default function TeamFormDialog (props: Props) {
       await createTeam({
         name: form.name,
         sport: form.sport?.id,
+        logo: form.logo ? form.logo.id : null
       })
     ) : (
       await updateTeam({
         id: form.id,
         name: form.name,
+        logo: form.logo ? form.logo.id : null,
       })
     );
 
@@ -95,11 +105,18 @@ export default function TeamFormDialog (props: Props) {
         <Column stretch gap="lg">
           <Row stretch alignItems="center" justifyContent="between" gap="lg">
             <div>
-              <Avatar 
-                size="md"
-                firstName={form.name[0]}
-                lastName={form.name[1]} 
-              />
+              <ImageUploader id={`${props.type}-team`} onSelect={handleLogoChange}>
+                {open => (
+                  <Avatar 
+                    size="md"
+                    src={form.logo?.smallUrl}
+                    firstName={form.name[0]}
+                    lastName={form.name[1]} 
+                    pickLabel="Cambiar"
+                    onPick={open}
+                  />
+                )}
+              </ImageUploader>
             </div>
             <Input 
               stretch
@@ -132,13 +149,13 @@ export default function TeamFormDialog (props: Props) {
       </Dialog.Body>
       <Dialog.Footer>
         <Row stretch alignItems="center" justifyContent="end">
-          <Button 
+          <Button
             color="neutral"
             onClick={() => closeModal(modalId.current)}
           >
             Cancelar
           </Button>
-          <Button 
+          <Button
             loading={loading}
             color="primary"
             onClick={handleSubmit}
@@ -159,5 +176,6 @@ type Props = {
 type Form = {
   id?: number,
   name: string,
-  sport?: Sport | null
+  sport?: Sport | null,
+  logo?: Image | null,
 }

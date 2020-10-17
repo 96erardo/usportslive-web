@@ -36,7 +36,11 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
         }
       >
         <Grid.Box area="avatar">
-          <Avatar size="sm" src={player.photo} firstName={player.name} lastName={player.lastname}/>
+          <Avatar 
+            size="sm" src={player.avatar?.smallUrl}
+            firstName={player.name} 
+            lastName={player.lastname}
+          />
         </Grid.Box>
         <Grid.Box area="name" direction="row" alignItems="center">
           <Text weight="bold" color="WHITE">{player.name} {player.lastname}</Text>

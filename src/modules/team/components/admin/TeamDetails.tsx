@@ -20,7 +20,7 @@ function TeamDetails () {
     cancelToken.current = axios.CancelToken.source();
     setLoading(true);
 
-    const [err, canceled, data] = await fetchTeam(parseInt(id), [], cancelToken.current);
+    const [err, canceled, data] = await fetchTeam(parseInt(id), ['logo'], cancelToken.current);
 
     if (canceled)
       return;
@@ -80,7 +80,12 @@ function TeamDetails () {
     <div style={{ padding: '24px' }}>
       <Column stretch gap="lg">
         <Row stretch alignItems="center" justifyContent="start" gap="md">
-          <Avatar size="lg" firstName={team.name[0]} lastName={team.name[1]} pickLabel="Cambiar" onPick={() => {}} />
+          <Avatar 
+            size="lg" 
+            src={team.logo?.url}
+            firstName={team.name[0]} 
+            lastName={team.name[1]} 
+          />
           <EditableTitle 
             tagName="h1"
             value={team.name}
