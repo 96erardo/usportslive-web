@@ -13,7 +13,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { fetchCompetition } from '../../competition-actions';
 import { EventInput } from '@fullcalendar/react';
 import CompetitionTeamsTable from './CompetitionTeamsTable';
-import moment from 'moment';
 
 const TitleField = styled(InputField)`
   & input {

@@ -124,7 +124,7 @@ export const ImageUploader: React.FC<Props> = ({ id, children, onSelect }) => {
       close();
     }
 
-  }, [image, crop, onSelect]);
+  }, [image, crop, close, onSelect]);
 
   return (
     <Container>

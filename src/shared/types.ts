@@ -37,16 +37,9 @@ export interface PaginatedResponse<T> {
   items: Array<T>
 };
 
-export interface ModalState {
-  isOpen: boolean,
-  title: string,
-  maxWidth: Size,
-  props: object,
-  component?: React.ComponentType
-}
-
-export interface ObjectRef<T> {
-  id: T | null
+export type ClientCredentials = {
+  accessToken: string,
+  refreshToken: string,
 }
 
 export type CalendarEvent = {

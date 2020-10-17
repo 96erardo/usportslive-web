@@ -7,7 +7,6 @@ import { Team, Sport, Image } from '../../../../shared/types';
 import { createTeam, updateTeam } from '../../team-actions';
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
-import { logDOM } from '@testing-library/react';
 
 const initialForm = {
   name: '',

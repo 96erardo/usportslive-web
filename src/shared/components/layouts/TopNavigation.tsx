@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { TopBar as TopBarBoost, Button, Menu, Tag, Row, Column, Grid, Avatar, Dropdown, Text, styled } from '@8base/boost';
+import { TopBar as TopBarBoost, Button, Menu, Tag, Row, Grid, Avatar, Dropdown, Text, styled } from '@8base/boost';
 import logo from '../../assets/images/logo_uneg.png';
 import Can from '../utilities/Can';
 import { useAuthStore } from '../../../modules/auth/auth-store';

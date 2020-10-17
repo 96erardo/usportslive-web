@@ -1,10 +1,12 @@
 import create from 'zustand';
 import { Sport, Role } from '../../shared/types';
 import { useAuthStore } from '../auth/auth-store';
+import { fetchCredentials } from './app-actions';
 import { fetchSports } from '../sport/sport-actions';
 import { fetchRoles } from '../user/user-actions';
 
 export const useAppStore = create<Store>(set => ({
+  credentials: {},
   loading: true,
   sports: [],
   roles: [],
@@ -14,16 +16,18 @@ export const useAppStore = create<Store>(set => ({
    * work correctly
    */
   fetchAppResources: async () => {
+    const [err1] = await fetchCredentials();
+
     const { fetchAuthenticatedUser } = useAuthStore.getState();
-
+    
     await fetchAuthenticatedUser();
-    const [err1,, sports]  = await fetchSports();
-    const [err2, roles] = await fetchRoles();
+    const [err2,, sports]  = await fetchSports();
+    const [err3, roles] = await fetchRoles();
 
-    if (err1 || err2) {
+    if (err1 || err2 || err3) {
       return set({
         loading: false,
-        error: err1 || err2
+        error: err1 || err2 || err3
       });
     }
 
@@ -40,6 +44,10 @@ export const useAppStore = create<Store>(set => ({
 }))
 
 type Store = {
+  credentials: { 
+    accessToken?: string,
+    refreshToken?: string,
+  },
   loading: boolean,
   sports: Array<Sport>,
   roles: Array<Role>,

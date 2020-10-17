@@ -4,7 +4,6 @@ import { fetchTeamPlayers } from '../player-actions';
 import SearchInput from '../../../shared/components/form/SearchInput';
 import axios, { CancelTokenSource } from 'axios';
 import { Person as Player } from '../../../shared/types';
-import PersonSelector from '../../person/components/PersonSelector';
 
 const Option = styled(Card.Section)`
   cursor: pointer;
