@@ -1,23 +1,32 @@
 import axios from 'axios';
 import qs from 'qs';
 import { useAuthStore } from '../../modules/auth/auth-store';
+import { useAppStore } from '../../modules/app/app-store';
 
 export const request = axios.create({
   baseURL: process.env.REACT_APP_API_SERVER,
 });
 
-export const refresh = axios.create({
-  baseURL: process.env.REACT_APP_API_SERVER,
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Authorization': `Basic ${process.env.REACT_APP_BASIC_AUTH_B64}`
-  },
-  transformRequest: [function (data, headers) {
-    return qs.stringify({
-      ...data,
-      grant_type: 'refresh_token'
-    });
-  }]
+request.interceptors.response.use(response => {
+  return response;
+}, error => {
+  const { config, response } = error;
+  const { setClientToken } = useAppStore.getState();
+
+  if (response.status === 401) {
+    return axios.post('/api/client/authenticate')
+      .then(res => {
+        const { access_token } = res.data;
+    
+        setClientToken(access_token);
+    
+        config.headers['Authorization'] = `Bearer ${access_token}`;
+    
+        return axios(config);
+      });
+  }
+
+  throw error;
 });
 
 export const authenticated = axios.create({
@@ -40,7 +49,7 @@ authenticated.interceptors.response.use(response => {
       return Promise.reject(error);
     }
     
-    return refresh.post('/oauth/token', {refresh_token: refreshToken}) 
+    return axios.post('/api/token/refresh', {refreshToken: refreshToken}) 
       .then(res => {
         const { access_token, refresh_token } = res.data;
     

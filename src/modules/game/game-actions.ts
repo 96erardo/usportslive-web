@@ -3,6 +3,7 @@ import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import { QueryResult, PaginatedResponse, Game, Person as Player, MutationResult, Participation, PersonPlaysGame, Point } from '../../shared/types';
 import Logger from 'js-logger';
 import qs from 'qs';
+import { useAppStore } from '../app/app-store';
 import { useAuthStore } from '../auth/auth-store';
 
 /**
@@ -21,6 +22,7 @@ export async function fetchGames (
   data: FilterData = {},
   source?: CancelTokenSource
 ): Promise<QueryResult<PaginatedResponse<Game>>> {
+  const { accessToken } = useAppStore.getState();
   const first = page !== 0 ? 10 : undefined;
   const skip = (page !== 0 && first) ? (first * (page - 1)) : undefined;
   const filters = createFilter(data);
@@ -33,6 +35,7 @@ export async function fetchGames (
   
   try {
     const res: AxiosResponse<PaginatedResponse<Game>> = await request.get(`/api/games?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 
@@ -103,10 +106,12 @@ export async function fetchGame (
   source?: CancelTokenSource
 ): Promise<QueryResult<{ game: Game | null }>> {
 
+  const { accessToken } = useAppStore.getState();
   const query = qs.stringify({ include });
 
   try {
     const res: AxiosResponse<{ game: Game | null }> = await request.get(`/api/games/${id}?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 
@@ -139,9 +144,11 @@ export async function fetchGameEvents (
   id: number,
   source?: CancelTokenSource
 ): Promise<QueryResult<PaginatedResponse<Point | PersonPlaysGame>>> {
+  const { accessToken } = useAppStore.getState();
 
   try {
     const res: AxiosResponse<PaginatedResponse<Point | PersonPlaysGame>> = await request.get(`/api/games/${id}/events`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined,
     });
 
@@ -336,10 +343,12 @@ export async function fetchPlayersInGame (
   source?: CancelTokenSource
 ): Promise<QueryResult<PaginatedResponse<Player>>> {
 
+  const { accessToken } = useAppStore.getState();
   const query = qs.stringify({ type }, { encode: false, arrayFormat: 'brackets' })
 
   try {
     const res: AxiosResponse<PaginatedResponse<Player>> = await request.get(`/api/games/${gameId}/team/${teamId}?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 

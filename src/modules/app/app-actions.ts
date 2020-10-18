@@ -5,7 +5,7 @@ import Logger from 'js-logger';
 export async function fetchCredentials (): Promise<QueryResult<ClientCredentials>> {
   try {
 
-    const res: AxiosResponse<ClientCredentials> = await axios.get('/api/client/auth');
+    const res: AxiosResponse<ClientCredentials> = await axios.post('/api/client/authenticate');
 
     Logger.info('fetchCredentials', res.data);
 

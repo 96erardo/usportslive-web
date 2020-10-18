@@ -2,6 +2,7 @@ import { request, authenticated } from '../../shared/config/axios';
 import { User, PaginatedResponse, QueryResult, Role, MutationResult } from '../../shared/types';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
+import { useAppStore } from '../app/app-store';
 import { useAuthStore } from '../auth/auth-store';
 import qs from 'qs';
 
@@ -24,10 +25,12 @@ export async function fetchUsers (
   const first = 10;
   const skip = first * (page - 1);
   const filters = createFilter(data);
+  const { accessToken } = useAppStore.getState();
   const query = qs.stringify({ first, skip, include, filters }, { encode: false, arrayFormat: 'brackets' })
 
   try {
     const res: AxiosResponse<PaginatedResponse<User>> = await request.get(`/api/users?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 
@@ -71,13 +74,15 @@ export type FilterData = {
  * @returns {User} The fetched user
  */
 export async function fetchUser (id: number = 0, include: Array<string> = []) {
+  const { accessToken: userAccessToken } = useAuthStore.getState();
+  const { accessToken: clientAccessToken } = useAppStore.getState();
+
   if (id === 0) {
-    const { accessToken } = useAuthStore.getState();
 
     try {
       const response: AxiosResponse<{ user: User}> = await authenticated.get(`/api/users/${id}`, {
         params: { include },
-        headers: { Authorization: `Bearer ${accessToken}` }
+        headers: { Authorization: `Bearer ${userAccessToken || clientAccessToken}` }
       });
 
       Logger.info('fetchUser', response.data);
@@ -86,13 +91,17 @@ export async function fetchUser (id: number = 0, include: Array<string> = []) {
 
     } catch (e) {
       Logger.error('fetchUser', e);
-
+      
       return [e];
     }
   }
+  
 
   try {
-    const response: AxiosResponse<{ user: User }> = await request.get(`/api/users/${id}`, { params: { include }});
+    const response: AxiosResponse<{ user: User }> = await request.get(`/api/users/${id}`, { 
+      params: { include },
+      headers: { Authorization: `Bearer ${clientAccessToken}` },
+    });
 
     Logger.info('fetchUser', response.data);
 
@@ -112,8 +121,12 @@ export async function fetchUser (id: number = 0, include: Array<string> = []) {
  * @returns {Promise} The request result
  */
 export async function fetchRoles (page: number = 1) {
+  const { accessToken } = useAppStore.getState();
+
   try {
-    const response: AxiosResponse<PaginatedResponse<Role>> = await request.get(`/api/roles`);
+    const response: AxiosResponse<PaginatedResponse<Role>> = await request.get(`/api/roles`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
 
     Logger.info('fetchRoles', response.data);
 

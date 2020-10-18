@@ -3,6 +3,7 @@ import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import { QueryResult, PaginatedResponse, Team, MutationResult } from '../../shared/types';
 import Logger from 'js-logger';
 import { useAuthStore } from '../auth/auth-store';
+import { useAppStore } from '../app/app-store';
 import qs from 'qs';
 
 /**
@@ -20,10 +21,12 @@ export async function fetchTeam (
   source?: CancelTokenSource
 ): Promise<QueryResult<{ team: Team|null }>> {
   
+  const { accessToken } = useAppStore.getState();
   const query = qs.stringify({ include });
 
   try {
     const res: AxiosResponse<{ team: Team }> = await request.get(`/api/teams/${id}?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 
@@ -63,10 +66,12 @@ export async function fetchTeams (
   const first = 10;
   const skip = first * (page - 1);
   const filters = createFilter(data);
+  const { accessToken } = useAppStore.getState();
   const query = qs.stringify({ first, skip, include, filters }, { encode: false, arrayFormat: 'brackets' })
 
   try {
     const res: AxiosResponse<PaginatedResponse<Team>> = await request.get(`/api/teams?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 

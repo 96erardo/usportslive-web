@@ -39,7 +39,6 @@ export interface PaginatedResponse<T> {
 
 export type ClientCredentials = {
   accessToken: string,
-  refreshToken: string,
 }
 
 export type CalendarEvent = {
