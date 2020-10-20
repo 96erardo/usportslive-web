@@ -1,5 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';
 import { useAuthStore } from '../auth/auth-store';
+import { useAppStore } from '../app/app-store';
 import { Sport, PaginatedResponse, MutationResult, QueryResult } from '../../shared/types';
 import Logger from 'js-logger';
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
@@ -21,10 +22,12 @@ export async function fetchSports (
   const first: number = 10;
   const skip: number = first * (page - 1);
   const filters = createFilter(data);
+  const { accessToken } = useAppStore.getState();
   const query: string = qs.stringify({ first, skip, include, filters }, { encode: false, arrayFormat: 'brackets' })
   
   try {
     const res: AxiosResponse<PaginatedResponse<Sport>> = await request.get(`/api/sports?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined,
     });
 

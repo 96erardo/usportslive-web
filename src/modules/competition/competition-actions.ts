@@ -1,6 +1,7 @@
 import { request, authenticated } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import { QueryResult, PaginatedResponse, Competition, Team, MutationResult } from '../../shared/types';
+import { useAppStore } from '../app/app-store';
 import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
 import qs from 'qs';
@@ -22,6 +23,7 @@ export async function fetchCompetitions (
   data: FilterData = {},
   source?: CancelTokenSource
 ): Promise<QueryResult<PaginatedResponse<Competition>>> {
+  const { accessToken } = useAppStore.getState();
   const first = 10;
   const skip = first * (page - 1);
   const filters = createFilter(data);
@@ -29,6 +31,7 @@ export async function fetchCompetitions (
   
   try {
     const res: AxiosResponse<PaginatedResponse<Competition>> = await request.get(`/api/competitions?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 
@@ -72,10 +75,12 @@ export async function fetchCompetition (
   include: Array<string> = [], 
   source?: CancelTokenSource
 ): Promise<QueryResult<{ competition: Competition | null }>> {  
+  const { accessToken } = useAppStore.getState();
   const query = qs.stringify({ include });
 
   try {
     const res: AxiosResponse<{ competition: Competition | null }> = await request.get(`/api/competitions/${id}?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 

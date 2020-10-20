@@ -1,6 +1,7 @@
 import { request } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import { PaginatedResponse, Person, QueryResult } from '../../shared/types';
+import { useAppStore } from '../app/app-store';
 import Logger from 'js-logger';
 import qs from 'qs';
 
@@ -21,10 +22,12 @@ export async function fetchPersons (
   const first: number = 20;
   const skip: number = first * (page - 1);
   const filters = createFilter(data);
+  const { accessToken } = useAppStore.getState();
   const query: string = qs.stringify({ first, skip, include, filters }, { encode: false, arrayFormat: 'brackets' })
   
   try {
     const res: AxiosResponse<PaginatedResponse<Person>> = await request.get(`/api/persons?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined,
     });
 
@@ -72,10 +75,12 @@ export async function fetchPerson (
   source?: CancelTokenSource
 ): Promise<QueryResult<{ person: Person | null }>> {
 
+  const { accessToken } = useAppStore.getState();
   const query: string = qs.stringify({ include }, { encode: false, arrayFormat: 'brackets' });
 
   try {
     const res: AxiosResponse<{ person: Person | null }> = await request.get(`/api/persons/${id}?${query}`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       cancelToken: source ? source.token : undefined
     });
 

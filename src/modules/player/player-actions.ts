@@ -3,6 +3,7 @@ import { QueryResult, PaginatedResponse, Person as Player, MutationResult } from
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
+import { useAppStore } from '../app/app-store';
 import { useAuthStore } from '../auth/auth-store';
 
 /**
@@ -25,6 +26,7 @@ export async function fetchTeamPlayers (
   const first = 10;
   const skip = first * (page - 1);
   const filters = createFilter(data);
+  const { accessToken } = useAppStore.getState();
   const query = qs.stringify({ 
     first,
     skip,
@@ -36,6 +38,7 @@ export async function fetchTeamPlayers (
     const res: AxiosResponse<PaginatedResponse<Player>> = await request.get(
       `/api/teams/${id}/players?${query}`,
       {
+        headers: { Authorization: `Bearer ${accessToken}` },
         cancelToken: source ? source.token : undefined
       }
     );

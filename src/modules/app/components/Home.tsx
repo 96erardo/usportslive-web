@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import AuthButton from '../../auth/components/AuthButton';
 import { Link as BoostLink, Card, Column, Heading as BoostHeading, Row, styled } from '@8base/boost';
-import { Link, useHistory } from 'react-router-dom';
-import Can from '../../../shared/components/utilities/Can';
+import { useHistory } from 'react-router-dom';
 import { useGamesFeed } from '../../game/game-hooks';
 import { Paper } from '../../../shared/components/globals/Paper';
 import { onError } from '../../../shared/mixins';
