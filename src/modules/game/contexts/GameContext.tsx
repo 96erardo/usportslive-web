@@ -15,5 +15,5 @@ export class GameProvider extends React.Component<Props> {
 
 type Props = {
   children: React.ReactNode
-  game: Game | null,
+  game: Game,
 }

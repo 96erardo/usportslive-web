@@ -2,7 +2,6 @@ import React from 'react';
 import videojs, { VideoJsPlayer, VideoJsPlayerOptions } from 'video.js';
 
 const host = process.env.REACT_APP_MEDIA_SERVER_HOST;
-const port = process.env.REACT_APP_MEDIA_SERVER_PORT;
 
 class VideoPlayer extends React.Component<Props, State> {
   private player: VideoJsPlayer | null = null;
@@ -27,10 +26,12 @@ class VideoPlayer extends React.Component<Props, State> {
       videoJsOptions: {
         autoplay: false,
         controls: true,
-        sources: [{
-          src: `${host}:${port}/live/${streamKey}/index.m3u8`,
-          type: 'application/x-mpegURL'
-        }],
+        sources: [
+          {
+            src: `${host}/${streamKey}.m3u8`,
+            type: 'application/x-mpegURL'
+          }
+        ],
         fluid: true,
       }
     }, () => {

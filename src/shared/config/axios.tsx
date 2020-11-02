@@ -1,5 +1,4 @@
 import axios from 'axios';
-import qs from 'qs';
 import { useAuthStore } from '../../modules/auth/auth-store';
 import { useAppStore } from '../../modules/app/app-store';
 

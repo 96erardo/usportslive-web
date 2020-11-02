@@ -125,10 +125,13 @@ function createFilter (data: FilterData) {
 export async function createTeam (data: CreateTeamInput): Promise<MutationResult<Team>> {
   const { accessToken } = useAuthStore.getState();
 
-  const team = {
+  const team: { name: string, sportId?: number | string, logoId?: number | string } = {
     name: data.name,
     sportId: data.sport,
+  }
 
+  if (data.logo) {
+    team.logoId = data.logo;
   }
 
   try {
@@ -268,9 +271,9 @@ type FilterData = {
 }
 
 type CreateTeamInput = {
-  name?: string,
-  sport?: number,
-  logo: number | null,
+  name: string,
+  sport?: number | string,
+  logo?: number | null,
 }
 
 type UpdateTeamInput = {

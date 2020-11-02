@@ -1,47 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Row, Column, Loader } from '@8base/boost';
-import { Game } from '../../../shared/types';
-import { fetchGame } from '../game-actions';
-import axios, { CancelTokenSource } from 'axios';
 import { useParams } from 'react-router-dom';
-import VideoPlayer from '../../../shared/components/globals/VideoPlayer';
+import { VideoPlayer } from '../../../shared/components/globals/Video';
 import TeamLive from '../../team/components/TeamLive';
 import LiveScore from './LiveScore';
+import { WaitingStream } from './WaitingStream';
 import { GameProvider } from '../contexts/GameContext';
-import { onError } from '../../../shared/mixins';
+import { useGameLive } from '../hooks/useGameLive';
 
 const GameView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [game, setGame] = useState<Game | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const cancelToken = useRef<CancelTokenSource>();
+  const { game, loading } = useGameLive(id);
 
-  const fetch = useCallback(async () => {
-    cancelToken.current = axios.CancelToken.source();
-    setLoading(true);
-
-    const [err, canceled, data] = await fetchGame(parseInt(id), ['competition', 'local', 'visitor', 'local.logo', 'visitor.logo']);
-
-    if (canceled) {
-      return;
-    }
-
-    if (err)
-      onError(err);
-
-    if (data)
-      setGame(data.game);
-    
-    setLoading(false);
-  }, [id]);
-
-  useEffect(() => {
-    fetch();
-
-    return () => cancelToken.current?.cancel()
-  }, [fetch]);
-
-  if (loading) {
+  if (loading && game === null) {
     return (
       <div className="mt-5 container">
         <Row stretch alignItems="center" justifyContent="center">
@@ -68,9 +39,11 @@ const GameView: React.FC = () => {
           </div>
           <div className="col-12 col-xl-6 order-1 order-xl-2 mb-4">
             <Column>
-              <VideoPlayer 
-                streamKey={game.streamKey}
-              />
+              {game.isLive ? (
+                <VideoPlayer streamKey={game.streamKey} />
+              ) : (
+                <WaitingStream />
+              )}
               <LiveScore 
                 gameId={game.id} 
               />
