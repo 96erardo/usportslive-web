@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Column, Loader } from '@8base/boost';
 import { useParams } from 'react-router-dom';
-import { VideoPlayer } from '../../../shared/components/globals/Video';
+import { VideoPlayer } from '../../../shared/components/globals/VideoPlayer';
 import TeamLive from '../../team/components/TeamLive';
 import LiveScore from './LiveScore';
 import { WaitingStream } from './WaitingStream';
@@ -39,14 +39,12 @@ const GameView: React.FC = () => {
           </div>
           <div className="col-12 col-xl-6 order-1 order-xl-2 mb-4">
             <Column>
-              {game.isLive ? (
+              {(game.isLive || game.isFinished) ? (
                 <VideoPlayer streamKey={game.streamKey} />
               ) : (
                 <WaitingStream />
               )}
-              <LiveScore 
-                gameId={game.id} 
-              />
+              <LiveScore gameId={game.id} />
             </Column>
           </div>
           <div className="col-12 col-lg-6 col-xl-3 order-3 order-xl-3 mb-4">

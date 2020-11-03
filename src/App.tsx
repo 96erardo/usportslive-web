@@ -40,7 +40,7 @@ const icons = {
   PrimaryRect,
 };
 
-Logger.useDefaults({ defaultLevel: Logger[process.env.REACT_APP_LOG_LEVEL] });
+Logger.useDefaults({ defaultLevel: Logger.DEBUG });
 
 function App () {
   const fetchAppResources = useAppStore(state => state.fetchAppResources);

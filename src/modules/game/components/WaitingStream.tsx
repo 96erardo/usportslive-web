@@ -1,11 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Card, Heading as BoostHeading, Column, Row, styled } from '@8base/boost';
-import { Paper } from '../../../shared/components/globals/Paper';
+import { Loader, Heading as BoostHeading, Column as BoostColumn, Row, styled } from '@8base/boost';
 import { GameContext } from '../contexts/GameContext';
 import moment from 'moment';
+import noSignal from '../../../shared/assets/images/no_signal.png';
 
 const Heading = styled(BoostHeading)`
   color: #fff;
+`;
+
+const Placeholder = styled.div`
+  width: 100%;
+  height: 450px;
+  background-image: url(${noSignal});
+  background-position: center center;
+  background-size: cover;
+  border-radius: .5rem;
+  overflow: hidden;
+`;
+
+const Shadow = styled(BoostColumn)`
+  background-image: linear-gradient(rgba(0,0,0, 0.3), #000);
+  padding: 24px;
 `;
 
 export const WaitingStream: React.FC = () => {
@@ -30,13 +45,16 @@ export const WaitingStream: React.FC = () => {
 
   if (isTime) {
     return (
-      <Paper stretch background="#000">
-        <Card.Body padding="xl">
-          <Row stretch alignContent="center" justifyContent="center">
-            <Heading>El Directo empezará en unos minutos</Heading>
+      <Placeholder stretch background="#000">
+        <Shadow stretch alignItems="between" justifyContent="end" gap="xs">
+          <Row alignItems="center" justifyContent="between">
+            <Heading type="h1" weight="bold">
+              <span role="img" aria-label="pop-corn">🍿</span> El Directo empieza pronto
+            </Heading>
+            <Loader size="sm" color="DANGER"/>
           </Row>
-        </Card.Body>
-      </Paper>
+        </Shadow>
+      </Placeholder>
     )
   }
 
@@ -47,17 +65,13 @@ export const WaitingStream: React.FC = () => {
   const seconds = duration.seconds();
   
   return (
-    <Paper stretch background="#000">
-      <Card.Body>
-        <Column stretch>
-          <Heading type="h1" weight="bold">El Directo empieza en:</Heading>
-          <Row stretch alignItems="center" justifyContent="end">
-            <Heading type="h2" weight="bold">
-              {`${days > 1 ? `${days} días ` : ''} ${hours}h ${minutes}m ${seconds}seg`}
-            </Heading>
-          </Row>
-        </Column>
-      </Card.Body>
-    </Paper>
+    <Placeholder stretch background="#000">
+      <Shadow stretch alignItems="end" justifyContent="end" gap="xs">
+        <Heading type="h1" weight="bold">El Directo empieza en</Heading>
+        <Heading type="h2" weight="bold">
+          ⏲ {`${days > 1 ? `${days} días ` : ''} ${hours}h ${minutes}m ${seconds}seg`}
+        </Heading>
+      </Shadow>
+    </Placeholder>
   );
 }

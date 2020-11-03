@@ -465,3 +465,27 @@ export type UpdateSubMinuteData ={
   minute: number,
   type: 'inMinute' | 'outMinute'
 }
+
+/**
+ * Fetches a game playlist to see if is available for  streaming
+ * 
+ * @param {string} streamKey - The game stream key
+ * 
+ * @returns {Promise<QueryResult<void>>} The request result
+ */
+export async function fetchGamePlaylist (streamKey: string): Promise<QueryResult<void>> {
+  try {
+    const res: AxiosResponse<void> = await axios.get(
+      `${process.env.REACT_APP_MEDIA_SERVER_HOST}/${streamKey}.m3u8`,
+    );
+
+    Logger.info('fetchGamePlaylist', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    Logger.error('fetchGamePlaylist', e);
+
+    return [e, false];
+  }
+}
