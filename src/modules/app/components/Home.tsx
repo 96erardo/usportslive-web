@@ -47,23 +47,7 @@ function Home (props: Props) {
 
   return (
     <div>
-      {/* <div className="p-5">
-        <Row stretch alignItems="center" justifyContent="between">
-          <AuthButton />
-          <Can
-            perform="admin-page:visit"
-            onYes={() => (
-              <Link 
-                to="/admin"
-                color="neutral"
-                children="Admin"
-                component={BoostLink}
-              />
-            )}
-          />
-        </Row>
-      </div> */}
-      <div className="container mt-5">
+      <div className="container-fluid mt-5">
         <Column stretch gap="lg">
           {content}
           {(!loading && items.length < count) &&
