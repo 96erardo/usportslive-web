@@ -23,7 +23,7 @@ export const useAppStore = create<Store>(set => ({
     const { fetchAuthenticatedUser } = useAuthStore.getState();
     
     await fetchAuthenticatedUser();
-    const [err2,, sports]  = await fetchSports();
+    const [err2,, sports]  = await fetchSports(1, ['icon']);
     const [err3, roles] = await fetchRoles();
 
     if (err1 || err2 || err3) {
