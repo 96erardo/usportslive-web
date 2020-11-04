@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Avatar, Table, Dropdown, Link, Icon, Menu, Loader, Row } from '@8base/boost';
 import { updateUserRole } from '../../user-actions';
 import { User } from '../../../../shared/types';
-import { DATE_FORMAT } from '../../../../shared/constants';
+import { DATE_TIME_FORMAT } from '../../../../shared/constants';
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
 import moment from 'moment';
@@ -82,7 +82,7 @@ function UserTableRow ({ columns, user, afterUpdate }: Props) {
         {user.streamKey}
       </Table.BodyCell>
       <Table.BodyCell>
-        {moment(user.createdAt).format(DATE_FORMAT)}
+        {moment(user.createdAt).format(DATE_TIME_FORMAT)}
       </Table.BodyCell>
     </Table.BodyRow>
   );

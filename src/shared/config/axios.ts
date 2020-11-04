@@ -12,7 +12,9 @@ request.interceptors.response.use(response => {
   const { config, response } = error;
   const { setClientToken } = useAppStore.getState();
 
-  if (response.status === 401) {
+  console.log('error', error);
+
+  if (response && response.status === 401) {
     return axios.post('/api/client/authenticate')
       .then(res => {
         const { access_token } = res.data;
@@ -38,9 +40,11 @@ export const authenticated = axios.create({
 authenticated.interceptors.response.use(response => {
   return response;
 }, error => {
+  console.log('error', error);
+
   const { config, response } = error;
 
-  if (response.status === 401) {
+  if (response && response.status === 401) {
     const { refreshToken, logout, setAuthTokens } = useAuthStore.getState();
 
     if (!refreshToken) {

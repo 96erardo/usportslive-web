@@ -95,6 +95,8 @@ const Competition: React.FC = () => {
   }, [params, fetch]);
 
   const handleChange = useCallback((name, value) => {
+    console.log('name', value);
+
     setForm(state => ({
       ...state,
       competition: {
