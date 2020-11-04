@@ -7,7 +7,7 @@ import { onError } from '../../../../shared/mixins';
 import { modalId as decisionModalId } from '../../../../shared/components/globals/DecisionDialog';
 import { } from '../../sport-actions';
 import { toast } from 'react-toastify';
-import { DATE_FORMAT } from '../../../../shared/constants';
+import { DATE_TIME_FORMAT } from '../../../../shared/constants';
 import moment from 'moment';
 
 const ColorPreview = styled.span`
@@ -112,7 +112,7 @@ function SportsTableRow ({ columns, sport, afterUpdate }: Props) {
         </Table.BodyCell>
       )}
       <Table.BodyCell>
-        {moment(sport.createdAt).format(DATE_FORMAT)}
+        {moment(sport.createdAt).format(DATE_TIME_FORMAT)}
       </Table.BodyCell>
       <Table.BodyCell>
         <Dropdown defaultOpen={false}>

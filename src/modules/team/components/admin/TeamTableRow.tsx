@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Table, Dropdown, Icon, Menu, Text, Avatar, useModal } from '@8base/boost';
 import { Team } from '../../../../shared/types';
-import { DATE_FORMAT } from '../../../../shared/constants';
+import { DATE_TIME_FORMAT } from '../../../../shared/constants';
 import Link from '../../../../shared/components/buttons/Link';
 import { deleteTeam } from '../../team-actions';
 import { modalId as decisionModalId } from '../../../../shared/components/globals/DecisionDialog';
@@ -63,7 +63,7 @@ function TeamTableRow ({ columns, team, afterUpdate }: Props) {
       </Table.BodyCell>
       <Table.BodyCell>{team.sport?.name}</Table.BodyCell>
       <Table.BodyCell>
-        {moment(team.createdAt).format(DATE_FORMAT)}
+        {moment(team.createdAt).format(DATE_TIME_FORMAT)}
       </Table.BodyCell>
       <Table.BodyCell>
         <Dropdown defaultOpen={false}>

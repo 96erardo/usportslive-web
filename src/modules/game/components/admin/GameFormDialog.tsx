@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { Dialog, Row, Button, Column, DateInput, Icon, useModal } from '@8base/boost';
+import { Dialog, Row, Button, Column, DateInput, Icon, Label, useModal } from '@8base/boost';
 import CompetitionTeamSelector from '../../../competition/components/admin/CompetitionTeamSelector';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
 import { updateGame, deleteGame } from '../../game-actions';
@@ -160,36 +160,42 @@ const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
           />
           {(args.type !== 'before-create' && args.type !== 'before-create-update') &&
             <>
-              <CompetitionTeamSelector id="local" onSelect={handleLocal}>
-                {open => (
-                  <Row stretch alignItems="center">
-                    <ClickableInput
-                      placeholder="Elige un equipo"
-                      name="local"
-                      value={form.local ? form.local.name : ''}
-                      onClick={() => open({ competition: parseInt(form.competition as string) })}
-                    />
-                    <Button squared size="sm" color="neutral" onClick={() => handleLocal(null)}>
-                      <Icon name="Delete" />
-                    </Button>
-                  </Row>
-                )}
-              </CompetitionTeamSelector>
-              <CompetitionTeamSelector id="visitor" onSelect={handleVisitor}>
-                {open => (
-                  <Row stretch alignItems="center">
-                    <ClickableInput
-                      placeholder="Elige un equipo"
-                      name="visitor"
-                      value={form.visitor ? form.visitor.name : ''}
-                      onClick={() => open({ competition: parseInt(form.competition as string) })}
-                    />
-                    <Button squared size="sm" color="neutral" onClick={() => handleVisitor(null)}>
-                      <Icon name="Delete" />
-                    </Button>
-                  </Row>
-                )}
-              </CompetitionTeamSelector>
+              <Column stretch gap="none">
+                <Label text="Local" />
+                <CompetitionTeamSelector id="local" onSelect={handleLocal}>
+                  {open => (
+                    <Row stretch alignItems="center">
+                      <ClickableInput
+                        placeholder="Elige un equipo"
+                        name="local"
+                        value={form.local ? form.local.name : ''}
+                        onClick={() => open({ competition: parseInt(form.competition as string) })}
+                      />
+                      <Button squared size="sm" color="neutral" onClick={() => handleLocal(null)}>
+                        <Icon name="Delete" />
+                      </Button>
+                    </Row>
+                  )}
+                </CompetitionTeamSelector>
+              </Column>
+              <Column stretch gap="none">
+                <Label text="Visitante" />
+                <CompetitionTeamSelector id="visitor" onSelect={handleVisitor}>
+                  {open => (
+                    <Row stretch alignItems="center">
+                      <ClickableInput
+                        placeholder="Elige un equipo"
+                        name="visitor"
+                        value={form.visitor ? form.visitor.name : ''}
+                        onClick={() => open({ competition: parseInt(form.competition as string) })}
+                      />
+                      <Button squared size="sm" color="neutral" onClick={() => handleVisitor(null)}>
+                        <Icon name="Delete" />
+                      </Button>
+                    </Row>
+                  )}
+                </CompetitionTeamSelector>
+              </Column>
             </>
           }
         </Column>

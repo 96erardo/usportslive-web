@@ -180,7 +180,7 @@ export async function updateCompetition (data: UpdateCompetitionInput): Promise<
   try {
     const res: AxiosResponse<Competition> = await authenticated.patch(`/api/competitions/${id}`, {
       ...competition,
-      startDate: moment(competition.startDate).toISOString()
+      startDate: competition.startDate
     }, {
       headers: {
         Authorization: `Bearer ${accessToken}`
