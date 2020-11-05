@@ -17,7 +17,10 @@ export const SportsSidebar: React.FC = () => {
       </div>
       <div className="w-100 d-flex flex-column">
         {sports.map(sport => (
-          <SportSidebarItem sport={sport} />
+          <SportSidebarItem 
+            key={sport.id}
+            sport={sport} 
+          />
         ))}
       </div>
     </Paper>

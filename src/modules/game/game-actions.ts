@@ -71,10 +71,10 @@ function createFilter (data: FilterData) {
       isLive: { eq: data.isLive }
     } : {}),
     ...(data.local ? {
-      local: data.local
+      localId: data.local
     } : {}),
     ...(data.visitor ? {
-      visitor: data.visitor
+      visitorId: data.visitor
     } : {})
   }
 }

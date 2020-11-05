@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { Table, Dropdown, Icon, Menu, Text, Avatar, useModal } from '@8base/boost';
+import { Table, Dropdown, Icon, Menu, Text, useModal } from '@8base/boost';
+import { Avatar } from '../../../../shared/components/globals';
 import { Team } from '../../../../shared/types';
 import { DATE_TIME_FORMAT } from '../../../../shared/constants';
 import Link from '../../../../shared/components/buttons/Link';
