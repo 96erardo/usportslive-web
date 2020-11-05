@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouteComponentProps, Switch } from 'react-router-dom';
+import { RouteComponentProps, Switch, Route } from 'react-router-dom';
 import ProtectedRoute from '../utilities/ProtectedRoute';
 import AdminNavigation from './AdminNavigation';
 import TopNavigation from './TopNavigation';
@@ -12,6 +12,7 @@ import TeamDetails from '../../../modules/team/components/admin/TeamDetails';
 import CompetitionsView from '../../../modules/competition/components/admin/CompetitionsView';
 import Competition from '../../../modules/competition/components/admin/Competition';
 import UsersView from '../../../modules/user/components/admin/UsersView';
+import { PageNotFound } from '../globals/PageNotFound';
 
 const Container = styled.div`
   display: flex;
@@ -35,6 +36,7 @@ function Admin (props: Props) {
             <ProtectedRoute perform="admin-page" exact path="/admin/competitions" component={CompetitionsView} />
             <ProtectedRoute perform="admin-page" exact path="/admin/competition/:id?" component={Competition} />
             <ProtectedRoute perform="admin-page" exact path="/admin/users" component={UsersView} />
+            <Route component={PageNotFound} />
           </Switch>
         </Content>
       </Container>

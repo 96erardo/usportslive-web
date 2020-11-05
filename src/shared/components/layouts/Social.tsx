@@ -6,6 +6,7 @@ import { styled } from '@8base/boost';
 // Pages
 import Home from '../../../modules/app/components/Home';
 import GameView from '../../../modules/game/components/GameView';
+import { PageNotFound } from '../globals/PageNotFound';
 
 const Container = styled.div`
   display: flex;
@@ -24,6 +25,7 @@ function Admin (props: Props) {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/game/:id" component={GameView} />
+            <Route component={PageNotFound} />
           </Switch>
         </Content>
       </Container>

@@ -5,7 +5,6 @@ import { useAppStore } from '../app/app-store';
 import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
 import qs from 'qs';
-import moment from 'moment';
 
 /**
  * Fetches the team list
