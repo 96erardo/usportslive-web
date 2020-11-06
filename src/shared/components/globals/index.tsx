@@ -7,11 +7,13 @@ import {
 export const Heading = styled(BoostHeading)`
   ${(props: HeadingProps) => props.color && `color: ${props.color};`}
   ${(props: HeadingProps) => props.fontWeight && `font-weight: ${props.fontWeight};`}
+  ${(props: HeadingProps) => props.clickable && `cursor: pointer;`}
 `;
 
 type HeadingProps = {
   color?: string,
-  fontWeight?: string
+  clickable?: boolean,
+  fontWeight?: string,
 }
 
 export const Avatar = styled(BoostAvatar)`

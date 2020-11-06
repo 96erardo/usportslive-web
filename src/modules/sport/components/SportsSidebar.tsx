@@ -9,7 +9,7 @@ export const SportsSidebar: React.FC = () => {
   const sports = useAppStore(state => state.sports);
 
   return (
-    <Paper stretch className="py-3" background={COLORS.BLACK}>
+    <Paper className="w-100 py-3" background={COLORS.BLACK}>
       <div className="px-4 mb-3">
         <Heading type="h2" fontWeight="600" color="#fff">
           Deportes

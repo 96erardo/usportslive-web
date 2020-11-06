@@ -11,7 +11,6 @@ import './shared/assets/css/toastify-override.css';
 
 // Pages
 import ProtectedRoute from './shared/components/utilities/ProtectedRoute';
-// // import VisitorsRoute from './atoms/VisitorsRoute';
 import Admin from './shared/components/layouts/Admin';
 import Social from './shared/components/layouts/Social';
 
@@ -26,6 +25,8 @@ import { ReactComponent as GreyCircle } from './shared/assets/images/grey-circle
 import { ReactComponent as PrimaryCircle } from './shared/assets/images/primary-circle.svg';
 import { ReactComponent as GreyRect } from './shared/assets/images/grey-square.svg';
 import { ReactComponent as PrimaryRect } from './shared/assets/images/primary-square.svg';
+import { ReactComponent as WhiteHeart } from './shared/assets/images/white_heart.svg';
+import { ReactComponent as RedHeart } from './shared/assets/images/red_heart.svg';
 
 const icons = {
   WhiteSoccer,
@@ -38,6 +39,8 @@ const icons = {
   PrimaryCircle,
   GreyRect,
   PrimaryRect,
+  WhiteHeart,
+  RedHeart
 };
 
 Logger.useDefaults({ defaultLevel: Logger.DEBUG });
