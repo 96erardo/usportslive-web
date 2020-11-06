@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Avatar, Card, Row, COLORS, Text, styled } from '@8base/boost';
+import { Card, Row, COLORS, Text, styled } from '@8base/boost';
 import { Paper } from '../../../shared/components/globals/Paper';
 import Can from '../../../shared/components/utilities/Can';
 import PlayerPlaysButton from '../../player/components/PlayerPlaysButton';
@@ -7,6 +7,7 @@ import PlayerLiveItem from '../../player/components/PlayerLiveItem';
 import SubstitutionButton from './SubstitutionButton';
 import { PointFormDialog } from '../../point/components/PointFormDialog';
 import { usePlayersInGameLive } from '../../game/game-hooks';
+import { Avatar } from '../../../shared/components/globals';
 import { Game } from '../../../shared/types';
 
 const Body = styled(Card.Body)`

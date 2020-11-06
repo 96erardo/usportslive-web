@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  Avatar, 
   Card,
   Row, 
   Column, 
@@ -12,6 +11,7 @@ import {
 import { PointFormDialog } from '../../point/components/PointFormDialog';
 import { Paper } from '../../../shared/components/globals/Paper';
 import { useLiveScore } from '../hooks/useLiveScore';
+import { Avatar } from '../../../shared/components/globals';
 import GameEvents from './GameEvents';
 
 const Body = styled(Card.Body)`

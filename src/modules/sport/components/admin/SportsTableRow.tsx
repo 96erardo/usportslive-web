@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Avatar, Table, Text, Button, Row, Dropdown, Menu, Icon, Loader, useModal, styled } from '@8base/boost';
+import { Table, Text, Button, Row, Dropdown, Menu, Icon, Loader, useModal, styled } from '@8base/boost';
+import { Avatar } from '../../../../shared/components/globals';
 import TeamSelector from '../../../team/components/TeamSelector';
 import { Sport, Team } from '../../../../shared/types';
 import { assignTeamToSport, deleteSport } from '../../sport-actions';

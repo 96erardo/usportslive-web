@@ -80,3 +80,15 @@ table .fc-col-header {
 .border-left {
   border-left: 1px solid #cfd7de;
 }
+
+.w-100 {
+  width: 100%;
+}
+
+.list-item {
+  cursor: pointer;
+}
+
+.list-item:hover {
+  background-color: #1a252f;
+}

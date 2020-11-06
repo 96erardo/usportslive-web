@@ -71,10 +71,10 @@ function createFilter (data: FilterData) {
       isLive: { eq: data.isLive }
     } : {}),
     ...(data.local ? {
-      local: data.local
+      localId: data.local
     } : {}),
     ...(data.visitor ? {
-      visitor: data.visitor
+      visitorId: data.visitor
     } : {})
   }
 }
@@ -485,6 +485,30 @@ export async function fetchGamePlaylist (streamKey: string): Promise<QueryResult
 
   } catch (e) {
     Logger.error('fetchGamePlaylist', e);
+
+    return [e, false];
+  }
+}
+
+/**
+ * Fetches a game thumbnail to see if is available for streaming
+ * 
+ * @param {string} streamkey - The game stream key
+ * 
+ * @returns {Promise<QueryResult<void>>} The request result
+ */
+export async function fetchGameThumbnail (streamkey: string): Promise<QueryResult<void>> {
+  try {
+    const res: AxiosResponse<void> = await axios.get(
+      `${process.env.REACT_APP_MEDIA_SERVER_HOST}/${streamkey}.m3u8`
+    );
+
+    Logger.info('fetchGameThumbnail', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    Logger.error('fetchGameThumbnail', e);
 
     return [e, false];
   }
