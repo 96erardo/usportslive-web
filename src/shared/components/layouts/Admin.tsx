@@ -6,6 +6,7 @@ import TopNavigation from './TopNavigation';
 import { styled } from '@8base/boost';
 
 // Pages
+import { AdminDashboard } from '../../../modules/app/components/AdminDashboard';
 import SportsView from '../../../modules/sport/components/admin/SportsView';
 import TeamsView from '../../../modules/team/components/admin/TeamsView';
 import TeamDetails from '../../../modules/team/components/admin/TeamDetails';
@@ -30,6 +31,7 @@ function Admin (props: Props) {
         <AdminNavigation />
         <Content>
           <Switch>
+            <ProtectedRoute perform="admin-page" exact path="/" component={AdminDashboard} />
             <ProtectedRoute perform="admin-page" exact path="/admin/sports" component={SportsView} />
             <ProtectedRoute perform="admin-page" exact path="/admin/teams" component={TeamsView} />
             <ProtectedRoute perform="admin-page" exact path="/admin/team/:id" component={TeamDetails} />

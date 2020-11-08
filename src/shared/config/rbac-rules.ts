@@ -1,4 +1,4 @@
-import { Game } from "../types"
+import { Game, User, Person } from "../types"
 
 const rules: Rules = {
   Visitor: {
@@ -12,7 +12,12 @@ const rules: Rules = {
     static: [
       'dashboard-page:visit',
       'user:authenticated'
-    ]
+    ],
+    dynamic: {
+      'person:update': ({ user, person }: { user: User, person: Person }) => {
+        return user.personId === person.id;
+      },
+    }
   },
   Audiovisual: {
     static: [
@@ -45,6 +50,9 @@ const rules: Rules = {
       'game-point:delete': ({ game }: { game: Game }) => {
         return game.isLive;
       },
+      'person:update': ({ user, person }: { user: User, person: Person }) => {
+        return user.personId === person.id;
+      },
     }
   },
   Teacher: {
@@ -72,6 +80,9 @@ const rules: Rules = {
       'game-point:delete': ({ game }: { game: Game }) => {
         return game.isLive;
       },
+      'person:update': ({ user, person }: { user: User, person: Person }) => {
+        return user.personId === person.id || person.userId === null;
+      },
     }
   },
   Administrator: {
@@ -90,6 +101,9 @@ const rules: Rules = {
     dynamic: {
       'game-player:initial': ({ game }: { game: Game }) => {
         return !game.isFinished && !game.isLive;
+      },
+      'person:update': ({ user, person }: { user: User, person: Person }) => {
+        return user.personId === person.id || person.userId === null;
       },
     }
   }

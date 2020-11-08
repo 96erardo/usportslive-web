@@ -6,6 +6,7 @@ import { useAppStore } from './modules/app/app-store';
 import AuthCallback from './modules/auth/components/AuthCallback';
 import AppLoader from './shared/components/globals/AppLoader';
 import { ToastContainer } from 'react-toastify';
+import { PageNotFound } from './shared/components/globals/PageNotFound';
 import 'react-toastify/dist/ReactToastify.css';
 import './shared/assets/css/toastify-override.css';
 
@@ -60,6 +61,7 @@ function App () {
             <Route exact path="/oauth/callback" component={AuthCallback}/>
             <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
             <Route path="/" component={Social}/>
+            <Route component={PageNotFound} />
           </Switch>
         </Router>
       </AppLoader>
