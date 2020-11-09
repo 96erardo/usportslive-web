@@ -200,6 +200,14 @@ export type Rating = {
   value: number,
 }
 
+export type Stats = {
+  started: number,
+  substitute: number,
+  total: number,
+  points: number,
+  assist: number
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }
