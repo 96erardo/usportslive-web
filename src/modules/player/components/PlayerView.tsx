@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Row, Loader } from '@8base/boost';
+import { Row, Loader, Column } from '@8base/boost';
 import { useParams } from 'react-router-dom';
 import { Person } from '../../../shared/types';
 import { fetchPersonByIdOrUser } from '../../person/person-actions';
 import { PersonCard } from '../../person/components/PersonCard';
 import { PlayerSports } from './PlayerSports';
+import { PlayerTeams } from '../../team/components/PlayerTeams';
 import axios, { CancelTokenSource } from 'axios';
 
 export const PlayerView: React.FC = () => {
@@ -60,10 +61,13 @@ export const PlayerView: React.FC = () => {
     <div className="container-fluid mt-5">
       <div className="row">
         <div className="col-md-3">
-          <PersonCard 
-            person={player.person}
-            onChange={fetch}
-          />
+          <Column className="w-100" gap="md">
+            <PersonCard 
+              person={player.person}
+              onChange={fetch}
+            />
+            <PlayerTeams playerId={player.person.id} />
+          </Column>
         </div>
         <div className="col-md-9">
           <PlayerSports playerId={player.person.id} />

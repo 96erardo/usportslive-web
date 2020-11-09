@@ -51,7 +51,7 @@ export const SportPerformance: React.FC<Props> = ({ playerId, played }) => {
         >
           <Grid.Box area="starter" direction="column">
             <Heading type="h4" weight="bold" color="#fff">
-              Juegos como titular ⭐
+              Juegos como titular
             </Heading>
             <Heading type="h5" color="#fff">
               {`${stats.data.started}`}
@@ -59,7 +59,7 @@ export const SportPerformance: React.FC<Props> = ({ playerId, played }) => {
           </Grid.Box>
           <Grid.Box area="substitute" direction="column">
             <Heading type="h4" weight="bold" color="#fff">
-              Juegos como suplente 🔃
+              Juegos como suplente
             </Heading>
             <Heading type="h5" color="#fff">
               {`${stats.data.substitute}`} 
@@ -67,7 +67,7 @@ export const SportPerformance: React.FC<Props> = ({ playerId, played }) => {
           </Grid.Box>
           <Grid.Box area="total" direction="column">
             <Heading type="h4" weight="bold" color="#fff">
-              Total de partidos jugados 🏃
+              Total de partidos jugados
             </Heading>
             <Heading type="h5" color="#fff">
               {`${stats.data.total}`} 
@@ -75,7 +75,7 @@ export const SportPerformance: React.FC<Props> = ({ playerId, played }) => {
           </Grid.Box>
           <Grid.Box className="mt-5" area="points" direction="column">
             <Heading type="h4" weight="bold" color="#fff">
-              Puntos anotados 😎
+              Puntos anotados
             </Heading>
             <Heading type="h5" color="#fff">
               {`${stats.data.points}`}
@@ -83,7 +83,7 @@ export const SportPerformance: React.FC<Props> = ({ playerId, played }) => {
           </Grid.Box>
           <Grid.Box className="mt-5" area="assist" direction="column">
             <Heading type="h4" weight="bold" color="#fff">
-              Asistencias dadas 😁👉 😎
+              Asistencias dadas
             </Heading>
             <Heading type="h5" color="#fff">
               {`${stats.data.points}`}
