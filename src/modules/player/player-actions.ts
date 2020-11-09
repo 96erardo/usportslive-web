@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';
-import { QueryResult, PaginatedResponse, Person as Player, MutationResult } from '../../shared/types';
-import axios, { CancelTokenSource, AxiosResponse } from 'axios';
+import { QueryResult, PaginatedResponse, Person as Player, MutationResult, Rating } from '../../shared/types';
+import axios, { CancelTokenSource, AxiosResponse, CancelToken } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
 import { useAppStore } from '../app/app-store';
@@ -226,6 +226,47 @@ export async function removePlayerFromTeam (teamId: string | number, playerId: s
     } else {
       return [e];
     }
+  }
+}
+
+/**
+ * Fetches the specified player general rating in the specified sport
+ * 
+ * @param {number} player - The player id
+ * @param {number} sport - The sport id
+ * @param {CancelTokenSource} source - Token needed to cancel the request if needed
+ * 
+ * @returns {Promise<QueryResult<Rating>>} - The player rating
+ */
+export async function fetchPlayerPerformanceInSport (
+  player: number, 
+  sport: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<Rating>> {
+  const { accessToken } = useAppStore.getState();
+
+  try {
+    const res: AxiosResponse<{ quantity: number, value: string }> = await request.get(`/api/persons/${player}/sport/${sport}/stars`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPlayerPerformanceInSport', res.data);
+
+    return [null, false, { quantity: res.data.quantity, value: parseFloat(res.data.value) }];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchPlayerPerformanceInSport (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchPlayerPerformanceInSport', e);
+
+    return [e];
   }
 }
 

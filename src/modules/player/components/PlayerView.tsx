@@ -4,9 +4,10 @@ import { useParams } from 'react-router-dom';
 import { Person } from '../../../shared/types';
 import { fetchPersonByIdOrUser } from '../../person/person-actions';
 import { PersonCard } from '../../person/components/PersonCard';
+import { PlayerSports } from './PlayerSports';
 import axios, { CancelTokenSource } from 'axios';
 
-export const PlayerView: React.FC<Props> = () => {
+export const PlayerView: React.FC = () => {
   const [player, setPlayer] = useState<State>({ loading: true, person: null, error: null });
   const { id } = useParams<{ id: string }>();
 
@@ -60,20 +61,16 @@ export const PlayerView: React.FC<Props> = () => {
       <div className="row">
         <div className="col-md-3">
           <PersonCard 
-            person={player.person} 
+            person={player.person}
             onChange={fetch}
           />
         </div>
         <div className="col-md-9">
-          
+          <PlayerSports playerId={player.person.id} />
         </div>
       </div>
     </div>
   );
-}
-
-type Props = {
-
 }
 
 type State = {

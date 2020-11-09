@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { MutationResult, PaginatedResponse, Person, QueryResult } from '../../shared/types';
+import { MutationResult, PaginatedResponse, Person, QueryResult, PlayedSports } from '../../shared/types';
 import { useAppStore } from '../app/app-store';
 import Logger from 'js-logger';
 import qs from 'qs';
@@ -193,5 +193,44 @@ export async function updateAvatar (id: number, photo: number): Promise<Mutation
     } else {
       return [e];
     }
+  }
+}
+
+/**
+ * Fetches the specifid person participation in sports
+ * 
+ * @param {string} id - The id of the person to fetch
+ * @param {CancelTokenSource} source - Token to cancel the request if needed
+ * 
+ * @returns {Promise<QueryResult<PaginatedResponse<PlayedSports>>>} The request response
+ */
+export async function fetchPersonsPlayedSports (
+  id: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<PaginatedResponse<PlayedSports>>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<PaginatedResponse<PlayedSports>> = await authenticated.get(`/api/persons/${id}/played`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPersonsPlayedSports', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.info('fetchPersonsPlayedSports (Request canceled)', e);
+
+      return [e, true];
+    }
+    
+    Logger.error('fetchPersonsPlayedSports', e);
+
+    return [e];
   }
 }
