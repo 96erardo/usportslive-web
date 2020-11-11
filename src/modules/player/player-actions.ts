@@ -1,5 +1,5 @@
 import { request, authenticated } from '../../shared/config/axios';
-import { QueryResult, PaginatedResponse, Person as Player, MutationResult } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Person as Player, MutationResult, Rating, Stats, Team } from '../../shared/types';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
@@ -258,6 +258,7 @@ export async function removePlayerFromTeam (teamId: string | number, playerId: s
 }
 
 /**
+<<<<<<< HEAD
  * Lines up a player in the game
  * 
  * @param {number} game - The game id
@@ -268,6 +269,141 @@ export async function removePlayerFromTeam (teamId: string | number, playerId: s
  */
 export async function lineupPlayerInGame (game: number, team: number, player: number): Promise<MutationResult<void>> {
   const { accessToken } = useAuthStore.getState();
+=======
+ * Fetches the specified player general rating in the specified sport
+ * 
+ * @param {number} player - The player id
+ * @param {number} sport - The sport id
+ * @param {CancelTokenSource} source - Token needed to cancel the request if needed
+ * 
+ * @returns {Promise<QueryResult<Rating>>} - The player rating
+ */
+export async function fetchPlayerPerformanceInSport (
+  player: number, 
+  sport: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<Rating>> {
+  const { accessToken } = useAppStore.getState();
+
+  try {
+    const res: AxiosResponse<{ quantity: number, value: string }> = await request.get(`/api/persons/${player}/sport/${sport}/stars`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPlayerPerformanceInSport', res.data);
+
+    return [null, false, { quantity: res.data.quantity, value: parseFloat(res.data.value) }];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchPlayerPerformanceInSport (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchPlayerPerformanceInSport', e);
+
+    return [e];
+  }
+}
+
+/**
+ * Fetches the stats of the player in the specified sport
+ * 
+ * @param {number} player - The person id
+ * @param {number} sport - The sport id
+ * @param {CancelTokenSource} source - The token to cancel the request if needed
+ * 
+ * @returns {Promise<QueryResult<Stats>>} The stats of the player
+ */
+export async function fetchPlayerPerformanceDetails (
+  player: number,
+  sport: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<Stats>> {
+  const { accessToken } = useAppStore.getState();
+
+  try {
+    const res: AxiosResponse<Stats> = await request.get(`/api/persons/${player}/sport/${sport}/stats`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPlayerPerformanceDetails', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchPlayerPerformanceDetails (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchPlayerPerformanceDetails', e);
+
+    return [e];
+  }
+}
+
+/**
+ * Fetches the list of teams in which a person has played
+ * 
+ * @param {number} player - The player id
+ * @param {number} page - The page of teams to fetch
+ * @param {CancelTokenSource} source - The cancel token
+ * 
+ * @returns {Promise<QueryResult<PaginatedResponse<Team>>>} The list of teams
+ */
+export async function fetchPlayerTeams (
+  player: number,
+  page: number = 1,
+  source?: CancelTokenSource
+): Promise<QueryResult<PaginatedResponse<Team>>> {
+  const { accessToken } = useAppStore.getState();
+
+  const first = 10;
+  const skip = first * (page - 1);
+
+  const query = qs.stringify({ 
+    first,
+    skip,
+  });
+
+  try {
+    const res: AxiosResponse<PaginatedResponse<Team>> = await request.get(`/api/persons/${player}/teams?${query}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPlayerTeams', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchPlayerTeams (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchPlayerTeams', e);
+
+    return [e];
+  }
+}
+
+export type FetchPlayerFilter = {
+  q?: string,
+}
+>>>>>>> feature/55-player-details
 
   try {
     const res: AxiosResponse = await authenticated.post(`/api/games/${game}/team/${team}/player/${player}/lineup`, {}, {
