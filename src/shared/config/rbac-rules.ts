@@ -36,14 +36,14 @@ const rules: Rules = {
       'game-player:lineup': ({ game }: { game: Game }) => {
         return !game.isFinished && !game.isLive;
       },
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (game.isLive && status === 'playing');
+      },
       'game-player:add': ({ game }: { game: Game }) => {
         return !game.isLive && !game.isFinished;
       },
       'game-player:substitute': ({ game }: { game: Game }) => {
         return game.isLive;
-      },
-      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
-        return (game.isLive && status === 'playing');
       },
       'game-point:update': ({ game }: { game: Game }) => {
         return game.isLive;
@@ -69,6 +69,9 @@ const rules: Rules = {
       },
       'game-player:lineup': ({ game }: { game: Game }) => {
         return !game.isFinished && !game.isLive;
+      },
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (game.isLive && status === 'playing');
       },
       'game-player:add': ({ game }: { game: Game }) => {
         return !game.isLive && !game.isFinished;
@@ -110,8 +113,11 @@ const rules: Rules = {
       'game-player:substitute': ({ game }: { game: Game }) => {
         return game.isLive || game.isFinished;
       },
-      'game-point:create': ({ game }: { game: Game }) => {
-        return game.isLive || game.isFinished;
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (
+          (game.isLive && status === 'playing' ) || 
+          game.isFinished
+        );
       },
     }
   }

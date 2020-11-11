@@ -24,7 +24,7 @@ const GameEvents: React.FC<Props> = ({ gameId }) => {
   ));
 
   return (
-    <div>
+    <div className="w-100">
       {events}
       <UpdateSubMinuteDialog 
         id="live-score"

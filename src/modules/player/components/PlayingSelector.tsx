@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, styled } from '@8base/boost';
+import { Avatar } from '../../../shared/components/globals';
 import { fetchPlayersInGame } from '../../game/game-actions';
 import axios, { CancelTokenSource } from 'axios';
 import { Person as Player } from '../../../shared/types';
@@ -19,7 +20,6 @@ const Body = styled(Card.Body)`
 
 export const PlayingSelector: React.FC<Props> = (props) => {
   const { isOpen, closeModal, openModal, args } = useModal(`${props.id}-playing-selector`);
-  const cancelToken = useRef<CancelTokenSource>();
   const [selected, setSelected] = useState<Player | null>(null);
   const [players, setPlayers] = useState<{ items: Array<Player>, count: number, loading: boolean }>({
     items: [],
@@ -27,9 +27,7 @@ export const PlayingSelector: React.FC<Props> = (props) => {
     loading: true
   });
 
-  const fetch = useCallback(async () => {
-    cancelToken.current = axios.CancelToken.source();
-
+  const fetch = useCallback(async (source?: CancelTokenSource) => {
     setSelected(null);
     setPlayers(state => ({...state, loading: true }));
 
@@ -37,7 +35,7 @@ export const PlayingSelector: React.FC<Props> = (props) => {
       args.gameId as number, 
       args.teamId as number, 
       '',
-      cancelToken.current
+      source
     );
 
     if (canceled)
@@ -57,9 +55,11 @@ export const PlayingSelector: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (isOpen) {
-      fetch();
+      const source = axios.CancelToken.source();
+
+      fetch(source);
   
-      return () => cancelToken.current?.cancel();
+      return () => source.cancel();
     } else {
       setSelected(null);
     }
@@ -102,6 +102,12 @@ export const PlayingSelector: React.FC<Props> = (props) => {
           {person.id === selected?.id && 
             <Icon name="Check" color="PRIMARY" />
           }
+          <Avatar 
+            size="sm"
+            src={person.avatar?.smallUrl}
+            firstName={person.name}
+            lastName={person.lastname}
+          />
           <Text>
             {person.name} {person.lastname}
           </Text>

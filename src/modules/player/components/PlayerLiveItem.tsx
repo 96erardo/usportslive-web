@@ -95,7 +95,7 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, onActionFinishe
                 </Dropdown.Head>
                 <Dropdown.Body>
                   <Menu>
-                    <Can 
+                    <Can
                       perform="game-player:lineup"
                       data={{ game }}
                       onYes={() =>  (
