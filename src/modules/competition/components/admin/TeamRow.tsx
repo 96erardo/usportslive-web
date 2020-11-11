@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
-import { Avatar, Table, Dropdown, Menu, Text, Icon, useModal } from '@8base/boost';
+import { Table, Dropdown, Menu, Text, Icon, useModal } from '@8base/boost';
 import { modalId } from '../../../../shared/components/globals/DecisionDialog';
 import { removeTeamFromCompetition } from '../../competition-actions';
 import { Team } from '../../../../shared/types';
 import { onError } from '../../../../shared/mixins';
+import { Avatar } from '../../../../shared/components/globals';
 import { toast } from 'react-toastify';
 
 const TeamRow: React.FC<Props> = ({ id, team, columns, afterMutation }) => {

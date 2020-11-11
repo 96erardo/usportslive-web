@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Row, Avatar, Column, Loader } from '@8base/boost';
+import { Row, Column, Loader } from '@8base/boost';
 import { useParams, useHistory } from 'react-router-dom';
 import { fetchTeam, updateTeamName } from '../../team-actions';
 import { Team } from '../../../../shared/types';
 import EditableTitle from '../../../../shared/components/form/EditableTitle';
+import { Avatar } from '../../../../shared/components/globals';
 import axios, { CancelTokenSource } from 'axios';
 import { onError } from '../../../../shared/mixins';
 import PlayersTable from './PlayersTable';
