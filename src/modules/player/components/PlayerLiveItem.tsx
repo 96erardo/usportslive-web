@@ -4,8 +4,10 @@ import { Person as Player } from '../../../shared/types';
 import { GameContext } from '../../game/contexts/GameContext';
 import { modalId } from '../../point/components/PointFormDialog';
 import Can from '../../../shared/components/utilities/Can';
+import { lineupPlayerInGame } from '../player-actions';
+import { onError } from '../../../shared/mixins';
 
-const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
+const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, onActionFinished }) => {
   const { openModal } = useModal();
   const { inMinute, outMinute, points } = player.participation;
   const game = useContext(GameContext);
@@ -19,6 +21,16 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
       scorerId: player.id,
     });
   }, [game, teamId, player, openModal]);
+
+  const onLineup = useCallback(async () => {
+    const [err] = await lineupPlayerInGame(game ? game.id : 0, teamId, player.id);
+
+    if (err) {
+      return onError(err);
+    }
+
+    onActionFinished();
+  }, [game, player, teamId, onActionFinished]);
 
   const on = inMinute !== null && inMinute > 0 && outMinute === null;
   const off = outMinute !== null;
@@ -74,7 +86,7 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
         )}
         <Can 
           perform="game-player:actions"
-          data={{ game, status: type }}
+          data={{ game, status: type, participated: inMinute !== null }}
           onYes={() => (
             <Grid.Box area="actions" direction="row" alignItems="center" justifyContent="flex-end">
               <Dropdown defaultOpen={false}>
@@ -84,15 +96,11 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
                 <Dropdown.Body>
                   <Menu>
                     <Can 
-                      perform="game-player:initial"
+                      perform="game-player:lineup"
                       data={{ game }}
-                      onYes={() => type === 'playing' ? (
-                        <Menu.Item>
-                          Suplente
-                        </Menu.Item>
-                      ) : (
-                        <Menu.Item>
-                          Titular
+                      onYes={() =>  (
+                        <Menu.Item onClick={onLineup}>
+                          {type === 'playing' ? 'Suplente' : 'Titular'}
                         </Menu.Item>
                       )}
                     />
@@ -120,6 +128,7 @@ type Props = {
   type: 'playing' | 'bench',
   player: Player,
   teamId: number,
+  onActionFinished: () => void
 }
 
 export default PlayerLiveItem;

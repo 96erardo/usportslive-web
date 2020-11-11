@@ -44,6 +44,7 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
       type="bench"
       teamId={id ? id : 0}
       player={player}
+      onActionFinished={refresh}
     />
   ));
 
@@ -53,6 +54,7 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
       type="playing"
       teamId={id ? id : 0}
       player={player}
+      onActionFinished={refresh}
     />
   ));
 

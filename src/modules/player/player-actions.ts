@@ -77,6 +77,10 @@ function createFilter (data: FetchPlayerFilter) {
   return filter;
 }
 
+export type FetchPlayerFilter = {
+  q?: string,
+}
+
 /**
  * Creates a player in a team
  * 
@@ -120,6 +124,15 @@ export async function createPlayer (data: CreatePlayerInput): Promise<MutationRe
   }
 }
 
+export type CreatePlayerInput = {
+  teamId: number,
+  name: string,
+  lastname: string,
+  number: number | string,
+  gender: string,
+  avatar: number | null,
+}
+
 /**
  * Adds a player in the specified team
  * 
@@ -155,6 +168,12 @@ export async function adddPlayerInTeam (data: AddPlayerInput): Promise<MutationR
       return [e];
     }
   }
+}
+
+export type AddPlayerInput = {
+  teamId: number | string,
+  playerId: number | string,
+  number: number | string,
 }
 
 /**
@@ -193,6 +212,15 @@ export async function updatePlayer (teamId: string | number, data: UpdatePlayerI
   }
 }
 
+export type UpdatePlayerInput = {
+  id: null | number | string,
+  name?: string,
+  lastname?: string,
+  number?: number | string,
+  gender?: string,
+  avatarId?: number | null,
+}
+
 /**
  * Removes the specified player from the specified team
  * 
@@ -229,30 +257,39 @@ export async function removePlayerFromTeam (teamId: string | number, playerId: s
   }
 }
 
-export type FetchPlayerFilter = {
-  q?: string,
-}
+/**
+ * Lines up a player in the game
+ * 
+ * @param {number} game - The game id
+ * @param {number} team - The team id
+ * @param {number} player - The player id
+ * 
+ * @returns {Promise<MutationResult<void>>}
+ */
+export async function lineupPlayerInGame (game: number, team: number, player: number): Promise<MutationResult<void>> {
+  const { accessToken } = useAuthStore.getState();
 
-export type CreatePlayerInput = {
-  teamId: number,
-  name: string,
-  lastname: string,
-  number: number | string,
-  gender: string,
-  avatar: number | null,
-}
+  try {
+    const res: AxiosResponse = await authenticated.post(`/api/games/${game}/team/${team}/player/${player}/lineup`, {}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      } 
+    })
 
-export type AddPlayerInput = {
-  teamId: number | string,
-  playerId: number | string,
-  number: number | string,
-}
+    Logger.info('lineupPlayerInGame', res.data);
 
-export type UpdatePlayerInput = {
-  id: null | number | string,
-  name?: string,
-  lastname?: string,
-  number?: number | string,
-  gender?: string,
-  avatarId?: number | null,
+    return [null];
+
+  } catch (e) {
+    Logger.error('lineupPlayerInGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
 }
