@@ -118,11 +118,8 @@ export function useGamesFeed (page: number = 1) {
 
 export function usePlayersInGameLive (gameId: number, teamId: number, type: 'playing' | 'bench' | '') {
   const [state, setState] = useState<ListHooksState<Player>>(initialState);
-  const cancelToken = useRef<CancelTokenSource>();
-  const interval = useRef<number>();
 
-  const fetch = useCallback(async () => {
-    cancelToken.current?.cancel();
+  const fetch = useCallback(async (source?: CancelTokenSource) => {
 
     if (teamId === 0) {
       return setState(state => ({
@@ -136,9 +133,7 @@ export function usePlayersInGameLive (gameId: number, teamId: number, type: 'pla
 
     setState(state => ({...state, loading: true }));
 
-    cancelToken.current = axios.CancelToken.source();
-
-    const [err, canceled, data] = await fetchPlayersInGame(gameId, teamId, type, cancelToken.current);
+    const [err, canceled, data] = await fetchPlayersInGame(gameId, teamId, type, source);
 
     if (canceled) {
       return;
@@ -163,11 +158,20 @@ export function usePlayersInGameLive (gameId: number, teamId: number, type: 'pla
   }, [gameId, teamId, type]);
 
   useEffect(() => {
-    fetch();
+    let source = axios.CancelToken.source();
 
-    interval.current = window.setInterval(fetch, 60000);
+    fetch(source);
 
-    return () => clearInterval(interval.current);
+    const interval = window.setInterval(() => {
+      source = axios.CancelToken.source();
+
+      fetch(source);
+    }, 60000);
+
+    return () => {
+      clearInterval(interval);
+      source.cancel();
+    };
   }, [fetch]);
 
   return {

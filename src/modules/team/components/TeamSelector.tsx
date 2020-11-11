@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, Avatar, styled } from '@8base/boost';
+import { Dialog, Button, Card, Icon, Row, Text, Loader, NoData, useModal, styled } from '@8base/boost';
+import { Avatar } from '../../../shared/components/globals';
 import SearchInput from '../../../shared/components/form/SearchInput';
 import { fetchTeams } from '../team-actions';
 import axios, { CancelTokenSource } from 'axios';

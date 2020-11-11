@@ -126,6 +126,7 @@ const SubstitutionDialog: React.FC<Props> = ({ id, gameId, teamId, afterSubstitu
             ) : (
               playing.map(player => (
                 <SubstitutionPlayer
+                  key={player.id}
                   type="out"
                   selected={out}
                   player={player}
@@ -142,6 +143,7 @@ const SubstitutionDialog: React.FC<Props> = ({ id, gameId, teamId, afterSubstitu
             ) : (
               waiting.map(player => (
                 <SubstitutionPlayer
+                  key={player.id}
                   type="in"
                   selected={enter}
                   player={player}

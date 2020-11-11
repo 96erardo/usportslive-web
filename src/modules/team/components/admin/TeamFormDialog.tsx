@@ -1,11 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
-import { Dialog, Button, Column, Row, Input, Avatar, Icon, useModal } from '@8base/boost';
+import { Dialog, Button, Column, Row, Input, Icon, useModal } from '@8base/boost';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
 import { ImageUploader } from '../../../../shared/components/utilities/ImageUploader';
 import SportSelector from '../../../sport/components/SportSelector';
 import { Team, Sport, Image } from '../../../../shared/types';
 import { createTeam, updateTeam } from '../../team-actions';
 import { onError } from '../../../../shared/mixins';
+import { Avatar } from '../../../../shared/components/globals';
 import { toast } from 'react-toastify';
 
 const initialForm = {
