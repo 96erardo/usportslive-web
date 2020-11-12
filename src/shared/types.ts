@@ -208,6 +208,12 @@ export type Stats = {
   assist: number
 }
 
+export type GamePerformance = {
+  person_id: number,
+  votes: number,
+  points: string | null
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

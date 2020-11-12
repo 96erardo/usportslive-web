@@ -258,7 +258,6 @@ export async function removePlayerFromTeam (teamId: string | number, playerId: s
 }
 
 /**
-<<<<<<< HEAD
  * Lines up a player in the game
  * 
  * @param {number} game - The game id
@@ -269,7 +268,32 @@ export async function removePlayerFromTeam (teamId: string | number, playerId: s
  */
 export async function lineupPlayerInGame (game: number, team: number, player: number): Promise<MutationResult<void>> {
   const { accessToken } = useAuthStore.getState();
-=======
+
+  try {
+    const res: AxiosResponse = await authenticated.post(`/api/games/${game}/team/${team}/player/${player}/lineup`, {}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      } 
+    })
+
+    Logger.info('lineupPlayerInGame', res.data);
+
+    return [null];
+
+  } catch (e) {
+    Logger.error('lineupPlayerInGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+/**
  * Fetches the specified player general rating in the specified sport
  * 
  * @param {number} player - The player id
@@ -397,35 +421,5 @@ export async function fetchPlayerTeams (
     Logger.error('fetchPlayerTeams', e);
 
     return [e];
-  }
-}
-
-export type FetchPlayerFilter = {
-  q?: string,
-}
->>>>>>> feature/55-player-details
-
-  try {
-    const res: AxiosResponse = await authenticated.post(`/api/games/${game}/team/${team}/player/${player}/lineup`, {}, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      } 
-    })
-
-    Logger.info('lineupPlayerInGame', res.data);
-
-    return [null];
-
-  } catch (e) {
-    Logger.error('lineupPlayerInGame', e);
-
-    if (e.response) {
-      return [e.response.data]
-    
-    } else if (e.request) {
-      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
-    } else {
-      return [e];
-    }
   }
 }

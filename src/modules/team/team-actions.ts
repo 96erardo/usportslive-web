@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';  
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Team, MutationResult } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Team, MutationResult, GamePerformance } from '../../shared/types';
 import Logger from 'js-logger';
 import { useAuthStore } from '../auth/auth-store';
 import { useAppStore } from '../app/app-store';
@@ -115,6 +115,12 @@ function createFilter (data: FilterData) {
   return filter;
 }
 
+export type FilterData = {
+  sport?: number,
+  q?: string,
+  competition?: number,
+}
+
 /**
  * Creates a new team
  * 
@@ -159,6 +165,12 @@ export async function createTeam (data: CreateTeamInput): Promise<MutationResult
   }
 }
 
+type CreateTeamInput = {
+  name: string,
+  sport?: number | string,
+  logo?: number | null,
+}
+
 /**
  * Updates the specified team
  * 
@@ -196,6 +208,12 @@ export async function updateTeam (data: UpdateTeamInput): Promise<MutationResult
       return [e];
     }
   }
+}
+
+type UpdateTeamInput = {
+  id?: number,
+  name?: string,
+  logo: number | null,
 }
 
 /**
@@ -262,22 +280,41 @@ export async function deleteTeam (id: number): Promise<MutationResult<boolean>> 
   }
 }
 
-export 
+/**
+ * 
+ * @param {number} team - The team id
+ * @param {number} game - The game id
+ * @param {CancelTokenSource} source - Cancel token source
+ * 
+ * @returns {Promise}
+ */
+export async function fetchTeamPerformance (
+  team: number,
+  game: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<Array<GamePerformance>>> {
+  const { accessToken } = useAppStore.getState();
 
-type FilterData = {
-  sport?: number,
-  q?: string,
-  competition?: number,
-}
+  try {
+    const res: AxiosResponse<Array<GamePerformance>> = await request.get(`/api/teams/${team}/game/${game}/performance`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
 
-type CreateTeamInput = {
-  name: string,
-  sport?: number | string,
-  logo?: number | null,
-}
+    Logger.info('fetchTeamPerformance', res.data);
 
-type UpdateTeamInput = {
-  id?: number,
-  name?: string,
-  logo: number | null,
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchTeamPerformance (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchTeamPerformance', e);
+
+    return [e];
+  }
 }
