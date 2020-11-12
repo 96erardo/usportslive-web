@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PointEvent from './PointEvent';
 import SubstitutionEvent from './SubstitutionEvent';
   import { useGameLiveEvents } from '../hooks/useGameLiveEvents';
 import { PersonPlaysGame } from '../../../shared/types';
 import UpdateSubMinuteDialog from '../../team/components/UpdateSubMinuteDialog';
 import DecisionDialog from '../../../shared/components/globals/DecisionDialog';
+import { GameContext } from '../contexts/GameContext';
 
-const GameEvents: React.FC<Props> = ({ gameId }) => {
-  const { items } = useGameLiveEvents(gameId);
+const GameEvents: React.FC<Props> = () => {
+  const game = useContext(GameContext);
+  const { items } = useGameLiveEvents(game);
 
   const events = items.map((event, i) => (
     event.type === 'point' ? (
@@ -24,7 +26,7 @@ const GameEvents: React.FC<Props> = ({ gameId }) => {
   ));
 
   return (
-    <div>
+    <div className="w-100">
       {events}
       <UpdateSubMinuteDialog 
         id="live-score"

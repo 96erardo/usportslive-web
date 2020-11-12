@@ -6,9 +6,10 @@ import PlayerPlaysButton from '../../player/components/PlayerPlaysButton';
 import PlayerLiveItem from '../../player/components/PlayerLiveItem';
 import SubstitutionButton from './SubstitutionButton';
 import { PointFormDialog } from '../../point/components/PointFormDialog';
-import { usePlayersInGameLive } from '../../game/game-hooks';
+import { usePlayersInGameLive } from '../../game/hooks/usePlayersInGameLive';
 import { Avatar } from '../../../shared/components/globals';
 import { Game } from '../../../shared/types';
+import { useTeamPerformance } from './hooks/useTeamPerformance';
 
 const Body = styled(Card.Body)`
   & > *:not(:last-child) {
@@ -30,8 +31,10 @@ const playing = 'playing';
 const bench = 'bench';
 
 const TeamLive: React.FC<Props> = ({ id, type, game }) => {
-  const benchState = usePlayersInGameLive(game.id, id ? id : 0, bench);
-  const fieldState = usePlayersInGameLive(game.id, id ? id : 0, playing);
+  const benchState = usePlayersInGameLive(game, id ? id : 0, bench);
+  const fieldState = usePlayersInGameLive(game, id ? id : 0, playing);
+  const performance = useTeamPerformance(id ? id : 0 , game);
+  
 
   const refresh = useCallback(() => {
     benchState.fetch();
@@ -44,6 +47,8 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
       type="bench"
       teamId={id ? id : 0}
       player={player}
+      performance={performance.items.find(perf => perf.person_id === player.id)}
+      onActionFinished={refresh}
     />
   ));
 
@@ -53,6 +58,8 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
       type="playing"
       teamId={id ? id : 0}
       player={player}
+      performance={performance.items.find(perf => perf.person_id === player.id)}
+      onActionFinished={refresh}
     />
   ));
 

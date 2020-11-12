@@ -1,11 +1,15 @@
 import React, { useCallback, useContext } from 'react';
 import { Avatar, Grid, Icon, Text, Dropdown, Menu, Tooltip, useModal } from '@8base/boost';
-import { Person as Player } from '../../../shared/types';
+import { GamePerformance, Person as Player } from '../../../shared/types';
 import { GameContext } from '../../game/contexts/GameContext';
 import { modalId } from '../../point/components/PointFormDialog';
 import Can from '../../../shared/components/utilities/Can';
+import { lineupPlayerInGame } from '../player-actions';
+import { onError } from '../../../shared/mixins';
+import { modalId as ratingModalId } from './PlayerRatingDialog';
+import Rating from 'react-rating';
 
-const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
+const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, onActionFinished }) => {
   const { openModal } = useModal();
   const { inMinute, outMinute, points } = player.participation;
   const game = useContext(GameContext);
@@ -20,6 +24,23 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
     });
   }, [game, teamId, player, openModal]);
 
+  const onLineup = useCallback(async () => {
+    const [err] = await lineupPlayerInGame(game ? game.id : 0, teamId, player.id);
+
+    if (err) {
+      return onError(err);
+    }
+
+    onActionFinished();
+  }, [game, player, teamId, onActionFinished]);
+
+  const onRate = useCallback(() => {
+    openModal(ratingModalId, {
+      person: player,
+      game: game
+    })
+  }, [openModal, player, game]);
+
   const on = inMinute !== null && inMinute > 0 && outMinute === null;
   const off = outMinute !== null;
 
@@ -32,6 +53,7 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
           [
             ['avatar', 'name', 'actions'],
             ['avatar', 'points', 'actions'],
+            ['space', 'rating', 'rating']
           ]
         }
       >
@@ -74,7 +96,7 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
         )}
         <Can 
           perform="game-player:actions"
-          data={{ game, status: type }}
+          data={{ game, status: type, participated: inMinute !== null }}
           onYes={() => (
             <Grid.Box area="actions" direction="row" alignItems="center" justifyContent="flex-end">
               <Dropdown defaultOpen={false}>
@@ -83,16 +105,12 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
                 </Dropdown.Head>
                 <Dropdown.Body>
                   <Menu>
-                    <Can 
-                      perform="game-player:initial"
+                    <Can
+                      perform="game-player:lineup"
                       data={{ game }}
-                      onYes={() => type === 'playing' ? (
-                        <Menu.Item>
-                          Suplente
-                        </Menu.Item>
-                      ) : (
-                        <Menu.Item>
-                          Titular
+                      onYes={() =>  (
+                        <Menu.Item onClick={onLineup}>
+                          {type === 'playing' ? 'Suplente' : 'Titular'}
                         </Menu.Item>
                       )}
                     />
@@ -111,6 +129,16 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId }) => {
             </Grid.Box>
           )}
         />
+        {game?.isFinished && inMinute !== null && performance &&
+          <Grid.Box className="pointer" area="rating" onClick={onRate}>
+            <Rating
+              readonly={true}
+              initialRating={Math.round(parseFloat(performance.points ? performance.points : '0'))}
+              emptySymbol={<Icon name="BlankStar" size="sm" />}
+              fullSymbol={<Icon name="YellowStar" size="sm" />}
+            />
+          </Grid.Box>
+        }
       </Grid.Layout>
     </div>
   );
@@ -120,6 +148,8 @@ type Props = {
   type: 'playing' | 'bench',
   player: Player,
   teamId: number,
+  performance: GamePerformance | undefined,
+  onActionFinished: () => void
 }
 
 export default PlayerLiveItem;

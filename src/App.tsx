@@ -7,6 +7,7 @@ import AuthCallback from './modules/auth/components/AuthCallback';
 import AppLoader from './shared/components/globals/AppLoader';
 import { ToastContainer } from 'react-toastify';
 import { PageNotFound } from './shared/components/globals/PageNotFound';
+import { theme } from './shared/config/theme';
 import 'react-toastify/dist/ReactToastify.css';
 import './shared/assets/css/toastify-override.css';
 
@@ -58,7 +59,7 @@ function App () {
   }, [fetchAppResources]);
 
   return (
-    <BoostProvider icons={icons}>
+    <BoostProvider theme={theme} icons={icons}>
       <AppLoader>
         <Router>
           <Switch>

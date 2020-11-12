@@ -145,7 +145,7 @@ export const PointFormDialog: React.FC<Props> = ({ id }) => {
               <ClickableInput 
                 stretch
                 readOnly
-                value={form.scorer ? form.scorer.name : ''}
+                value={form.scorer ? `${form.scorer.name} ${form.scorer.lastname}` : ''}
                 placeholder="Select a player"
                 cursor="pointer"
                 onChange={() => {}}
@@ -171,7 +171,7 @@ export const PointFormDialog: React.FC<Props> = ({ id }) => {
                 <ClickableInput 
                   stretch
                   readOnly
-                  value={form.assister ? form.assister.name : ''}
+                  value={form.assister ? `${form.assister.name} ${form.assister.lastname}` : ''}
                   placeholder="Select a player"
                   cursor="pointer"
                   onChange={() => {}}

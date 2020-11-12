@@ -13,6 +13,7 @@ import { Paper } from '../../../shared/components/globals/Paper';
 import { useLiveScore } from '../hooks/useLiveScore';
 import { Avatar } from '../../../shared/components/globals';
 import GameEvents from './GameEvents';
+import { Game } from '../../../shared/types';
 
 const Body = styled(Card.Body)`
   & > *:not(:last-child) {
@@ -30,8 +31,8 @@ const Heading = styled(BoostHeading)`
   ${({ color }: { color: string }) => color && `color: ${color};`}
 `;
 
-const LiveScore: React.FC<Props> = ({ gameId }) => {
-  const { local, visitor, loading } = useLiveScore(gameId);
+const LiveScore: React.FC<Props> = ({ game }) => {
+  const { local, visitor, loading } = useLiveScore(game);
 
   if (loading) {
     return (
@@ -71,7 +72,7 @@ const LiveScore: React.FC<Props> = ({ gameId }) => {
           gap="sm" 
           alignItems="start" 
         >
-          <GameEvents gameId={gameId} />
+          <GameEvents gameId={game.id} />
         </Events>
       </Body>
       <PointFormDialog id="score" />
@@ -80,7 +81,7 @@ const LiveScore: React.FC<Props> = ({ gameId }) => {
 }
 
 type Props = {
-  gameId: number,
+  game: Game,
 }
 
 export default LiveScore;

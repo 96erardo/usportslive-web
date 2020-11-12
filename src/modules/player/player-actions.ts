@@ -1,5 +1,5 @@
 import { request, authenticated } from '../../shared/config/axios';
-import { QueryResult, PaginatedResponse, Person as Player, MutationResult, Rating, Stats, Team } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Person as Player, MutationResult, Rating, Stats, Team, UserRatesPlayer } from '../../shared/types';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
@@ -77,6 +77,10 @@ function createFilter (data: FetchPlayerFilter) {
   return filter;
 }
 
+export type FetchPlayerFilter = {
+  q?: string,
+}
+
 /**
  * Creates a player in a team
  * 
@@ -120,6 +124,15 @@ export async function createPlayer (data: CreatePlayerInput): Promise<MutationRe
   }
 }
 
+export type CreatePlayerInput = {
+  teamId: number,
+  name: string,
+  lastname: string,
+  number: number | string,
+  gender: string,
+  avatar: number | null,
+}
+
 /**
  * Adds a player in the specified team
  * 
@@ -155,6 +168,12 @@ export async function adddPlayerInTeam (data: AddPlayerInput): Promise<MutationR
       return [e];
     }
   }
+}
+
+export type AddPlayerInput = {
+  teamId: number | string,
+  playerId: number | string,
+  number: number | string,
 }
 
 /**
@@ -193,6 +212,15 @@ export async function updatePlayer (teamId: string | number, data: UpdatePlayerI
   }
 }
 
+export type UpdatePlayerInput = {
+  id: null | number | string,
+  name?: string,
+  lastname?: string,
+  number?: number | string,
+  gender?: string,
+  avatarId?: number | null,
+}
+
 /**
  * Removes the specified player from the specified team
  * 
@@ -229,6 +257,42 @@ export async function removePlayerFromTeam (teamId: string | number, playerId: s
   }
 }
 
+/**
+ * Lines up a player in the game
+ * 
+ * @param {number} game - The game id
+ * @param {number} team - The team id
+ * @param {number} player - The player id
+ * 
+ * @returns {Promise<MutationResult<void>>}
+ */
+export async function lineupPlayerInGame (game: number, team: number, player: number): Promise<MutationResult<void>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse = await authenticated.post(`/api/games/${game}/team/${team}/player/${player}/lineup`, {}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      } 
+    })
+
+    Logger.info('lineupPlayerInGame', res.data);
+
+    return [null];
+
+  } catch (e) {
+    Logger.error('lineupPlayerInGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
 /**
  * Fetches the specified player general rating in the specified sport
  * 
@@ -360,30 +424,87 @@ export async function fetchPlayerTeams (
   }
 }
 
-export type FetchPlayerFilter = {
-  q?: string,
+/**
+ * Fetches the player rating in a game
+ * 
+ * @param {number} player - The player id
+ * @param {number} game - The game id
+ * @param {CancelTokenSource} source - The cancel token source
+ * 
+ * @returns {Promise<QueryResult<UserRatesPlayer>>} 
+ */
+export async function fetchPlayerRatingInGame (
+  player: number, 
+  game: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<{ rating: UserRatesPlayer }>> {
+  const { accessToken } = useAppStore.getState();
+  const { user } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<{ rating: UserRatesPlayer }> = await request.get(`/api/persons/${player}/game/${game}/user/${user?.id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPlayerRatingInGame', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchPlayerRatingInGame (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchPlayerRatingInGame', e);
+
+    return [e];
+  }
 }
 
-export type CreatePlayerInput = {
-  teamId: number,
-  name: string,
-  lastname: string,
-  number: number | string,
-  gender: string,
-  avatar: number | null,
-}
+/**
+ * Submits the players performance given by a user
+ * 
+ * @param {number} player - The person id
+ * @param {number} game - The id of the game to rate
+ * @param {number} points - The points given for the performance of the player
+ * 
+ * @returns {Promise<MutationResult<UserRatesPlayer>>} The request result
+ */
+export async function ratePlayerPerformance (
+  player: number,
+  game: number,
+  points: number
+): Promise<MutationResult<UserRatesPlayer>> {
+  const { accessToken } = useAuthStore.getState();
 
-export type AddPlayerInput = {
-  teamId: number | string,
-  playerId: number | string,
-  number: number | string,
-}
+  try {
+    const res: AxiosResponse<UserRatesPlayer> = await authenticated.post(`/api/games/${game}/player/${player}/rate`, {
+      points
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
 
-export type UpdatePlayerInput = {
-  id: null | number | string,
-  name?: string,
-  lastname?: string,
-  number?: number | string,
-  gender?: string,
-  avatarId?: number | null,
+    Logger.info('ratePlayerPerformance', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('lineupPlayerInGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
 }

@@ -14,6 +14,9 @@ const rules: Rules = {
       'user:authenticated'
     ],
     dynamic: {
+      'game-player:actions': ({ game }: { game: Game }) => {
+        return game.isFinished;
+      },
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id;
       },
@@ -26,23 +29,24 @@ const rules: Rules = {
       'user:authenticated'
     ],
     dynamic: {
-      'game-player:actions': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+      'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
         return (
-          (!game.isFinished && !game.isLive) ||
-          (game.isLive && status === 'playing')
+          (game.isFinished && participated) || // Game has finished and the player participated
+          (!game.isLive && !game.isFinished) || // Game has not started
+          (game.isLive && status === 'playing') // Game is live and the player is not in the bench
         );
       },
-      'game-player:initial': ({ game }: { game: Game }) => {
+      'game-player:lineup': ({ game }: { game: Game }) => {
         return !game.isFinished && !game.isLive;
+      },
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (game.isLive && status === 'playing');
       },
       'game-player:add': ({ game }: { game: Game }) => {
         return !game.isLive && !game.isFinished;
       },
       'game-player:substitute': ({ game }: { game: Game }) => {
         return game.isLive;
-      },
-      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
-        return (game.isLive && status === 'playing');
       },
       'game-point:update': ({ game }: { game: Game }) => {
         return game.isLive;
@@ -62,11 +66,18 @@ const rules: Rules = {
       'dashboard-page:visit',
     ],
     dynamic: {
-      'game-player:actions': ({ game }: { game: Game }) => {
-        return !game.isFinished;
+      'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
+        return (
+          (game.isFinished && participated) || // Game has finished and the player participated
+          (!game.isLive && !game.isFinished) || // Game has not started
+          (game.isLive && status === 'playing') // Game is live and the player is not in the bench
+        );
       },
-      'game-player:initial': ({ game }: { game: Game }) => {
+      'game-player:lineup': ({ game }: { game: Game }) => {
         return !game.isFinished && !game.isLive;
+      },
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (game.isLive && status === 'playing');
       },
       'game-player:add': ({ game }: { game: Game }) => {
         return !game.isLive && !game.isFinished;
@@ -91,16 +102,31 @@ const rules: Rules = {
       'admin-page:visit',
       'dashboard-page:visit',
       // Actions
-      'game-player:actions',
-      'game-player:add',
-      'game-player:substitute',
-      'game-point:create',
       'game-point:update',
       'game-point:delete',
     ],
     dynamic: {
-      'game-player:initial': ({ game }: { game: Game }) => {
+      'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
+        return (
+          (game.isFinished && participated) || // Game has finished and the player participated
+          (!game.isLive && !game.isFinished) || // Game has not started
+          (game.isLive && status === 'playing') // Game is live and the player is not in the bench
+        );
+      },
+      'game-player:add': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
+      'game-player:lineup': ({ game }: { game: Game }) => {
         return !game.isFinished && !game.isLive;
+      },
+      'game-player:substitute': ({ game }: { game: Game }) => {
+        return game.isLive || game.isFinished;
+      },
+      'game-point:create': ({ game, status }: { game: Game, status: 'playing' | 'bench' }) => {
+        return (
+          (game.isLive && status === 'playing' ) || 
+          game.isFinished
+        );
       },
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id || person.userId === null;
