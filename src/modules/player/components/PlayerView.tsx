@@ -6,6 +6,7 @@ import { fetchPersonByIdOrUser } from '../../person/person-actions';
 import { PersonCard } from '../../person/components/PersonCard';
 import { PlayerSports } from './PlayerSports';
 import { PlayerTeams } from '../../team/components/PlayerTeams';
+import { LatestPlayerGames } from '../../game/components/LatestPlayerGames';
 import axios, { CancelTokenSource } from 'axios';
 
 export const PlayerView: React.FC = () => {
@@ -60,16 +61,17 @@ export const PlayerView: React.FC = () => {
   return (
     <div className="container-fluid mt-5">
       <div className="row">
-        <div className="col-md-3">
-          <Column className="w-100" gap="md">
+        <div className="col-xs-12 col-md-4">
+          <Column className="w-100 mb-4" gap="md">
             <PersonCard 
               person={player.person}
               onChange={fetch}
             />
-            <PlayerTeams playerId={player.person.id} />
+            <PlayerTeams player={player.person} />
+            <LatestPlayerGames player={player.person.id} />
           </Column>
         </div>
-        <div className="col-md-9">
+        <div className="col-md-8">
           <PlayerSports playerId={player.person.id} />
         </div>
       </div>

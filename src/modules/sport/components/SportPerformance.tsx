@@ -8,7 +8,7 @@ import { useSportPerformance } from '../../player/hooks/useSportPerformance';
 import { usePerformanceDetails } from '../../player/hooks/usePerformanceDetails';
 
 const Paper = styled(BoostPaper)`
-  ${(props: {border: string}) => props.border && `border: 2px solid ${props.border};`}
+  ${(props: {border: string}) => props.border && `border: 4px solid ${props.border};`}
 `;
 
 export const SportPerformance: React.FC<Props> = ({ playerId, played }) => {

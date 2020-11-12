@@ -9,12 +9,14 @@ export const Heading = styled(BoostHeading)`
   ${(props: HeadingProps) => props.color && `color: ${props.color};`}
   ${(props: HeadingProps) => props.fontWeight && `font-weight: ${props.fontWeight};`}
   ${(props: HeadingProps) => props.clickable && `cursor: pointer;`}
+  ${(props: HeadingProps) => props.align && `text-align: ${props.align};`}
 `;
 
 type HeadingProps = {
   color?: string,
   clickable?: boolean,
   fontWeight?: string,
+  align?: string,
 }
 
 export const Avatar = styled(BoostAvatar)`
@@ -26,6 +28,7 @@ type AvatarProps = {
 }
 
 export const Column = styled(BoostColumn)`
+  ${(props: ColumnProps) => props.height && `height: ${props.height}px;`}
   ${(props: ColumnProps) => props.maxHeight && `
     max-height: ${props.maxHeight}px;
     overflow: auto;
@@ -33,5 +36,6 @@ export const Column = styled(BoostColumn)`
 `;
 
 type ColumnProps = {
-  maxHeight: number
+  maxHeight: number,
+  height: number,
 }

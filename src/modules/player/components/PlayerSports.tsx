@@ -1,10 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Column, Row, Loader } from '@8base/boost';
+import { Column, Row, Loader, COLORS, styled } from '@8base/boost';
 import { fetchPersonsPlayedSports } from '../../person/person-actions';
 import { PlayedSports } from '../../../shared/types';
 import axios, { CancelTokenSource } from 'axios';
 import { SportPerformance } from '../../sport/components/SportPerformance';
+import { Heading } from '../../../shared/components/globals';
 import { onError } from '../../../shared/mixins';
+import wink from '../../../shared/assets/images/wink.png';
+
+const Background = styled(Column)`
+  height: 600px;
+  background-color: ${COLORS.BLACK};
+  border: 4px solid ${COLORS.MAGENTA_10};
+  border-radius: .5rem;
+`;
 
 export const PlayerSports: React.FC<Props> = ({ playerId }) => {
   const [sports, setSports] = useState<State>({ loading: true, items: [], error: null });
@@ -59,7 +68,19 @@ export const PlayerSports: React.FC<Props> = ({ playerId }) => {
   }
 
   if (sports.items.length === 0) {
-
+    return (
+      <Background 
+        className="w-100"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <img alt="wink emoji" src={wink} width={200} />
+        <Heading color="#fff" type="h2" fontWeight="600" align="center">
+          Recuerda que el ejercicio es importante para tu salud tanto física
+          como mental, puedes participar en los juegos universitarios siempre que quieras.
+        </Heading>
+      </Background>
+    )
   }
 
   return (
