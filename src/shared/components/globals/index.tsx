@@ -1,6 +1,7 @@
 import { 
   Heading as BoostHeading,
   Avatar as BoostAvatar,
+  Column as BoostColumn,
   styled
 } from '@8base/boost';
 
@@ -22,4 +23,15 @@ export const Avatar = styled(BoostAvatar)`
 
 type AvatarProps = {
   src: string
+}
+
+export const Column = styled(BoostColumn)`
+  ${(props: ColumnProps) => props.maxHeight && `
+    max-height: ${props.maxHeight}px;
+    overflow: auto;
+  `}
+`;
+
+type ColumnProps = {
+  maxHeight: number
 }

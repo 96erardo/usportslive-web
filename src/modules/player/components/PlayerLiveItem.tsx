@@ -1,13 +1,15 @@
 import React, { useCallback, useContext } from 'react';
 import { Avatar, Grid, Icon, Text, Dropdown, Menu, Tooltip, useModal } from '@8base/boost';
-import { Person as Player } from '../../../shared/types';
+import { GamePerformance, Person as Player } from '../../../shared/types';
 import { GameContext } from '../../game/contexts/GameContext';
 import { modalId } from '../../point/components/PointFormDialog';
 import Can from '../../../shared/components/utilities/Can';
 import { lineupPlayerInGame } from '../player-actions';
 import { onError } from '../../../shared/mixins';
+import { modalId as ratingModalId } from './PlayerRatingDialog';
+import Rating from 'react-rating';
 
-const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, onActionFinished }) => {
+const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, onActionFinished }) => {
   const { openModal } = useModal();
   const { inMinute, outMinute, points } = player.participation;
   const game = useContext(GameContext);
@@ -32,6 +34,13 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, onActionFinishe
     onActionFinished();
   }, [game, player, teamId, onActionFinished]);
 
+  const onRate = useCallback(() => {
+    openModal(ratingModalId, {
+      person: player,
+      game: game
+    })
+  }, [openModal, player, game]);
+
   const on = inMinute !== null && inMinute > 0 && outMinute === null;
   const off = outMinute !== null;
 
@@ -44,6 +53,7 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, onActionFinishe
           [
             ['avatar', 'name', 'actions'],
             ['avatar', 'points', 'actions'],
+            ['space', 'rating', 'rating']
           ]
         }
       >
@@ -119,6 +129,16 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, onActionFinishe
             </Grid.Box>
           )}
         />
+        {game?.isFinished && inMinute !== null && performance &&
+          <Grid.Box className="pointer" area="rating" onClick={onRate}>
+            <Rating
+              readonly={true}
+              initialRating={Math.round(parseFloat(performance.points ? performance.points : '0'))}
+              emptySymbol={<Icon name="BlankStar" size="sm" />}
+              fullSymbol={<Icon name="YellowStar" size="sm" />}
+            />
+          </Grid.Box>
+        }
       </Grid.Layout>
     </div>
   );
@@ -128,6 +148,7 @@ type Props = {
   type: 'playing' | 'bench',
   player: Player,
   teamId: number,
+  performance: GamePerformance | undefined,
   onActionFinished: () => void
 }
 

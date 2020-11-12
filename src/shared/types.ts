@@ -188,6 +188,39 @@ export interface Image {
   createdBy: number,  
 }
 
+export type PlayedSports = {
+  id: number, // sport id
+  name: string, // sport name
+  color: string, // sport color
+  teams: number, // The number of teams that the player has been part of from that sport
+}
+
+export type Rating = {
+  quantity: number,
+  value: number,
+}
+
+export type Stats = {
+  started: number,
+  substitute: number,
+  total: number,
+  points: number,
+  assist: number
+}
+
+export type GamePerformance = {
+  person_id: number,
+  votes: number,
+  points: string | null
+}
+
+export type UserRatesPlayer = {
+  userId: number,
+  personId: number,
+  gameId: number,
+  points: number,
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

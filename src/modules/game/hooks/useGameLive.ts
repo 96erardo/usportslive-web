@@ -57,12 +57,17 @@ export function useGameLive (id: string | number): State {
   }, [id]);
 
   useEffect(() => {
-    fetch();
+    if (!state.game) {
+      fetch();
+    }
 
-    const interval = setInterval(() => fetch(), 60000); // A minute
+    if (state.game && state.game.isFinished === false) {
+      const interval = setInterval(() => fetch(), 60000); // A minute
+  
+      return () => clearInterval(interval);
+    }
 
-    return () => clearInterval(interval);
-  }, [fetch]);
+  }, [fetch, state.game]);
 
   return state;
 }

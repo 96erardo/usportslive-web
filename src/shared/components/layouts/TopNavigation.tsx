@@ -34,7 +34,7 @@ function TopNavigation () {
 
   const toProfile = useCallback(() => {
     if (user) {
-      history.push(`/profile/${user.id}`)
+      history.push(`/profile/${user.person.id}`)
     }
   }, [history, user]);
   

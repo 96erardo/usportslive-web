@@ -1,7 +1,7 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { fetchGameEvents } from '../game-actions';
-import { CancelTokenSource } from 'axios';
-import { Point, PersonPlaysGame } from '../../../shared/types';
+import axios, { CancelTokenSource } from 'axios';
+import { Point, PersonPlaysGame, Game } from '../../../shared/types';
 
 const initialState = {
   items: [],
@@ -16,21 +16,21 @@ const initialState = {
  * 
  * @returns {State} The state of the fetched events
  */
-export function useGameLiveEvents (game: number): State {
+export function useGameLiveEvents (game: Game | null): State {
   const [state, setState] = useState<State>(initialState);
-  const cancelToken = useRef<CancelTokenSource>();
   const interval = useRef<number>();
 
-  const fetch = useCallback(async () => {
-    cancelToken.current?.cancel();
-
+  const fetch = useCallback(async (source?: CancelTokenSource) => {
+    if (!game)
+      return;
+    
     setState(prevState => ({
       ...prevState,
       loading: prevState.items.length === 0,
       error: null,
     }))
 
-    const [err, canceled, data] = await fetchGameEvents(game, cancelToken.current);
+    const [err, canceled, data] = await fetchGameEvents(game.id, source);
 
     if (canceled) {
       return;
@@ -56,12 +56,25 @@ export function useGameLiveEvents (game: number): State {
   }, [game]);
 
   useEffect(() => {
-    fetch();
+    let source = axios.CancelToken.source();
 
-    interval.current = window.setInterval(fetch, 60000);
+    fetch(source);
 
-    return () => clearInterval(interval.current);
-  }, [fetch]);
+    if (game !== null && !game.isFinished) {
+      interval.current = window.setInterval(() => {
+        source = axios.CancelToken.source();
+
+        fetch(source);
+      }, 60000);
+  
+      return () => {
+        clearInterval(interval.current)
+        source.cancel();
+      };
+    }
+
+    return () => source.cancel()
+  }, [fetch, game]);
 
   return state;
 }

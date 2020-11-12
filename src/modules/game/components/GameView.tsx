@@ -7,6 +7,7 @@ import LiveScore from './LiveScore';
 import { WaitingStream } from './WaitingStream';
 import { GameProvider } from '../contexts/GameContext';
 import { useGameLive } from '../hooks/useGameLive';
+import { PlayerRatingDialog } from '../../player/components/PlayerRatingDialog';
 
 const GameView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +45,7 @@ const GameView: React.FC = () => {
               ) : (
                 <WaitingStream />
               )}
-              <LiveScore gameId={game.id} />
+              <LiveScore game={game} />
             </Column>
           </div>
           <div className="col-12 col-lg-6 col-xl-3 order-3 order-xl-3 mb-4">
@@ -55,6 +56,7 @@ const GameView: React.FC = () => {
             />
           </div>
         </div>
+        <PlayerRatingDialog />
       </div>
     </GameProvider>
   );
