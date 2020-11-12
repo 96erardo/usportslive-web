@@ -45,7 +45,7 @@ const GameView: React.FC = () => {
               ) : (
                 <WaitingStream />
               )}
-              <LiveScore gameId={game.id} />
+              <LiveScore game={game} />
             </Column>
           </div>
           <div className="col-12 col-lg-6 col-xl-3 order-3 order-xl-3 mb-4">

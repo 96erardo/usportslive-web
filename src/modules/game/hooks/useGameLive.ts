@@ -61,7 +61,7 @@ export function useGameLive (id: string | number): State {
       fetch();
     }
 
-    if (state.game && !state.game.isFinished) {
+    if (state.game && state.game.isFinished === false) {
       const interval = setInterval(() => fetch(), 60000); // A minute
   
       return () => clearInterval(interval);
