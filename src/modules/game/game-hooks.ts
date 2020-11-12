@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { fetchGames, fetchPlayersInGame } from './game-actions';
-import { Game, Person as Player, ListHooksState } from '../../shared/types';
+import { fetchGames } from './game-actions';
+import { Game, ListHooksState } from '../../shared/types';
 import axios, { CancelTokenSource } from 'axios';
 
 const initialState = {

@@ -513,3 +513,56 @@ export async function fetchGameThumbnail (streamkey: string): Promise<QueryResul
     return [e, false];
   }
 }
+
+/**
+ * Fetches games from the specified player
+ * 
+ * @param {number} player - The player id
+ * @param {number} page - The page id
+ * @param {CancelTokenSource} source - The cancel token source
+ * 
+ * @returns {Promise<QueryResult<PaginatedResponse<Game>>>} The request result
+ */
+export async function fetchPlayerGames (
+  player: number, 
+  page: number = 1, 
+  source?: CancelTokenSource
+): Promise<QueryResult<PaginatedResponse<Game>>> {
+  const { accessToken } = useAppStore.getState();
+
+  const first = 10;
+  const skip = first * (page - 1);
+  const orderBy = 'date_DESC';
+
+  const query = qs.stringify({
+    first,
+    skip,
+    orderBy,
+    include: ['local', 'visitor', 'local.logo', 'visitor.logo'],
+    filters: { players: { id: { eq: player } }, isFinished: { eq: true } },
+  }, { encode: false, arrayFormat: 'brackets' })
+
+  try {
+    const res: AxiosResponse<PaginatedResponse<Game>> = await request.get(`/api/games?${query}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined,
+    });
+
+    Logger.info('fetchPlayerGames', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchPlayerGames (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchPlayerGames', e);
+
+    return [e];
+  }
+}

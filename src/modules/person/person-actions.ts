@@ -208,7 +208,7 @@ export async function fetchPersonsPlayedSports (
   id: number,
   source?: CancelTokenSource
 ): Promise<QueryResult<PaginatedResponse<PlayedSports>>> {
-  const { accessToken } = useAuthStore.getState();
+  const { accessToken } = useAppStore.getState();
 
   try {
     const res: AxiosResponse<PaginatedResponse<PlayedSports>> = await authenticated.get(`/api/persons/${id}/played`, {

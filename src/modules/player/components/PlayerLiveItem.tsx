@@ -8,9 +8,11 @@ import { lineupPlayerInGame } from '../player-actions';
 import { onError } from '../../../shared/mixins';
 import { modalId as ratingModalId } from './PlayerRatingDialog';
 import Rating from 'react-rating';
+import { useHistory } from 'react-router-dom';
 
 const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, onActionFinished }) => {
   const { openModal } = useModal();
+  const history = useHistory();
   const { inMinute, outMinute, points } = player.participation;
   const game = useContext(GameContext);
 
@@ -41,6 +43,10 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, on
     })
   }, [openModal, player, game]);
 
+  const onProfile = useCallback(() => {
+    history.push(`/profile/${player.id}`)
+  }, [history, player]);
+
   const on = inMinute !== null && inMinute > 0 && outMinute === null;
   const off = outMinute !== null;
 
@@ -65,7 +71,14 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, on
           />
         </Grid.Box>
         <Grid.Box area="name" direction="row" alignItems="center">
-          <Text weight="bold" color="WHITE">{player.name} {player.lastname}</Text>
+          <Text 
+            weight="bold"
+            color="WHITE"
+            cursor="pointer"
+            onClick={onProfile}
+          >
+            {player.name} {player.lastname}
+          </Text>
           {on &&
             <Tooltip placement="right" message={`Min ${inMinute}.`}>
               <Icon
