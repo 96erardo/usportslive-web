@@ -7,6 +7,7 @@ import LiveScore from './LiveScore';
 import { WaitingStream } from './WaitingStream';
 import { GameProvider } from '../contexts/GameContext';
 import { useGameLive } from '../hooks/useGameLive';
+import { PlayerRatingDialog } from '../../player/components/PlayerRatingDialog';
 
 const GameView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,6 +56,7 @@ const GameView: React.FC = () => {
             />
           </div>
         </div>
+        <PlayerRatingDialog />
       </div>
     </GameProvider>
   );

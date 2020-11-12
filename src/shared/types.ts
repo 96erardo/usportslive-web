@@ -214,6 +214,13 @@ export type GamePerformance = {
   points: string | null
 }
 
+export type UserRatesPlayer = {
+  userId: number,
+  personId: number,
+  gameId: number,
+  points: number,
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

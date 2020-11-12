@@ -1,5 +1,5 @@
 import { request, authenticated } from '../../shared/config/axios';
-import { QueryResult, PaginatedResponse, Person as Player, MutationResult, Rating, Stats, Team } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Person as Player, MutationResult, Rating, Stats, Team, UserRatesPlayer } from '../../shared/types';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import qs from 'qs';
@@ -421,5 +421,90 @@ export async function fetchPlayerTeams (
     Logger.error('fetchPlayerTeams', e);
 
     return [e];
+  }
+}
+
+/**
+ * Fetches the player rating in a game
+ * 
+ * @param {number} player - The player id
+ * @param {number} game - The game id
+ * @param {CancelTokenSource} source - The cancel token source
+ * 
+ * @returns {Promise<QueryResult<UserRatesPlayer>>} 
+ */
+export async function fetchPlayerRatingInGame (
+  player: number, 
+  game: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<{ rating: UserRatesPlayer }>> {
+  const { accessToken } = useAppStore.getState();
+  const { user } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<{ rating: UserRatesPlayer }> = await request.get(`/api/persons/${player}/game/${game}/user/${user?.id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchPlayerRatingInGame', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchPlayerRatingInGame (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchPlayerRatingInGame', e);
+
+    return [e];
+  }
+}
+
+/**
+ * Submits the players performance given by a user
+ * 
+ * @param {number} player - The person id
+ * @param {number} game - The id of the game to rate
+ * @param {number} points - The points given for the performance of the player
+ * 
+ * @returns {Promise<MutationResult<UserRatesPlayer>>} The request result
+ */
+export async function ratePlayerPerformance (
+  player: number,
+  game: number,
+  points: number
+): Promise<MutationResult<UserRatesPlayer>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<UserRatesPlayer> = await authenticated.post(`/api/games/${game}/player/${player}/rate`, {
+      points
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('ratePlayerPerformance', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('lineupPlayerInGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
   }
 }

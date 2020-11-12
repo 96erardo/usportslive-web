@@ -92,3 +92,7 @@ table .fc-col-header {
 .list-item:hover {
   background-color: #1a252f;
 }
+
+.pointer {
+  cursor: pointer;
+}

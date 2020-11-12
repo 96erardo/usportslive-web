@@ -6,6 +6,7 @@ import { modalId } from '../../point/components/PointFormDialog';
 import Can from '../../../shared/components/utilities/Can';
 import { lineupPlayerInGame } from '../player-actions';
 import { onError } from '../../../shared/mixins';
+import { modalId as ratingModalId } from './PlayerRatingDialog';
 import Rating from 'react-rating';
 
 const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, onActionFinished }) => {
@@ -32,6 +33,13 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, on
 
     onActionFinished();
   }, [game, player, teamId, onActionFinished]);
+
+  const onRate = useCallback(() => {
+    openModal(ratingModalId, {
+      person: player,
+      game: game
+    })
+  }, [openModal, player, game]);
 
   const on = inMinute !== null && inMinute > 0 && outMinute === null;
   const off = outMinute !== null;
@@ -122,7 +130,7 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, on
           )}
         />
         {game?.isFinished && inMinute !== null && performance &&
-          <Grid.Box area="rating">
+          <Grid.Box className="pointer" area="rating" onClick={onRate}>
             <Rating
               readonly={true}
               initialRating={Math.round(parseFloat(performance.points ? performance.points : '0'))}
