@@ -2,7 +2,8 @@ import React, { useCallback } from 'react';
 import { Paper } from '../../../shared/components/globals/Paper';
 import { Heading } from '../../../shared/components/globals';
 import { Game } from '../../../shared/types';
-import { Column, Row, Icon, COLORS, styled } from '@8base/boost';
+import { Like } from './Like';
+import { Column, Row, COLORS, styled } from '@8base/boost';
 import noSignal from '../../../shared/assets/images/no_signal.png';
 import { keyframes } from '@emotion/core';
 import moment from 'moment';
@@ -86,11 +87,7 @@ export const GamePost: React.FC<Props> = ({ game }) => {
             <Heading type="h5" color={COLORS.GRAY_20}>
               {moment(game.date).format('DD/MM/YYYY HH:mm')}
             </Heading>
-            <Icon
-              cursor="pointer"
-              name="RedHeart" 
-              size="md"
-            />
+            <Like game={game.id} />
           </Row>
           {game.isLive && (
             <Live ga="sm" alignItems="center">

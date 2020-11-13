@@ -30,6 +30,7 @@ import { ReactComponent as GreyRect } from './shared/assets/images/grey-square.s
 import { ReactComponent as PrimaryRect } from './shared/assets/images/primary-square.svg';
 import { ReactComponent as WhiteHeart } from './shared/assets/images/white_heart.svg';
 import { ReactComponent as RedHeart } from './shared/assets/images/red_heart.svg';
+import { ReactComponent as RedBorderedHeart } from './shared/assets/images/red_bordered_heart.svg';
 import { ReactComponent as BlankStar } from './shared/assets/images/blank_star.svg';
 import { ReactComponent as YellowStar } from './shared/assets/images/yellow_star.svg';
 
@@ -46,6 +47,7 @@ const icons = {
   PrimaryRect,
   WhiteHeart,
   RedHeart,
+  RedBorderedHeart,
   BlankStar,
   YellowStar
 };

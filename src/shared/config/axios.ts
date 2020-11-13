@@ -12,8 +12,6 @@ request.interceptors.response.use(response => {
   const { config, response } = error;
   const { setClientToken } = useAppStore.getState();
 
-  console.log('error', error);
-
   if (response && response.status === 401) {
     return axios.post('/api/client/authenticate')
       .then(res => {
@@ -40,8 +38,6 @@ export const authenticated = axios.create({
 authenticated.interceptors.response.use(response => {
   return response;
 }, error => {
-  console.log('error', error);
-
   const { config, response } = error;
 
   if (response && response.status === 401) {

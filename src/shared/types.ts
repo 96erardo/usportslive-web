@@ -221,6 +221,11 @@ export type UserRatesPlayer = {
   points: number,
 }
 
+export type Likes = {
+  count: number,
+  liked: boolean
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

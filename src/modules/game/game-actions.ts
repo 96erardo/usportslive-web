@@ -1,6 +1,16 @@
 import { authenticated, request } from '../../shared/config/axios';
-import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Game, Person as Player, MutationResult, Participation, PersonPlaysGame, Point } from '../../shared/types';
+import axios, { CancelTokenSource, AxiosResponse, } from 'axios';
+import { 
+  QueryResult, 
+  PaginatedResponse, 
+  Game, 
+  Person as Player, 
+  MutationResult, 
+  Participation, 
+  PersonPlaysGame, 
+  Point,
+  Likes
+} from '../../shared/types';
 import Logger from 'js-logger';
 import qs from 'qs';
 import { useAppStore } from '../app/app-store';
@@ -564,5 +574,115 @@ export async function fetchPlayerGames (
     Logger.error('fetchPlayerGames', e);
 
     return [e];
+  }
+}
+
+/**
+ * Fetches the likes count in a game and if the currently authenticated user liked
+ * 
+ * @param {number} game - The game id
+ * @param {CancelTokenSource} source - The token source to cancel the request if needed
+ * 
+ * @returns {Promise<QueryResult<Likes>>} The request result
+ */
+export async function fetchGameLikes (
+  game: number,
+  source?: CancelTokenSource
+): Promise<QueryResult<Likes>> {
+  const { accessToken: userAccessToken } = useAuthStore.getState();
+  const { accessToken: clientAccessToken } = useAppStore.getState();
+
+  try {
+    const res: AxiosResponse<Likes> = await request.get(`/api/games/${game}/likes`, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken || clientAccessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchGamesLikes', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchGameLikes (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchGameLikes', e);
+
+    return [e];
+  }
+};
+
+/**
+ * Marks the specified game as liked by the user who triggered the event
+ * 
+ * @param {number} game - The game id
+ * 
+ * @returns {Promise<MutationResult<Likes>>} The current likes count
+ */
+export async function likeGame (game: number): Promise<MutationResult<Likes>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Likes> = await authenticated.post(`/api/games/${game}/like`, {}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('likeGame', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('likeGame', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Removes the like given by the authenticated user from the specified game
+ * 
+ * @param {number} game - The game id
+ * 
+ * @returns {Promise<MutationResult<Likes>>} The current likes count
+ */
+export async function dislikeGame (game: number): Promise<MutationResult<Likes>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Likes> = await authenticated.delete(`/api/games/${game}/like`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('dislikeGame', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('dislikeGame', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
   }
 }
