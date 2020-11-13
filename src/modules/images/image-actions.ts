@@ -1,4 +1,4 @@
-import { useAuthStore } from '../auth/auth-store';
+import { useAppStore } from '../app/app-store';
 import { authenticated } from '../../shared/config/axios';
 import { Image, MutationResult } from '../../shared/types';
 import { AxiosResponse } from 'axios';
@@ -12,7 +12,7 @@ import Logger from 'js-logger';
  * @returns {Promise<MutationResult<Image>>} The request result
  */
 export async function uploadImage (data: UploadImageInput): Promise<MutationResult<Image>> {
-  const { accessToken } = useAuthStore.getState();
+  const { accessToken } = useAppStore.getState();
   const form = new FormData();
 
   form.append('img', data.img);

@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react';
-import { TopBar as TopBarBoost, Button, Menu, Tag, Row, Grid, Avatar, Dropdown, Text, styled } from '@8base/boost';
+import { TopBar as TopBarBoost, Button, Menu, Tag, Row, Grid, Dropdown, Text, styled, useModal } from '@8base/boost';
+import { Avatar } from '../globals';
 import logo from '../../assets/images/logo_uneg.png';
 import Can from '../utilities/Can';
 import { useAuthStore } from '../../../modules/auth/auth-store';
 import { useHistory } from 'react-router-dom';
 import AuthButton from '../../../modules/auth/components/AuthButton';
+import { modalId } from '../../../modules/user/components/SigninDialog';
 
 const TopBar = styled(TopBarBoost)`
   padding: 8px 0px;
@@ -31,6 +33,7 @@ function TopNavigation () {
   const history = useHistory();
   const user = useAuthStore(state => state.user);
   const logout = useAuthStore(state => state.logout);
+  const { openModal } = useModal(modalId);
 
   const toProfile = useCallback(() => {
     if (user) {
@@ -45,6 +48,8 @@ function TopNavigation () {
   const onBrandClick = useCallback(() => {
     history.push('/');
   }, [history]);
+
+  const signin = useCallback(() => openModal(modalId), [openModal]);
 
   return (
     <TopBar color="WHITE">
@@ -112,7 +117,7 @@ function TopNavigation () {
             )}
             onNo={() => (
               <>
-                <Button size="sm" color="primary">
+                <Button size="sm" color="primary" onClick={signin}>
                   Registrate
                 </Button>
                 <AuthButton size="sm" variant="link" />

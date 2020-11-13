@@ -7,6 +7,7 @@ import AuthCallback from './modules/auth/components/AuthCallback';
 import AppLoader from './shared/components/globals/AppLoader';
 import { ToastContainer } from 'react-toastify';
 import { PageNotFound } from './shared/components/globals/PageNotFound';
+import { SigninDialog } from './modules/user/components/SigninDialog';
 import { theme } from './shared/config/theme';
 import 'react-toastify/dist/ReactToastify.css';
 import './shared/assets/css/toastify-override.css';
@@ -70,6 +71,7 @@ function App () {
           </Switch>
         </Router>
       </AppLoader>
+      <SigninDialog />
       <ToastContainer 
         autoClose={8000}
         position="bottom-left"
