@@ -176,3 +176,54 @@ export async function updateUserRole (user: number, role: number): Promise<Mutat
     }
   }
 }
+
+/**
+ * Registers user in platform
+ * 
+ * @param {SignupData} data - The data needed to signup a user
+ * 
+ * @return {Promise<MutationResult<User>>} - The request result
+ */
+export async function signup (data: SignupData): Promise<MutationResult<User>> {
+  const { accessToken } = useAppStore.getState();
+
+  const user = {
+    ...data,
+    avatarId: data.avatar
+  }
+
+  try {
+    const res: AxiosResponse<User> = await request.post(`/api/users`, user, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('signup', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('signup', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+type SignupData = {
+  name: string,
+  lastname: string,
+  gender: string,
+  username: string,
+  email: string,
+  avatar: number | null,
+  password: string,
+  passwordConfirmation: string,
+}
