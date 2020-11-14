@@ -50,11 +50,11 @@ authenticated.interceptors.response.use(response => {
     
     return axios.post('/api/token/refresh', {refreshToken: refreshToken}) 
       .then(res => {
-        const { access_token, refresh_token } = res.data;
+        const { accessToken, refreshToken } = res.data;
     
-        setAuthTokens(access_token, refresh_token);
+        setAuthTokens(accessToken, refreshToken);
     
-        config.headers['Authorization'] = `Bearer ${access_token}`;
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
     
         return axios(config);
       }, () => logout());

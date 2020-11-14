@@ -12,6 +12,8 @@ if (result.error) {
   throw result.error;
 }
 
+app.use(express.json())
+
 const auth = Buffer.from(
   `${process.env.SERVER_CLIENT_ID}:${process.env.SERVER_CLIENT_SECRET}`
 ).toString('base64');
@@ -76,10 +78,7 @@ app.post('/api/token/refresh', async (req: Request, res: Response<RefreshTokenRe
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Basic ${auth}`
         },
-        body: JSON.stringify({
-          grant_type: 'refresh_token',
-          refresh_token: req.body.refeshToken,
-        })
+        body: params
       }
     )
   } catch (e) {
