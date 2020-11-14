@@ -226,6 +226,16 @@ export type Likes = {
   liked: boolean
 }
 
+export type Configuration = {
+  id: number,
+  name: string,
+  value: string,
+  createdAt: string,
+  updatedAt: string,
+  updatedBy: number,
+  user?: User
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

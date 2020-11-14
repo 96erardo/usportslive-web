@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import { TopBar as TopBarBoost, Button, Menu, Tag, Row, Grid, Dropdown, Text, styled, useModal } from '@8base/boost';
 import { Avatar } from '../globals';
-import logo from '../../assets/images/logo_uneg.png';
 import Can from '../utilities/Can';
 import { useAuthStore } from '../../../modules/auth/auth-store';
 import { useHistory } from 'react-router-dom';
 import AuthButton from '../../../modules/auth/components/AuthButton';
 import { modalId } from '../../../modules/user/components/SigninDialog';
+import { APP_LOGO } from '../../constants';
+import { useAppStore } from '../../../modules/app/app-store';
 
 const TopBar = styled(TopBarBoost)`
   padding: 8px 0px;
@@ -33,6 +34,7 @@ function TopNavigation () {
   const history = useHistory();
   const user = useAuthStore(state => state.user);
   const logout = useAuthStore(state => state.logout);
+  const logo = useAppStore(state => state.settings[APP_LOGO]);
   const { openModal } = useModal(modalId);
 
   const toProfile = useCallback(() => {
@@ -55,7 +57,7 @@ function TopNavigation () {
     <TopBar color="WHITE">
       <Row stretch alignItems="center" justifyContent="between">
         <Brand onClick={onBrandClick}>
-          <img src={logo} alt="Logo" style={{ height: '100%' }} />
+          <img src={logo.value} alt="Logo" style={{ height: '100%' }} />
         </Brand>
         <Row className="pr-4" alignItems="center" gap="lg">
           <Can 

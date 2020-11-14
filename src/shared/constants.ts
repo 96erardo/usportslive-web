@@ -13,3 +13,5 @@ export const GENDER_OPTIONS = [
   { label: 'Femenino', value: GENDERS.FEMALE },
   { label: 'Otro', value: GENDERS.OTHER },
 ];
+
+export const APP_LOGO = 'APP_LOGO';
