@@ -1,10 +1,11 @@
 import React from 'react';
 import { Column, Heading as BoostHeading, Loader, styled, COLORS } from '@8base/boost';
 import { useAppStore } from '../../../modules/app/app-store';
-import logo from '../../assets/images/logo_uneg.png';
 import errorEmoji from '../../assets/images/sad_error.png';
+import { APP_LOGO } from '../../constants';
 
 const selectLoading = (state: any) => state.loading;
+const selectLogo = (state: any) => state.settings[APP_LOGO];
 const selectError = (state: any) => state.error;
 
 const Display = styled(Column)`
@@ -20,11 +21,14 @@ const Heading = styled(BoostHeading)`
 function AppLoader (props: Props) {
   const loading = useAppStore(selectLoading);
   const error = useAppStore(selectError);
+  const logo = useAppStore(selectLogo)
 
   if (loading) {
     return (
       <Display gap="lg" alignItems="center" justifyContent="center">
-        <img alt="App Logo" src={logo} width="75" height="75" />
+        {logo && 
+          <img alt="App Logo" src={logo.value} width="75" height="75" />
+        }
         <Loader color="PRIMARY" size="sm" />
       </Display>
     );
