@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import { ClientAuthResponse, RefreshTokenBody, RefreshTokenResponse } from './types';
+import { ClientAuthResponse, RefreshTokenResponse } from './types';
 import dotenv from 'dotenv';
 import { Buffer } from 'buffer';
 import { URLSearchParams } from 'url';

@@ -15,11 +15,11 @@ request.interceptors.response.use(response => {
   if (response && response.status === 401) {
     return axios.post('/api/client/authenticate')
       .then(res => {
-        const { access_token } = res.data;
+        const { accessToken } = res.data;
     
-        setClientToken(access_token);
+        setClientToken(accessToken);
     
-        config.headers['Authorization'] = `Bearer ${access_token}`;
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
     
         return axios(config);
       });
