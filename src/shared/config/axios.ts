@@ -15,11 +15,11 @@ request.interceptors.response.use(response => {
   if (response && response.status === 401) {
     return axios.post('/api/client/authenticate')
       .then(res => {
-        const { access_token } = res.data;
+        const { accessToken } = res.data;
     
-        setClientToken(access_token);
+        setClientToken(accessToken);
     
-        config.headers['Authorization'] = `Bearer ${access_token}`;
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
     
         return axios(config);
       });
@@ -50,11 +50,11 @@ authenticated.interceptors.response.use(response => {
     
     return axios.post('/api/token/refresh', {refreshToken: refreshToken}) 
       .then(res => {
-        const { access_token, refresh_token } = res.data;
+        const { accessToken, refreshToken } = res.data;
     
-        setAuthTokens(access_token, refresh_token);
+        setAuthTokens(accessToken, refreshToken);
     
-        config.headers['Authorization'] = `Bearer ${access_token}`;
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
     
         return axios(config);
       }, () => logout());

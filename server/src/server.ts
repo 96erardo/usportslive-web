@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import { ClientAuthResponse, RefreshTokenBody, RefreshTokenResponse } from './types';
+import { ClientAuthResponse, RefreshTokenResponse } from './types';
 import dotenv from 'dotenv';
 import { Buffer } from 'buffer';
 import { URLSearchParams } from 'url';
@@ -11,6 +11,8 @@ const app: Express = express();
 if (result.error) {
   throw result.error;
 }
+
+app.use(express.json())
 
 const auth = Buffer.from(
   `${process.env.SERVER_CLIENT_ID}:${process.env.SERVER_CLIENT_SECRET}`
@@ -76,10 +78,7 @@ app.post('/api/token/refresh', async (req: Request, res: Response<RefreshTokenRe
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Basic ${auth}`
         },
-        body: JSON.stringify({
-          grant_type: 'refresh_token',
-          refresh_token: req.body.refeshToken,
-        })
+        body: params
       }
     )
   } catch (e) {
