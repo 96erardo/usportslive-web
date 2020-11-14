@@ -17,7 +17,7 @@ function AdminNavigation () {
   return (
     <Navigation color="GRAY_60" expandedWidth="400px">
       <NavigationBoost.Item 
-        onClick={navigate('/admin')} 
+        onClick={navigate('/admin/dashboard')}
         iconSize="sm" 
         icon="Home" 
         label="Dashboard" 

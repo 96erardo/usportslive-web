@@ -46,7 +46,10 @@ export const useAppStore = create<Store>(set => ({
   setClientToken: (state: string) => set({ accessToken: state }),
   setAppLoading: (state: boolean) => set({ loading: state }),
   setSports: (state: Array<Sport>) => set({ sports: state }),
-  setRoles: (state: Array<Role>) => set({ roles: state })
+  setRoles: (state: Array<Role>) => set({ roles: state }),
+  setSetting: (name: string, value: Configuration) => set(prevState => ({
+    settings: {...prevState.settings, [name]: value }
+  }))
 }))
 
 type Store = {
@@ -63,4 +66,5 @@ type Store = {
   setClientToken: (accessToken: string) => void,
   setSports: (state: Array<Sport>) => void,
   setRoles: (state: Array<Role>) => void,
+  setSetting: (name: string, value: Configuration) => void
 }

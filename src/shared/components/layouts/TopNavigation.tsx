@@ -44,7 +44,7 @@ function TopNavigation () {
   }, [history, user]);
   
   const toAdmin = useCallback(() => {
-      history.push(`/admin`)
+      history.push(`/admin/dashboard`)
   }, [history]);
 
   const onBrandClick = useCallback(() => {
