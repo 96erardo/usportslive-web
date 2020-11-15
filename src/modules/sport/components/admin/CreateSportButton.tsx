@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { Button, useModal } from '@8base/boost';
 import SportDialog from './SportFormDialog';
-import { Sport } from '../../../../shared/types';
 
 function CreateSportButton (props: Props) {
   const { openModal } = useModal('create-sport-dialog');
@@ -24,7 +23,7 @@ function CreateSportButton (props: Props) {
 }
 
 type Props = {
-  afterCreate: (sport?: Sport) => void
+  afterCreate: () => void
 }
 
 export default CreateSportButton;

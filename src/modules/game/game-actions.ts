@@ -30,17 +30,21 @@ export async function fetchGames (
   page: number = 1,
   include: Array<string> = [],
   data: FilterData = {},
-  source?: CancelTokenSource
+  source?: CancelTokenSource,
+  orderBy?: string,
 ): Promise<QueryResult<PaginatedResponse<Game>>> {
+  
   const { accessToken } = useAppStore.getState();
   const first = page !== 0 ? 10 : undefined;
   const skip = (page !== 0 && first) ? (first * (page - 1)) : undefined;
   const filters = createFilter(data);
+  
   const query = qs.stringify({
     first,
     skip,
-    include, 
-    filters 
+    include,
+    filters,
+    orderBy
   }, { encode: false, arrayFormat: 'brackets' })
   
   try {
@@ -85,12 +89,16 @@ function createFilter (data: FilterData) {
     } : {}),
     ...(data.visitor ? {
       visitorId: data.visitor
+    } : {}),
+    ...(data.sport ? {
+      competition: { sportId: { eq: data.sport} }
     } : {})
   }
 }
 
 export type FilterData = {
   competition?: number | string,
+  sport?: number,
   isAfter?: string,
   isBefore?: string,
   isLive?: boolean,

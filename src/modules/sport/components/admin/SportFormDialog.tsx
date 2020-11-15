@@ -4,7 +4,7 @@ import Avatar from '../../../../shared/components/utilities/Avatar';
 import ColorPicker from '../../../../shared/components/form/ColorPicker';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
 import TeamSelector from '../../../team/components/TeamSelector';
-import { Team, Sport, Image } from '../../../../shared/types';
+import { Team, Image } from '../../../../shared/types';
 import { createSport, updateSport } from '../../sport-actions';
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
@@ -73,7 +73,7 @@ export default function SportFormDialog (props: Props) {
   const handleSubmit = useCallback(async () => {
     setLoading(true);
 
-    const [err, data] = props.type === 'create' ? (
+    const [err] = props.type === 'create' ? (
       await createSport({
         name: form.name,
         color: form.color,
@@ -101,7 +101,7 @@ export default function SportFormDialog (props: Props) {
       toast.success('Deporte actualizado con éxito');
     }
 
-    props.onFinished(data as Sport);
+    props.onFinished();
 
     closeModal(modalId.current);
   }, [props, form, closeModal]);
@@ -187,7 +187,7 @@ export default function SportFormDialog (props: Props) {
 
 type Props = {
   type: 'create' | 'update',
-  onFinished: (sport: Sport) => void
+  onFinished: () => void
 };
 
 type Form = {

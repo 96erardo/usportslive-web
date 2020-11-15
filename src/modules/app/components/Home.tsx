@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link as BoostLink, Column, Row } from '@8base/boost';
 import { useGamesFeed } from '../../game/game-hooks';
 import { onError } from '../../../shared/mixins';
@@ -8,18 +8,13 @@ import { GamePost } from '../../game/components/GamePost';
 import Media from 'react-media';
 
 function Home () {
-  const [page, setPage] = useState(1);
-  const { count, items, loading, error } = useGamesFeed(page);
+  const { count, items, next, loading, error } = useGamesFeed();;
 
   useEffect(() => {
     if (error) {
       onError(error);
     }
   }, [error]);
-
-  const handleMore = useCallback(() => {
-    setPage(state => state + 1);
-  }, []);
 
   const content = items.map(game => (
     <GamePost key={game.id} game={game}/>
@@ -40,8 +35,8 @@ function Home () {
             {content}
             {(!loading && items.length < count) &&
               <Row stretch alignItems="center" justifyContent="center">
-                <BoostLink onClick={handleMore}>
-                  Load More
+                <BoostLink onClick={next}>
+                  Cargar más
                 </BoostLink>
               </Row>
             }

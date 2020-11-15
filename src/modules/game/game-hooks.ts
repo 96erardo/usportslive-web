@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { fetchGames } from './game-actions';
 import { Game, ListHooksState } from '../../shared/types';
 import axios, { CancelTokenSource } from 'axios';
+import moment from 'moment';
 
 const initialState = {
   items: [],
@@ -55,27 +56,20 @@ export function useCalendarGames () {
   };
 }
 
-const useGamesFeedInclude = ['local', 'visitor', 'competition'];
-
-export function useGamesFeed (page: number = 1) {
+export function useGamesFeed () {
+  const [page, setPage] = useState(1);
   const [state, setState] = useState<ListHooksState<Game>>(initialState);
-  const cancelToken = useRef<CancelTokenSource>();
-  const last = useRef<string>();
 
-  const fetch = useCallback(async (feedPage) => {
-    cancelToken.current?.cancel();
-
+  const fetch = useCallback(async (source?: CancelTokenSource) => {
     setState(state => ({...state, loading: true }));
 
     const filters = {
-      // isBefore: feedPage === 1 ? moment().toISOString() : moment(last.current).toISOString(),
+      isBefore: moment().endOf('day').format('YYYY-MM-DD'),
       local: { ne: null },
       visitor: { ne: null },
     };
 
-    cancelToken.current = axios.CancelToken.source();
-
-    const [err, canceled, data] = await fetchGames(0, useGamesFeedInclude, filters, cancelToken.current);
+    const [err, canceled, data] = await fetchGames(page, ['local', 'visitor', 'competition'], filters, source, 'date_DESC');
 
     if (canceled) {
       return;
@@ -89,29 +83,33 @@ export function useGamesFeed (page: number = 1) {
     }
 
     if (data) {
-      if (data.count > 0) {
-        last.current = data.items[data.items.length - 1].date;
-      }
-
-      return setState(state => ({
-        ...state,
+      return setState(prevState => ({
+        ...prevState,
         error: null,
         loading: false,
         count: data.count,
-        items: [
-          ...state.items,
+        items: page === 1 ? data.items : [
+          ...prevState.items,
           ...data.items
         ],
       }))
     }
+  }, [page]);
+
+  const next = useCallback(() => {
+    setPage(prevPage => prevPage + 1);
   }, []);
 
   useEffect(() => {
-    fetch(page)
-  }, [page, fetch])
+    const source = axios.CancelToken.source();
+
+    fetch(source)
+
+    return () => source.cancel();
+  }, [fetch]);
 
   return {
     ...state,
-    fetch
+    next
   };
 }

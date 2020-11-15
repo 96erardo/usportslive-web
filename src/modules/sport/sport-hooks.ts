@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchSports } from './sport-actions';
 import axios, { CancelTokenSource } from 'axios';
 import { ListHooksState, Sport } from '../../shared/types';
@@ -22,14 +22,11 @@ const initialState = {
 export function useSports (page: number = 1, include: Array<string> = [], initialFilters = {}) {
   const [filters, setFilters] = useState(initialFilters);
   const [state, setState] = useState<ListHooksState<Sport>>(initialState);
-  const cancelToken = useRef<CancelTokenSource>()
 
-  const fetch = useCallback(async () => {
-    cancelToken.current = axios.CancelToken.source();
-
+  const fetch = useCallback(async (source?: CancelTokenSource) => {
     setState(state => ({...state, loading: true }));
 
-    const [error, canceled, data] = await fetchSports(page, include, filters, cancelToken.current);
+    const [error, canceled, data] = await fetchSports(page, include, filters, source);
 
     if (canceled) {
       return;
@@ -56,9 +53,11 @@ export function useSports (page: number = 1, include: Array<string> = [], initia
   }, [page, include, filters]);
 
   useEffect(() => {
-    fetch();
+    const source = axios.CancelToken.source();
 
-    return () => cancelToken.current?.cancel();
+    fetch(source);
+
+    return () => source.cancel();
   }, [fetch])
 
   return {

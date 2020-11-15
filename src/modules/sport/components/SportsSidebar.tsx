@@ -1,12 +1,23 @@
-import React from 'react';
-import { COLORS } from '@8base/boost';
+import React, { useCallback, useState } from 'react';
+import { Row, Link, Loader, COLORS } from '@8base/boost';
 import { Paper } from '../../../shared/components/globals/Paper';
 import { Heading } from '../../../shared/components/globals';
 import { useAppStore } from '../../app/app-store';
 import { SportSidebarItem } from './SportSidebarItem';
+import { useSports } from '../sport-hooks';
+
+const include = ['icon'];
 
 export const SportsSidebar: React.FC = () => {
-  const sports = useAppStore(state => state.sports);
+  const [page, setPage] = useState(1);
+  const items = useAppStore(state => state.sports);
+  const state = useSports(page, include);
+
+  const sports = state.items || items;
+
+  const next = useCallback(() => {
+    setPage(prevPage => prevPage + 1);
+  }, []);
 
   return (
     <Paper className="w-100 py-3" background={COLORS.BLACK}>
@@ -22,6 +33,16 @@ export const SportsSidebar: React.FC = () => {
             sport={sport} 
           />
         ))}
+        {state.loading && state.items.length > 0 &&
+          <Row className="w-100 py-2" justifyContent="center">
+            <Loader size="sm" color="PRIMARY" />
+          </Row>
+        }
+        {!state.loading && state.items.length < state.count &&
+          <Row className="w-100" justifyContent="center">
+            <Link onClick={next}>Cargar más</Link>
+          </Row>
+        }
       </div>
     </Paper>
   );
