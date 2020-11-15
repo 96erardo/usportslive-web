@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { COLORS, styled } from '@8base/boost';
 import { Sport } from '../../../shared/types';
 import { Heading, Avatar } from '../../../shared/components/globals';
 
-export const SportSidebarItem: React.FC<{ sport: Sport }> = ({ sport }) => {
+const Item = styled.div`
+  ${(props: { selected: boolean, color: string }) => props.selected && `
+    background: ${COLORS.GRAY_70};
+  `}
+`;
+
+export const SportSidebarItem: React.FC<Props> = ({ sport, selected, onSelect }) => {
+  const onClick = useCallback(() => {
+    if (onSelect) {
+      onSelect(sport.id);
+    }
+  }, [sport, onSelect]);
+
   return (
-    <div className="w-100 d-flex flex-row p-3 align-items-center list-item ">
+    <Item
+      selected={sport.id === selected}
+      className="w-100 d-flex flex-row p-3 align-items-center list-item" 
+      onClick={onClick}
+    >
       <Avatar 
         size="xs" 
         className="mr-3"
@@ -19,6 +36,12 @@ export const SportSidebarItem: React.FC<{ sport: Sport }> = ({ sport }) => {
       >
         {sport.name}
       </Heading>
-    </div>
+    </Item>
   );
+}
+
+type Props = {
+  sport: Sport,
+  selected?: number,
+  onSelect?: (id: number) => void,
 }

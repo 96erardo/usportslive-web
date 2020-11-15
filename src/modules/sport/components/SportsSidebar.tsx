@@ -8,7 +8,7 @@ import { useSports } from '../sport-hooks';
 
 const include = ['icon'];
 
-export const SportsSidebar: React.FC = () => {
+export const SportsSidebar: React.FC<Props> = ({ selected, onSelect }) => {
   const [page, setPage] = useState(1);
   const items = useAppStore(state => state.sports);
   const state = useSports(page, include);
@@ -30,7 +30,9 @@ export const SportsSidebar: React.FC = () => {
         {sports.map(sport => (
           <SportSidebarItem 
             key={sport.id}
-            sport={sport} 
+            sport={sport}
+            selected={selected}
+            onSelect={onSelect}
           />
         ))}
         {state.loading && state.items.length > 0 &&
@@ -46,4 +48,9 @@ export const SportsSidebar: React.FC = () => {
       </div>
     </Paper>
   );
+}
+
+type Props = {
+  selected?: number,
+  onSelect?: (id: number) => void,
 }

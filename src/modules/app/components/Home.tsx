@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link as BoostLink, Column, Row } from '@8base/boost';
 import { useGamesFeed } from '../../game/game-hooks';
 import { onError } from '../../../shared/mixins';
@@ -8,7 +8,8 @@ import { GamePost } from '../../game/components/GamePost';
 import Media from 'react-media';
 
 function Home () {
-  const { count, items, next, loading, error } = useGamesFeed();;
+  const [sport, setSport] = useState(0);
+  const { count, items, next, loading, error } = useGamesFeed(sport);
 
   useEffect(() => {
     if (error) {
@@ -17,7 +18,10 @@ function Home () {
   }, [error]);
 
   const content = items.map(game => (
-    <GamePost key={game.id} game={game}/>
+    <GamePost
+      key={game.id}
+      game={game}
+    />
   ));
 
   return (
@@ -26,7 +30,10 @@ function Home () {
         <div className=".d-none .d-md-block col-md-3">
           <Media query="(min-width: 768px)">
             <Column stretch>
-              <SportsSidebar />
+              <SportsSidebar 
+                selected={sport} 
+                onSelect={setSport}
+              />
             </Column>
           </Media>
         </div>

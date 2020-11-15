@@ -56,7 +56,7 @@ export function useCalendarGames () {
   };
 }
 
-export function useGamesFeed () {
+export function useGamesFeed (sport?: number) {
   const [page, setPage] = useState(1);
   const [state, setState] = useState<ListHooksState<Game>>(initialState);
 
@@ -67,6 +67,9 @@ export function useGamesFeed () {
       isBefore: moment().endOf('day').format('YYYY-MM-DD'),
       local: { ne: null },
       visitor: { ne: null },
+      ...((sport !== undefined && sport > 0) ? {
+        sport: sport
+      }: { })
     };
 
     const [err, canceled, data] = await fetchGames(page, ['local', 'visitor', 'competition'], filters, source, 'date_DESC');
@@ -94,7 +97,7 @@ export function useGamesFeed () {
         ],
       }))
     }
-  }, [page]);
+  }, [page, sport]);
 
   const next = useCallback(() => {
     setPage(prevPage => prevPage + 1);

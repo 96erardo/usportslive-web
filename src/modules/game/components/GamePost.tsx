@@ -42,6 +42,16 @@ const Live = styled(Row)`
   top: 10px;
   right: 10px;
 `;
+
+const Competition = styled(Heading)`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;    
+  }
+`;
   
 const LiveIcon = styled.span`
   width: 10px;
@@ -56,6 +66,10 @@ export const GamePost: React.FC<Props> = ({ game }) => {
 
   const onClick = useCallback(() => {
     history.push(`/game/${game.id}`);
+  }, [history, game]);
+
+  const onCompetition = useCallback(() => {
+    history.push(`/competition/${game.competition?.id}`);
   }, [history, game]);
 
   return (
@@ -89,6 +103,9 @@ export const GamePost: React.FC<Props> = ({ game }) => {
             </Heading>
             <Like game={game.id} />
           </Row>
+          <Competition type="h5" color={COLORS.GRAY_20} onClick={onCompetition}>
+            {game.competition?.name}
+          </Competition>
           {game.isLive && (
             <Live ga="sm" alignItems="center">
               <LiveIcon />
