@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link as BoostLink, Column, Row } from '@8base/boost';
 import { useGamesFeed } from '../../game/game-hooks';
 import { onError } from '../../../shared/mixins';
 import { SportsSidebar } from '../../sport/components/SportsSidebar';
-import { GamesSidebar } from '../../game/components/GamesSidebar';
+import { GamesSidebar, Props } from '../../game/components/GamesSidebar';
 import { GamePost } from '../../game/components/GamePost';
 import Media from 'react-media';
+
+const games: Array<Props> = [
+  { title: 'Hoy', startOf: 'day', endOf: 'day' },
+  { title: 'Semana pasada', startOf: 'week', endOf: 'week', manipulate: { type: 'subtract', amount: 1, time: 'week' } },
+  { title: 'Proxima semana', startOf: 'week', endOf: 'week', manipulate: { type: 'add', amount: 1, time: 'week' } },
+];
 
 function Home () {
   const [sport, setSport] = useState(0);
@@ -23,6 +29,13 @@ function Home () {
       game={game}
     />
   ));
+
+  const sidebars = useMemo(() => games.map((game, i) => (
+    <GamesSidebar 
+      key={i}
+      {...game}
+    />
+  )), []);
 
   return (
     <div className="container-fluid mt-5">
@@ -52,7 +65,7 @@ function Home () {
         <div className=".d-none .d-md-block col-md-3">
           <Media query="(min-width: 768px)">
             <Column stretch>
-              <GamesSidebar />
+              {sidebars}
             </Column>
           </Media>
         </div>

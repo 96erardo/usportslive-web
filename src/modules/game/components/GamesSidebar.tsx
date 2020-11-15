@@ -4,22 +4,31 @@ import { Paper } from '../../../shared/components/globals/Paper';
 import { Heading } from '../../../shared/components/globals';
 import { GameSidebarItem } from './GameSidebarItem';
 import { Game } from '../../../shared/types';
-import moment from 'moment';
+import moment, { unitOfTime, DurationInputArg2 } from 'moment';
 import { fetchGames } from '../game-actions';
+import axios, { CancelTokenSource } from 'axios';
 
-export const GamesSidebar: React.FC = () => {
+export const GamesSidebar: React.FC<Props> = ({ title, startOf, endOf, manipulate }) => {
   const [games, setGames] = useState<{ loading: boolean, items: Array<Game> }>({ loading: true, items: [] });
 
-  const fetch = useCallback(async () => {
-    const start = moment().startOf('day').toISOString();
-    const end = moment().endOf('day').toISOString();
+  const fetch = useCallback(async (source?: CancelTokenSource) => {
+    let start = moment();
+    let end = moment();
+
+    if (manipulate) {
+      start = start[manipulate.type](manipulate.amount, manipulate.time);
+      end = end[manipulate.type](manipulate.amount, manipulate.time);
+    }
+
+    start = start.startOf(startOf);
+    end = end.endOf(endOf);
 
     const [, canceled, data] = await fetchGames(1, ['points', 'local', 'visitor', 'local.logo', 'visitor.logo'], {
-      isAfter: start,
-      isBefore: end,
+      isAfter: start.toISOString(),
+      isBefore: end.toISOString(),
       local: { ne: null },
       visitor: { ne: null }
-    });
+    }, source, 'date_ASC');
 
     if (canceled)
       return;
@@ -31,10 +40,14 @@ export const GamesSidebar: React.FC = () => {
         items: data.items,
       }))
     }
-  }, []);
+  }, [startOf, endOf, manipulate]);
 
   useEffect(() => {
-    fetch();
+    const source = axios.CancelToken.source();
+
+    fetch(source);
+    
+    return () => source.cancel();
   }, [fetch]);
 
   if (!games.loading && games.items.length === 0)
@@ -44,7 +57,7 @@ export const GamesSidebar: React.FC = () => {
     <Paper className="w-100 py-3" background={COLORS.BLACK}>
       <div className="px-4 mb-3">
         <Heading type="h2" fontWeight="600" color="#fff">
-          Hoy
+          {title}
         </Heading>
       </div>
       {games.loading ? (
@@ -63,4 +76,15 @@ export const GamesSidebar: React.FC = () => {
       )}
     </Paper>
   );
+}
+
+export type Props = {
+  title: string,
+  startOf: unitOfTime.StartOf,
+  endOf: unitOfTime.StartOf,
+  manipulate?: { 
+    type: 'add' | 'subtract',
+    amount: number,
+    time: DurationInputArg2
+  } | null,
 }

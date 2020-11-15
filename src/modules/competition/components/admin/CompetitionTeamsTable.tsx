@@ -40,7 +40,7 @@ const CompetitionTeamsTable: React.FC<Props> = ({ sportId, competitionId }) => {
           />
         </Row>
       </Card.Header>
-      <Card.Body>
+      <Card.Body padding="none">
         <Table>
           <Table.Header columns={columns}>
             <Table.HeaderCell></Table.HeaderCell>
