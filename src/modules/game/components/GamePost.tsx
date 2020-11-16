@@ -91,7 +91,7 @@ export const GamePost: React.FC<Props> = ({ game }) => {
               clickable
               onClick={onClick}
               type="h2" 
-              fontWeight="600" 
+              fontWeight={800}
               color="#fff"
             >
               {game.local?.name} vs {game.visitor?.name}
