@@ -189,6 +189,10 @@ const Competition: React.FC = () => {
 
   }, [history, form, params]);
 
+  const onCancel = useCallback(() => {
+    history.push('/admin/competitions');
+  }, [history]);
+
   const { competition, games, sport } = form;
 
   return (
@@ -282,7 +286,7 @@ const Competition: React.FC = () => {
             </Card.Body>
             <Card.Footer>
               <Row stretch alignItems="center" justifyContent="end">
-                <Button color="neutral">
+                <Button color="neutral" onClick={onCancel}>
                   Cancelar
                 </Button>
                 <Button color="primary" loading={submitting} onClick={onSubmit}>
