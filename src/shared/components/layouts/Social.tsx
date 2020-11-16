@@ -7,6 +7,7 @@ import { styled } from '@8base/boost';
 import Home from '../../../modules/app/components/Home';
 import GameView from '../../../modules/game/components/GameView';
 import { PlayerView } from '../../../modules/player/components/PlayerView';
+import { CompetitionView } from '../../../modules/competition/components/CompetitionView';
 
 const Container = styled.div`
   display: flex;
@@ -27,6 +28,7 @@ function Admin (props: Props) {
             <Route exact path="/game/:id" component={GameView} />
             <Route exact path="/profile/:id" component={PlayerView} />
             <Route exact path="/player/:id" component={PlayerView} />
+            <Route exact path="/competition/:id" component={CompetitionView} />
           </Switch>
         </Content>
       </Container>

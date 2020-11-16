@@ -38,36 +38,30 @@ function Home () {
   )), []);
 
   return (
-    <div className="container-fluid mt-5">
-      <div className="row justify-content-center">
-        <div className=".d-none .d-md-block col-md-3">
+    <div className="container mt-5">
+      <div className="row">
+        <div className=".d-none .d-md-block col-md-4">
           <Media query="(min-width: 768px)">
             <Column stretch>
               <SportsSidebar 
                 selected={sport} 
                 onSelect={setSport}
               />
+              {sidebars}
             </Column>
           </Media>
         </div>
-        <div className="col-xs-12 col-md-6">
-          <Column stretch gap="lg">
+        <div className="col-xs-12 col-md-8">
+          <Column className="mb-3" stretch gap="lg">
             {content}
             {(!loading && items.length < count) &&
-              <Row stretch alignItems="center" justifyContent="center">
+              <Row className="w-100" alignItems="center" justifyContent="center">
                 <BoostLink onClick={next}>
                   Cargar más
                 </BoostLink>
               </Row>
             }
           </Column>
-        </div>
-        <div className=".d-none .d-md-block col-md-3">
-          <Media query="(min-width: 768px)">
-            <Column stretch>
-              {sidebars}
-            </Column>
-          </Media>
         </div>
       </div>
     </div>
