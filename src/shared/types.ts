@@ -238,6 +238,13 @@ export type Configuration = {
   user?: User
 }
 
+export type SearchResults = {
+  games: Array<Game>,
+  players: PaginatedResponse<Person>,
+  teams: PaginatedResponse<Team>,
+  competitions: PaginatedResponse<Competition>
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

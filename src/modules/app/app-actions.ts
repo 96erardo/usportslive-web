@@ -1,10 +1,11 @@
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
-import { ClientCredentials, Configuration, MutationResult, PaginatedResponse, QueryResult } from '../../shared/types';
+import { ClientCredentials, Configuration, MutationResult, PaginatedResponse, QueryResult, SearchResults } from '../../shared/types';
 import Logger from 'js-logger';
 import { useAppStore } from './app-store';
 import { authenticated, request } from '../../shared/config/axios';
 import { useAuthStore } from '../auth/auth-store';
 import { APP_LOGO } from '../../shared/constants';
+import qs from 'qs';
 
 /**
  * Fetches access token with client access
@@ -104,5 +105,43 @@ export async function updateAppLogo (url: string): Promise<MutationResult<Config
     } else {
       return [e];
     }
+  }
+}
+
+/**
+ * App search on games, teams, players and competitions
+ * 
+ * @param {string} value - The search term
+ * @param {CancelTokenSource} source - The cancel token source if the request needs to be canceled
+ * 
+ * @returns {Promise<QueryResult<SearchResults>>} The request result
+ */
+export async function search (value: string, source?: CancelTokenSource): Promise<QueryResult<SearchResults>> {
+  const { accessToken } = useAppStore.getState();
+
+  const query = qs.stringify({ q: value }, { encode: false, arrayFormat: 'brackets' })
+
+  try {
+    const res: AxiosResponse<SearchResults> = await request.get(`/api/search?${query}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('search', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.info('Request canceled', e);
+
+      return [e, true];
+    }
+    
+    Logger.error('fetchConfiguration', e);
+
+    return [e];
   }
 }

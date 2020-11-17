@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { TopBar as TopBarBoost, Button, Menu, Tag, Row, Grid, Dropdown, Text, styled, useModal } from '@8base/boost';
 import { Avatar } from '../globals';
+import { SearchBar } from '../form/SearchBar';
 import Can from '../utilities/Can';
 import { useAuthStore } from '../../../modules/auth/auth-store';
 import { useHistory } from 'react-router-dom';
@@ -59,6 +60,7 @@ function TopNavigation () {
         <Brand onClick={onBrandClick}>
           <img src={logo.value} alt="Logo" style={{ height: '100%' }} />
         </Brand>
+        <SearchBar />
         <Row className="pr-4" alignItems="center" gap="lg">
           <Can 
             perform="user:authenticated"
