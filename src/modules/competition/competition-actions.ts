@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Competition, Team, MutationResult } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Competition, Team, MutationResult, CompetitionStatus } from '../../shared/types';
 import { useAppStore } from '../app/app-store';
 import { useAuthStore } from '../auth/auth-store';
 import Logger from 'js-logger';
@@ -312,6 +312,42 @@ export async function removeTeamFromCompetition (competition: number, team: numb
 
   } catch (e) {
     Logger.error('removeTeamFromCompetition', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Updates the specified competition's status
+ * 
+ * @param {string} id - The id of the competition
+ * @param {CompetitionStatus} status - The status of the competition
+ * 
+ * @returns {Promise<MutationResult<Competition>>} - The request result
+ */
+export async function updateCompetitionStatus (id: number, status: CompetitionStatus): Promise<MutationResult<Competition>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Competition> = await authenticated.patch(`/api/competitions/${id}`, { status}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateCompetitionStatus', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateCompetitionStatus', e);
 
     if (e.response) {
       return [e.response.data];

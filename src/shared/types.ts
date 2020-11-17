@@ -147,6 +147,8 @@ export interface Team {
   createdAt: string
 }
 
+export type CompetitionStatus = 'SOON' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED';
+
 export interface Competition {
   id: number,
   name: string,
@@ -154,7 +156,7 @@ export interface Competition {
   matchTime: number,
   quantityOfTeams: number,
   quantityOfPlayers: number,
-  status: string,
+  status: 'SOON' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED',
   sportId: number,
   sport?: Sport
 }

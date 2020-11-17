@@ -22,3 +22,22 @@ export const INITIAL_LIST_STATE = {
   loading: true,
   error: null
 }
+
+export const COMPETITION_STATUS = {
+  'SOON': {
+    label: 'Empieza pronto',
+    color: 'WARNING'
+  },
+  'IN_PROGRESS': {
+    label: 'En curso',
+    color: 'SECONDARY'
+  },
+  'FINISHED': {
+    label: 'Terminado',
+    color: 'PRIMARY',
+  },
+  'CANCELLED': {
+    label: 'Cancelado',
+    color: 'DANGER_DARK',
+  },
+}
