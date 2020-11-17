@@ -54,7 +54,7 @@ export const GamesSidebar: React.FC<Props> = ({ title, startOf, endOf, manipulat
     return null;
 
   return (
-    <Paper className="w-100 py-3" background={COLORS.BLACK}>
+    <Paper className="w-100 py-3" background={COLORS.BLACK} maxHeight={350}>
       <div className="px-4 mb-3">
         <Heading type="h2" fontWeight="600" color="#fff">
           {title}

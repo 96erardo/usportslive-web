@@ -58,6 +58,9 @@ function createFilter (data: FilterData) {
     } : {}),
     ...(data.q ? {
       name: { like: data.q }
+    } : {}),
+    ...(data.status ? {
+      status: { eq: data.status }
     } : {})
   }
 }
@@ -67,6 +70,7 @@ export type FilterData = {
   sport?: number | string,
   startsAfter?: string,
   startsBefore?: string,
+  status?: 'SOON' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELED'
 }
 
 export async function fetchCompetition (

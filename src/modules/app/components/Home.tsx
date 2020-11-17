@@ -4,6 +4,7 @@ import { useGamesFeed } from '../../game/game-hooks';
 import { onError } from '../../../shared/mixins';
 import { SportsSidebar } from '../../sport/components/SportsSidebar';
 import { GamesSidebar, Props } from '../../game/components/GamesSidebar';
+import { CompetitionSidebar } from '../../competition/components/CompetitionSidebar';
 import { GamePost } from '../../game/components/GamePost';
 import Media from 'react-media';
 
@@ -48,6 +49,10 @@ function Home () {
                 onSelect={setSport}
               />
               {sidebars}
+              <CompetitionSidebar 
+                title="Torneos Activos"
+                type="IN_PROGRESS"
+              />
             </Column>
           </Media>
         </div>
