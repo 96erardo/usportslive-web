@@ -45,6 +45,9 @@ const rules: Rules = {
       'game-player:add': ({ game }: { game: Game }) => {
         return !game.isLive && !game.isFinished;
       },
+      'game-player:remove': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
       'game-player:substitute': ({ game }: { game: Game }) => {
         return game.isLive;
       },
@@ -82,6 +85,9 @@ const rules: Rules = {
       'game-player:add': ({ game }: { game: Game }) => {
         return !game.isLive && !game.isFinished;
       },
+      'game-player:remove': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
       'game-player:substitute': ({ game }: { game: Game }) => {
         return game.isLive;
       },
@@ -114,6 +120,9 @@ const rules: Rules = {
         );
       },
       'game-player:add': ({ game }: { game: Game }) => {
+        return !game.isLive && !game.isFinished;
+      },
+      'game-player:remove': ({ game }: { game: Game }) => {
         return !game.isLive && !game.isFinished;
       },
       'game-player:lineup': ({ game }: { game: Game }) => {
