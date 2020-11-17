@@ -1,18 +1,22 @@
-import React, { useCallback } from 'react';
-import { Table, Dropdown, Icon, Menu, Text, useModal } from '@8base/boost';
+import React, { useCallback, useMemo } from 'react';
+import { Table, Dropdown, Icon, Menu, Text, Tag, useModal } from '@8base/boost';
 import { useHistory } from 'react-router';
-import { Competition } from '../../../../shared/types';
+import { Competition, CompetitionStatus } from '../../../../shared/types';
 import { DATE_FORMAT } from '../../../../shared/constants';
-import { deleteCompetition } from '../../competition-actions';
+import { deleteCompetition, updateCompetitionStatus } from '../../competition-actions';
 import { modalId } from '../../../../shared/components/globals/DecisionDialog';
+import { COMPETITION_STATUS as STATUS } from '../../../../shared/constants';
 import { onError } from '../../../../shared/mixins';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 
-
 const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutation }) => {
   const { openModal, closeModal } = useModal(modalId);
   const history = useHistory();
+  
+  const status = useMemo<Array<CompetitionStatus>>(() => {
+    return Object.keys(STATUS).filter(value => value !== competition.status) as Array<CompetitionStatus>
+  }, [competition.status]);
 
   const onUpdate = useCallback(() => {
     history.push(`/admin/competition/${competition.id}`);
@@ -43,6 +47,18 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutat
       onConfirm: handleDelete
     });
   }, [handleDelete, openModal, closeModal]);
+
+  const onStatusChange = useCallback(async (value: CompetitionStatus) => {
+    const [err] = await updateCompetitionStatus(competition.id, value);
+
+    if (err) {
+      return onError(err);
+    }
+
+    afterMutation();
+
+    toast.success('Status actualizado correctamente');
+  }, [competition, afterMutation]);
   
   return (
     <Table.BodyRow columns={columns}>
@@ -65,7 +81,22 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutat
         {competition.sport?.name}
       </Table.BodyCell>
       <Table.BodyCell>
-        {competition.status}
+        <Dropdown defaultOpen={false}>
+          <Dropdown.Head>
+            <Tag color={STATUS[competition.status].color}>
+              {STATUS[competition.status].label}
+            </Tag>
+          </Dropdown.Head>
+          <Dropdown.Body>
+            <Menu>
+              {status.map((value) => (
+                <Menu.Item onClick={() => onStatusChange(value)}>
+                  {STATUS[value].label}
+                </Menu.Item>
+              ))}
+            </Menu>
+          </Dropdown.Body>
+        </Dropdown>
       </Table.BodyCell>
       <Table.BodyCell>
         <Dropdown defaultOpen={false}>

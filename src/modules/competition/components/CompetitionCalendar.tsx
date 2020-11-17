@@ -33,6 +33,7 @@ const CompetitionCalendar: React.FC<Props> = ({
   }, [competition.id, month, fetch]);
 
   const onCreate = useCallback((form: Form) => {
+    console.log('date', form.date);
     const date = moment(form.date);
 
     onNewGame({

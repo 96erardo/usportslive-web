@@ -16,7 +16,7 @@ const Body = styled(Table.Body)`
 `;
 
 const include = ['sport'];
-const columns = '80px 1fr 150px 150px 250px 1fr 100px 100px';
+const columns = '80px 1fr 150px 150px 250px 1fr 200px 100px';
 
 const CompetitionView: React.FC = () => {
   const history = useHistory();

@@ -5,10 +5,12 @@ import { GameContext } from '../../game/contexts/GameContext';
 import { modalId } from '../../point/components/PointFormDialog';
 import Can from '../../../shared/components/utilities/Can';
 import { lineupPlayerInGame } from '../player-actions';
+import { removePlayerFromGame } from '../../game/game-actions';
 import { onError } from '../../../shared/mixins';
 import { modalId as ratingModalId } from './PlayerRatingDialog';
 import Rating from 'react-rating';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, onActionFinished }) => {
   const { openModal } = useModal();
@@ -46,6 +48,18 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, on
   const onProfile = useCallback(() => {
     history.push(`/profile/${player.id}`)
   }, [history, player]);
+
+  const onRemovePlayer = useCallback(async () => {
+    const [err] = await removePlayerFromGame(player.id, teamId, game ? game.id : 0);
+
+    if (err) {
+      return onError(err);
+    }
+
+    toast.success('Jugador retirado del juego');
+
+    onActionFinished();
+  }, [player, teamId, game, onActionFinished]);
 
   const on = inMinute !== null && inMinute > 0 && outMinute === null;
   const off = outMinute !== null;
@@ -118,6 +132,15 @@ const PlayerLiveItem: React.FC<Props> = ({ player, type, teamId, performance, on
                 </Dropdown.Head>
                 <Dropdown.Body>
                   <Menu>
+                    <Can 
+                      perform="game-player:remove" 
+                      data={{ game }}
+                      onYes={() => (
+                        <Menu.Item onClick={onRemovePlayer}>
+                          Quitar
+                        </Menu.Item>
+                      )}
+                    />
                     <Can
                       perform="game-player:lineup"
                       data={{ game }}

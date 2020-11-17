@@ -69,7 +69,10 @@ export const CompetitionView: React.FC = () => {
                   <Table.Body data={[
                     { label: 'Deporte', value: competition?.sport?.name },
                     { label: 'Fecha de inicio', value: moment(competition?.startDate).format(DATE_FORMAT) },
-                    { label: 'Estatus', value: competition?.status}
+                    { label: 'Num. de equipos', value: competition?.quantityOfTeams },
+                    { label: 'Num. de jugadores por equipo', value: competition?.quantityOfPlayers },
+                    { label: 'Tiempo aprox. por juego (min)', value: competition?.matchTime },
+                    { label: 'Estatus', value: competition?.status }
                   ]}>
                     {(row: { label: string, value: string }) => (
                       <Table.BodyRow columns="50% 50%">

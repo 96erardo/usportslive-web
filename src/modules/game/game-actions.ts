@@ -310,6 +310,15 @@ export async function deleteGame (id: number): Promise<MutationResult<{ success:
   }
 }
 
+/**
+ * Adds a player to a game
+ * 
+ * @param {number} playerId - The player id
+ * @param {number} gameId - The game id
+ * @param {number} teamId - The team id
+ * 
+ * @returns {Promise<MutationResult<Participation>>} The request result
+ */
 export async function addPlayerToGame (
   playerId: number,
   gameId: number,
@@ -334,6 +343,47 @@ export async function addPlayerToGame (
 
   } catch (e) {
     Logger.error('addPlayerToGame', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Removes a player from a game
+ * 
+ * @param {number} player - The player id
+ * @param {number} team - The team id
+ * @param {number} game - The game id
+ * 
+ * @returns {Promise<MutationResult<Participation>>} - The request result
+ */
+export async function removePlayerFromGame (
+  player: number,
+  team: number,
+  game: number,
+): Promise<MutationResult<Participation>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Participation> = await authenticated.delete(`/api/games/${game}/team/${team}/player/${player}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('removePlayerFromGame', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('removePlayerFromGame', e);
 
     if (e.response) {
       return [e.response.data]
