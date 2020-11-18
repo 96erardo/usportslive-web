@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Table, Link, Row, Loader } from '@8base/boost';
+import { Card, Table, Link, Row, Loader, COLORS } from '@8base/boost';
 import { Avatar } from '../../../shared/components/globals';
 import { Heading } from '../../../shared/components/globals';
 import { useQuery } from '../../../shared/hooks';
@@ -97,18 +97,25 @@ export const PlayerSearchResults: React.FC = () => {
               )}
             </Table.Body>
           }
-        {players.loading &&
-          <Row className="w-100 py-3" alignItems="center" justifyContent="center">
-            <Loader color="PRIMARY" size="sm" />
-          </Row>
-        }
-        {!players.loading && players.items.length < players.count &&
-          <Row className="w-100 py-3" alignItems="center" justifyContent="center">
-            <Link onClick={next}>
-              Cargar más
-            </Link>
-          </Row>
-        }
+          {players.loading &&
+            <Row className="w-100 py-3" alignItems="center" justifyContent="center">
+              <Loader color="PRIMARY" size="sm" />
+            </Row>
+          }
+          {!players.loading && players.items.length < players.count &&
+            <Row className="w-100 py-3" alignItems="center" justifyContent="center">
+              <Link onClick={next}>
+                Cargar más
+              </Link>
+            </Row>
+          }
+          {!players.loading && players.count === 0 &&
+            <Row className="w-100 py-4" alignItems="center" justifyContent="center">
+              <Heading type="h3" weight="800" color={COLORS.GRAY_50}>
+                No se encontraron coincidencias
+              </Heading>
+            </Row>
+          }
         </Table>
       </Card.Body>
     </Card>

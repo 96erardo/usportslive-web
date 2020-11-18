@@ -4,6 +4,7 @@ import { Heading } from '../../../shared/components/globals';
 import { GameSearchResults } from '../../game/components/GameSearchResults';
 import { TeamSearchResults } from '../../team/components/TeamSearchResults';
 import { PlayerSearchResults } from '../../player/components/PlayerSearchResults';
+import { CompetitionSearchResults } from '../../competition/components/CompetitionSearchResults';
 import { useQuery } from '../../../shared/hooks';
 
 export const SearchView: React.FC = () => {
@@ -20,6 +21,7 @@ export const SearchView: React.FC = () => {
             <GameSearchResults />
             <TeamSearchResults />
             <PlayerSearchResults />
+            <CompetitionSearchResults />
           </Column>
         </div>
       </div>
