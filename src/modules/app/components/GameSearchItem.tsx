@@ -3,12 +3,14 @@ import { Row, Text } from '@8base/boost';
 import { Game } from '../../../shared/types';
 import { useHistory } from 'react-router-dom';
 
-export const GameSearchItem: React.FC<Props> = ({ game }) => {
+export const GameSearchItem: React.FC<Props> = ({ game, closeModal }) => {
   const history = useHistory();
 
   const onClick = useCallback(() => {
     history.push(`/game/${game.id}`);
-  }, [history, game]);
+
+    closeModal();
+  }, [history, game, closeModal]);
 
   return (
     <Row
@@ -30,5 +32,6 @@ export const GameSearchItem: React.FC<Props> = ({ game }) => {
 }
 
 type Props = {
-  game: Game
+  game: Game,
+  closeModal: () => void
 }

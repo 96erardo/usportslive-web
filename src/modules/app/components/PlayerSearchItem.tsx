@@ -4,12 +4,14 @@ import { Avatar } from '../../../shared/components/globals';
 import { Person as Player } from '../../../shared/types';
 import { useHistory } from 'react-router-dom';
 
-export const PlayerSearchItem: React.FC<Props> = ({ player }) => {
+export const PlayerSearchItem: React.FC<Props> = ({ player, closeModal }) => {
   const history = useHistory();
 
   const onClick = useCallback(() => {
     history.push(`/profile/${player.id}`);
-  }, [player, history]);
+
+    closeModal();
+  }, [player, history, closeModal]);
 
   return (
     <Row
@@ -33,5 +35,6 @@ export const PlayerSearchItem: React.FC<Props> = ({ player }) => {
 }
 
 type Props = {
-  player: Player
+  player: Player,
+  closeModal: () => void,
 }

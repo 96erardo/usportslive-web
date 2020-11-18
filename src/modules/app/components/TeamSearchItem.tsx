@@ -4,12 +4,14 @@ import { Avatar } from '../../../shared/components/globals';
 import { useHistory } from 'react-router-dom';
 import { Team } from '../../../shared/types';
 
-export const TeamSearchItem: React.FC<Props> = ({ team }) => {
+export const TeamSearchItem: React.FC<Props> = ({ team, closeModal }) => {
   const history = useHistory();
 
   const onClick = useCallback(() => {
     history.push(`/team/${team.id}`);
-  }, [history, team]);
+
+    closeModal();
+  }, [history, team, closeModal]);
 
   return (
     <Row
@@ -33,5 +35,6 @@ export const TeamSearchItem: React.FC<Props> = ({ team }) => {
 }
 
 type Props = {
-  team: Team
+  team: Team,
+  closeModal: () => void
 }

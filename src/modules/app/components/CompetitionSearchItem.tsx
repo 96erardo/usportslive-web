@@ -3,12 +3,14 @@ import { Row, Text } from '@8base/boost';
 import { useHistory } from 'react-router-dom';
 import { Competition } from '../../../shared/types';
 
-export const CompetitionSearchItem: React.FC<Props> = ({ competition }) => {
+export const CompetitionSearchItem: React.FC<Props> = ({ competition, closeModal }) => {
   const history = useHistory();
 
   const onClick = useCallback(() => {
-    history.push(`/competition/${competition.id}`)
-  }, [history, competition]);
+    history.push(`/competition/${competition.id}`);
+
+    closeModal();
+  }, [history, competition, closeModal]);
 
   return (
     <Row
@@ -26,5 +28,6 @@ export const CompetitionSearchItem: React.FC<Props> = ({ competition }) => {
 }
 
 type Props = {
-  competition: Competition
+  competition: Competition,
+  closeModal: () => void
 }
