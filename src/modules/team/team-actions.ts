@@ -299,7 +299,8 @@ export async function fetchTeamPerformance (
     const res: AxiosResponse<Array<GamePerformance>> = await request.get(`/api/teams/${team}/game/${game}/performance`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
-      }
+      },
+      cancelToken: source ? source.token : undefined
     });
 
     Logger.info('fetchTeamPerformance', res.data);

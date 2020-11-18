@@ -1,38 +1,38 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Card, Table, Link, Row, Loader } from '@8base/boost';
+import { Avatar } from '../../../shared/components/globals';
 import { Heading } from '../../../shared/components/globals';
 import { useQuery } from '../../../shared/hooks';
-import { searchGames } from '../game-actions';
-import { Game, ListHooksState } from '../../../shared/types';
-import { INITIAL_LIST_STATE, DATE_TIME_FORMAT } from '../../../shared/constants';
+import { fetchTeams } from '../team-actions';
+import { Team, ListHooksState } from '../../../shared/types';
+import { INITIAL_LIST_STATE } from '../../../shared/constants';
 import axios, { CancelTokenSource } from 'axios';
 import { onError } from '../../../shared/mixins';
-import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 
-export const GameSearchResults: React.FC = () => {
+export const TeamSearchResults: React.FC = () => {
   const history = useHistory();
   const [page, setPage] = useState(1);
-  const [games, setGames] = useState<ListHooksState<Game>>(INITIAL_LIST_STATE);
+  const [teams, setTeams] = useState<ListHooksState<Team>>(INITIAL_LIST_STATE);
   const [query] = useQuery();
 
   const fetch = useCallback(async (source?: CancelTokenSource) => {
-    setGames(state => ({...state, loading: true }));
+    setTeams(state => ({...state, loading: true }));
 
-    const [err, canceled, data] = await searchGames(query.q as string, page, source);
+    const [err, canceled, data] = await fetchTeams(page, ['logo'], { q: query.q as string }, source);
 
     if (canceled)
       return;
 
     if (err) {
-      return setGames(state => ({
+      return setTeams(state => ({
         ...state,
         error: err
       }))
     }
 
     if (data) {
-      return setGames(state => ({
+      return setTeams(state => ({
         ...state,
         error: null,
         loading: false,
@@ -50,10 +50,10 @@ export const GameSearchResults: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (games.error) {
-      onError(games.error);
+    if (teams.error) {
+      onError(teams.error);
     }
-  }, [games.error]);
+  }, [teams.error]);
 
   useEffect(() => {
     setPage(1);
@@ -68,41 +68,41 @@ export const GameSearchResults: React.FC = () => {
   }, [fetch]);
 
   return (
-    <Card stretch>
+    <Card className="w-100">
       <div className="p-4">
         <Heading type="h2" fontWeight="800">
-          <span role="img" aria-label="alien-game">👾</span> Juegos
+          <span role="img" aria-label="shield">🛡</span> Equipos
         </Heading>
       </div>
       <Card.Body padding="none">
         <Table>
-          {games.count > 0 &&
-            <Table.Body data={games.items}>
-              {(game: Game) => (
-                <Table.BodyRow key={game.id} columns="1fr 1fr 200px">
+          {teams.count > 0 &&
+            <Table.Body data={teams.items}>
+              {(team: Team) => (
+                <Table.BodyRow key={team.id} columns="200px 1fr">
                   <Table.BodyCell>
-                    <Link onClick={() => history.push(`/game/${game.id}`)}>
-                      {game.local?.name} vs {game.visitor?.name}
-                    </Link>
+                    <Avatar 
+                      size="sm"
+                      src={team.logo?.smallUrl}
+                      firstName={team.name}
+                      lastName={team.name[1]}
+                    />
                   </Table.BodyCell>
                   <Table.BodyCell>
-                    <Link onClick={() => history.push(`/competition/${game.competition?.id}`)}>
-                      {game.competition?.name}
+                    <Link onClick={() => history.push(`/team/${team.id}`)}>
+                      {team.name}
                     </Link>
-                  </Table.BodyCell>
-                  <Table.BodyCell>
-                    {moment(game.date).format(DATE_TIME_FORMAT)}
                   </Table.BodyCell>
                 </Table.BodyRow>
               )}
             </Table.Body>
           }
-        {games.loading &&
+        {teams.loading &&
           <Row className="w-100 py-3" alignItems="center" justifyContent="center">
             <Loader color="PRIMARY" size="sm" />
           </Row>
         }
-        {!games.loading && games.items.length < games.count &&
+        {!teams.loading && teams.items.length < teams.count &&
           <Row className="w-100 py-3" alignItems="center" justifyContent="center">
             <Link onClick={next}>
               Cargar más
