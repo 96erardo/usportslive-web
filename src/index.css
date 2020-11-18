@@ -90,7 +90,15 @@ table .fc-col-header {
 }
 
 .list-item:hover {
-  background-color: #1a252f;
+  background-color: #1a252f; /* GRAY_70 */
+}
+
+.white-list-item {
+  cursor: pointer !important;
+}
+
+.white-list-item:hover {
+  background-color: #e8eff5 /* GRAY_20 */;
 }
 
 .pointer {

@@ -744,3 +744,52 @@ export async function dislikeGame (game: number): Promise<MutationResult<Likes>>
     }
   }
 }
+
+/**
+ * Searches for games
+ * 
+ * @param {string} q - The search value
+ * @param {CancelTokenSource} source - The source to cancel the request if needed
+ * 
+ * @returns {Promise<QueryResult<PaginatedResponse<Game>>>}
+ */
+export async function searchGames (
+  q: string,
+  page: number = 1,
+  source?: CancelTokenSource,
+): Promise<QueryResult<PaginatedResponse<Game>>> {
+  
+  const { accessToken } = useAppStore.getState();
+  const first = 10;
+  const skip = first * (page - 1);
+  
+  const query = qs.stringify({
+    q,
+    first,
+    skip
+  }, { encode: false, arrayFormat: 'brackets' });
+
+  try {
+    const res: AxiosResponse<PaginatedResponse<Game>> = await authenticated.get(`/api/search/games?${query}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('searchGames', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchGameLikes (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchGameLikes', e);
+
+    return [e];
+  }
+}
