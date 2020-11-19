@@ -90,7 +90,7 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutat
           <Dropdown.Body>
             <Menu>
               {status.map((value) => (
-                <Menu.Item onClick={() => onStatusChange(value)}>
+                <Menu.Item key={value} onClick={() => onStatusChange(value)}>
                   {STATUS[value].label}
                 </Menu.Item>
               ))}

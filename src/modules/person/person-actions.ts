@@ -32,7 +32,7 @@ export async function fetchPersons (
       cancelToken: source ? source.token : undefined,
     });
 
-    Logger.info('fetchSports', res.data);
+    Logger.info('fetchPersons', res.data);
 
     return [null, false, res.data];
 
@@ -43,7 +43,7 @@ export async function fetchPersons (
       return [e, true];
     }
     
-    Logger.error('fetchSports', e);
+    Logger.error('fetchPersons', e);
 
     return [e];
   }

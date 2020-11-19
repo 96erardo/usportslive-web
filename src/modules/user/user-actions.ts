@@ -1,5 +1,5 @@
 import { request, authenticated } from '../../shared/config/axios';
-import { User, PaginatedResponse, QueryResult, Role, MutationResult } from '../../shared/types';
+import { User, PaginatedResponse, QueryResult, Role, MutationResult, ExchangeCode, Person } from '../../shared/types';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import { useAppStore } from '../app/app-store';
@@ -226,4 +226,80 @@ type SignupData = {
   avatar: number | null,
   password: string,
   passwordConfirmation: string,
+}
+
+/**
+ * Creates an exchange code for a profile
+ * 
+ * @param {number} person - The person id
+ * 
+ * @returns {Promise<MutationResult<ExchangeCode>>} The request result
+ */
+export async function createExchangeCode (
+  person: number
+): Promise<MutationResult<ExchangeCode>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<ExchangeCode> = await authenticated.post(`/api/persons/${person}/code`, {}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+    });
+
+    Logger.info('createExchangeCode', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('createExchangeCode', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
+ * Fetches the profile binded with the exchange code
+ * 
+ * @param {string} code - The exchange code
+ * @param {CancelTokenSource} source - The cancel token source
+ * 
+ * @returns {Promise<QueryResult<Person>>} The request result
+ */
+export async function fetchExchangeCodeProfile (
+  code: string,
+  source?: CancelTokenSource
+): Promise<QueryResult<Person>> {
+  const { accessToken } = useAppStore.getState();
+
+  try {
+    const res: AxiosResponse<Person> = await authenticated.get(`/api/persons/code/${code}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchExchangeCodeProfile', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchUsers(Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchUsers', e);
+
+    return [e];
+  }
 }

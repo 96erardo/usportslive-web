@@ -6,6 +6,7 @@ import { signup } from '../user-actions';
 import { Image } from '../../../shared/types';
 import { onError } from '../../../shared/mixins';
 import { GENDER_OPTIONS } from '../../../shared/constants';
+import { modalId as codeModalId, CodeDialog } from './CodeDialog';
 import { toast } from 'react-toastify';
 
 const initialForm = {
@@ -22,7 +23,7 @@ const initialForm = {
 export const modalId = 'signin-dialog';
 
 export const SigninDialog: React.FC = () => {
-  const { isOpen, closeModal } = useModal(modalId);
+  const { isOpen, openModal, closeModal } = useModal(modalId);
   const [form, setForm] = useState<Form>(initialForm);
   const [loading, setLoading] = useState(false);
 
@@ -41,6 +42,8 @@ export const SigninDialog: React.FC = () => {
   }, []);
 
   const close = useCallback(() => closeModal(modalId), [closeModal]);
+
+  const open = useCallback(() => openModal(codeModalId), [openModal]);
 
   const onSubmit = useCallback(async () => {
     setLoading(true);
@@ -183,6 +186,14 @@ export const SigninDialog: React.FC = () => {
             >
               Cancelar
             </Button>
+            <Button
+              size="sm"
+              disabled={loading}
+              color="success"
+              onClick={open}
+            >
+              Código de Cuenta
+            </Button>
             <Button 
               size="sm" 
               color="primary" 
@@ -193,6 +204,7 @@ export const SigninDialog: React.FC = () => {
             </Button>
           </Row>
         </Dialog.Footer>
+        <CodeDialog />
       </Dialog>
   );
 }

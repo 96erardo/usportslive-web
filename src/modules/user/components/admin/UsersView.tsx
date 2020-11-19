@@ -6,6 +6,7 @@ import { useQuery } from '../../../../shared/hooks';
 import { useUsers } from '../../user-hooks';
 import { User } from '../../../../shared/types';
 import UserTableRow from './UserTableRow';
+import { BindAccountButton } from './BindAccountButton';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -45,6 +46,9 @@ function TeamsView () {
               onSearch={handleSearch}
             />
           </Card.Header.Left>
+          <Card.Header.Right>
+            <BindAccountButton />
+          </Card.Header.Right>
         </Card.Header>
         <Card.Body padding="none">
           <Table>
