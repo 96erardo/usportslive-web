@@ -292,14 +292,64 @@ export async function fetchExchangeCodeProfile (
     return [null, false, res.data];
 
   } catch (e) {
+    if (e.response) {
+      Logger.error('fetchExchangeCodeProfile', e);
+
+      return [e.response.data]    
+    }
+
     if (axios.isCancel(e)) {
-      Logger.error('fetchUsers(Canceled)', e);
+      Logger.error('fetchExchangeCodeProfile(Canceled)', e);
 
       return [e, true];
     }
 
-    Logger.error('fetchUsers', e);
+    Logger.error('fetchExchangeCodeProfile', e);
 
     return [e];
   }
+}
+
+/**
+ * Bind user data to an already created profile
+ * 
+ * @param {BindUserData} data - Data needed to bid the user to the profile
+ * 
+ * @returns {Promise<MutationResult<User>>} The request result
+ */
+export async function bindUserToProfile (data: BindUserData): Promise<MutationResult<User>> {
+  const { accessToken } = useAppStore.getState();
+  const { code, ...user } = data;
+
+  try {
+    const res: AxiosResponse<User> = await request.post(`/api/users/bind/${code}`, user, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('bindUserToProfile', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('bindUserToProfile', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+export type BindUserData = {
+  email: string,
+  username: string,
+  password: string,
+  passwordConfirmation: string,
+  code: string,
 }

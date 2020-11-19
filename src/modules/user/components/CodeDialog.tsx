@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { Dialog, Row, Button, Column, InputField, Paragraph, useModal } from '@8base/boost';
+import { fetchExchangeCodeProfile } from '../user-actions';
+import { Person } from '../../../shared/types';
+import { onError } from '../../../shared/mixins';
 
 export const modalId = 'code-dialog';
 
-export const CodeDialog: React.FC = () => {
+export const CodeDialog: React.FC<Props> = ({ onExchange }) => {
   const [code, setCode] = useState('');
   const { isOpen, closeModal } = useModal(modalId);
   const [, setLoading] = useState(false);
@@ -13,8 +16,22 @@ export const CodeDialog: React.FC = () => {
   const exchange = useCallback(async () => {
     setLoading(true);
 
+    const [err, canceled, data] = await fetchExchangeCodeProfile(code);
 
-  }, []);
+    if (canceled)
+      return;
+
+    setLoading(false);
+
+    if (err) {
+      return onError(err);
+    }
+
+    if (data) {
+      onExchange({ person: data, code });
+      close();
+    }
+  }, [code, close, onExchange]);
 
   return (
     <Dialog isOpen={isOpen}>
@@ -22,7 +39,7 @@ export const CodeDialog: React.FC = () => {
       <Dialog.Body>
         <Column>
           <Paragraph align="center">
-            Use el código proveido por el administrador para
+            Use el código facilitado por el administrador para
             crear un usuario vinculado a un jugador ya existente
           </Paragraph>
           <InputField 
@@ -56,4 +73,8 @@ export const CodeDialog: React.FC = () => {
       </Dialog.Footer>
     </Dialog>
   );
+}
+
+type Props = {
+  onExchange: (arg: { person: Person, code: string }) => void
 }
