@@ -15,8 +15,16 @@ export const GENDER_OPTIONS = [
 ];
 
 export const APP_LOGO = 'APP_LOGO';
-
 export const APP_TITLE = 'APP_TITLE';
+export const ABOUT_US_LINK = 'ABOUT_US_LINK';
+export const MISION_LINK = 'MISION_LINK';
+export const VISION_LINK = 'VISION_LINK';
+export const GOALS_LINK = 'GOALS_LINK';
+export const CONTACT_EMAIL = 'CONTACT_EMAIL'; 
+export const CONTACT_PHONE = 'CONTACT_PHONE';
+export const FACEBOOK = 'FACEBOOK';
+export const TWITTER = 'TWITTER';
+export const INSTAGRAM = 'INSTAGRAM';
 
 export const INITIAL_LIST_STATE = {
   items: [],

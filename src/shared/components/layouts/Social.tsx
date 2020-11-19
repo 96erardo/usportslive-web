@@ -1,6 +1,7 @@
 import React from 'react';
 import { RouteComponentProps, Switch, Route } from 'react-router-dom';
 import TopNavigation from './TopNavigation';
+import { Footer } from './Footer';
 import { styled } from '@8base/boost';
 
 // Pages
@@ -12,10 +13,12 @@ import { SearchView } from '../../../modules/app/components/SearchView';
 
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 const Content = styled.div`
   width: 100%;
+  min-height: calc(100vh - 52px);
 `;
 
 function Admin (props: Props) {
@@ -33,6 +36,7 @@ function Admin (props: Props) {
             <Route exact path="/search" component={SearchView} />
           </Switch>
         </Content>
+        <Footer />
       </Container>
     </>
   );
