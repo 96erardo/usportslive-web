@@ -93,9 +93,16 @@ export async function createSport (data: CreateSportInput): Promise<MutationResu
     return [null, res.data];
 
   } catch (e) {
-    Logger.error('createSport', e);
+    Logger.error('updateSport', e);
 
-    return [e];
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
   }
 }
 

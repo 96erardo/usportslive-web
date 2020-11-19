@@ -245,6 +245,13 @@ export type SearchResults = {
   competitions: PaginatedResponse<Competition>
 }
 
+export type ExchangeCode = {
+  id: number,
+  code: string,
+  personId: number,
+  expiresAt: string,
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

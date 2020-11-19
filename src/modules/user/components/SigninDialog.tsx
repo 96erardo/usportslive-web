@@ -1,11 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Grid, Dialog, Column, Row, Button, InputField, SelectField, useModal } from '@8base/boost';
 import { ImageUploader } from '../../../shared/components/utilities/ImageUploader';
 import { Avatar } from '../../../shared/components/globals';
-import { signup } from '../user-actions';
-import { Image } from '../../../shared/types';
+import { signup, bindUserToProfile } from '../user-actions';
+import { Image, Person } from '../../../shared/types';
 import { onError } from '../../../shared/mixins';
 import { GENDER_OPTIONS } from '../../../shared/constants';
+import { modalId as codeModalId, CodeDialog } from './CodeDialog';
 import { toast } from 'react-toastify';
 
 const initialForm = {
@@ -21,10 +22,19 @@ const initialForm = {
 
 export const modalId = 'signin-dialog';
 
+const initialProfile = { person: null, code: '' };
+
 export const SigninDialog: React.FC = () => {
-  const { isOpen, closeModal } = useModal(modalId);
+  const { isOpen, openModal, closeModal } = useModal(modalId);
   const [form, setForm] = useState<Form>(initialForm);
+  const [profile, setProfile] = useState<{ person: Person | null, code: string }>(initialProfile);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setProfile(initialProfile);
+    }
+  }, [isOpen]);
 
   const onChange = useCallback((name, value) => {
     setForm(state => ({
@@ -42,19 +52,31 @@ export const SigninDialog: React.FC = () => {
 
   const close = useCallback(() => closeModal(modalId), [closeModal]);
 
+  const open = useCallback(() => openModal(codeModalId), [openModal]);
+
   const onSubmit = useCallback(async () => {
     setLoading(true);
 
-    const [err] = await signup({
-      avatar: form.avatar ? form.avatar.id: null,
-      name: form.name,
-      lastname: form.lastname,
-      email: form.email,
-      username: form.username,
-      password: form.password,
-      passwordConfirmation: form.passwordConfirmation,
-      gender: form.gender,
-    });
+    const [err] = profile.person ? (
+      await bindUserToProfile({
+        code: profile.code,
+        email: form.email,
+        username: form.username,
+        password: form.password,
+        passwordConfirmation: form.passwordConfirmation,
+      })
+    ) : (
+      await signup({
+        avatar: form.avatar ? form.avatar.id: null,
+        name: form.name,
+        lastname: form.lastname,
+        email: form.email,
+        username: form.username,
+        password: form.password,
+        passwordConfirmation: form.passwordConfirmation,
+        gender: form.gender,
+      })
+    );
 
     setLoading(false);
 
@@ -65,7 +87,9 @@ export const SigninDialog: React.FC = () => {
     toast.success('Usuario registrado satisfactoriamente, ya puede iniciar sesión');
 
     close();
-  }, [form, close]);
+  }, [profile, form, close]);
+
+  const { person } = profile;
 
   return (
     <Dialog isOpen={isOpen} size="md">
@@ -73,14 +97,25 @@ export const SigninDialog: React.FC = () => {
           <Column stretch alignItems="center" gap="xl">
             <ImageUploader id="signin" onSelect={onAvatar}>
               {open => (
-                <Avatar 
-                  src={form.avatar ? form.avatar.url : ""}
-                  firstName={form.name}
-                  lastName={form.lastname}
-                  size="xl"
-                  pickLabel="Cambiar"
-                  onPick={open}
-                />
+                <>
+                  {person ? (
+                    <Avatar 
+                      src={person.avatar?.url}
+                      firstName={person.name}
+                      lastName={person.lastname}
+                      size="xl"
+                    />
+                  ) : (
+                    <Avatar 
+                      src={form.avatar ? form.avatar.url : ""}
+                      firstName={form.name}
+                      lastName={form.lastname}
+                      size="xl"
+                      pickLabel="Cambiar"
+                      onPick={open}
+                    />
+                  )}
+                </>
               )}  
             </ImageUploader>
             <Grid.Layout 
@@ -96,10 +131,11 @@ export const SigninDialog: React.FC = () => {
               <Grid.Box area="name">
                 <InputField 
                   label="Nombre"
+                  readOnly={person !== null}
                   input={{
                     type: 'text',
                     name: 'name',
-                    value: form.name,
+                    value: person?.name || form.name,
                     onChange: (value: string) => onChange('name', value)
                   }}
                 />
@@ -107,10 +143,11 @@ export const SigninDialog: React.FC = () => {
               <Grid.Box area="lastname">
                 <InputField 
                   label="Apellido"
+                  readOnly={person !== null}
                   input={{
                     type: 'text',
                     name: 'lastname',
-                    value: form.lastname,
+                    value: person?.name || form.lastname,
                     onChange: (value: string) => onChange('lastname', value)
                   }}
                 />
@@ -162,10 +199,11 @@ export const SigninDialog: React.FC = () => {
               <Grid.Box area="gender">
                 <SelectField 
                   stretch
+                  disabled={person !== null}
                   label="Género"
                   options={GENDER_OPTIONS}
                   input={{
-                    value: form.gender,
+                    value: person?.gender || form.gender,
                     onChange: (value: string) => onChange('gender', value),
                   }}
                 />
@@ -183,6 +221,14 @@ export const SigninDialog: React.FC = () => {
             >
               Cancelar
             </Button>
+            <Button
+              size="sm"
+              disabled={loading}
+              color="success"
+              onClick={open}
+            >
+              Código de Cuenta
+            </Button>
             <Button 
               size="sm" 
               color="primary" 
@@ -193,6 +239,7 @@ export const SigninDialog: React.FC = () => {
             </Button>
           </Row>
         </Dialog.Footer>
+        <CodeDialog onExchange={setProfile} />
       </Dialog>
   );
 }

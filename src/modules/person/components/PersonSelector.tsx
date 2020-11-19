@@ -106,7 +106,7 @@ const PersonSelector: React.FC<Props> = (props) => {
             lastName={person.lastname}
           />
           <Text>
-            {person.name}
+            {person.name} {person.lastname}
           </Text>
         </Row>
       </Option>
