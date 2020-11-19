@@ -36,7 +36,7 @@ export const LogoChanger: React.FC = () => {
   }, [image, setSetting]);
 
   return (
-    <Card stretch>
+    <Card className="w-100">
       <Card.Body alignItems="center" padding="md">
         <Row stretch alignItems="center" justifyContent="center">
           <ImageUploader id="app-logo" onSelect={setImage}>

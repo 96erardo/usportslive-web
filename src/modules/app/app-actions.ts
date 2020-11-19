@@ -70,6 +70,44 @@ export async function fetchConfiguration (source?: CancelTokenSource): Promise<Q
 }
 
 /**
+ * Updates a configuration variable's value
+ * 
+ * @param {number} id - The id of the configuration to update
+ * @param {string} value - The value to assign to the configuration
+ * 
+ * @returns {Promise<MutationResult<Configuration>>} - The request result
+ */
+export async function updateAppConfig (id: number, value: string): Promise<MutationResult<Configuration>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<Configuration> = await authenticated.post(`/api/configurations/${id}`, {
+      value,
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateAppConfig', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateAppLogo', e);
+
+    if (e.response) {
+      return [e.response.data];
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+/**
  * Updates the app logo
  * 
  * @param {string} url - The url of the image to use as logo

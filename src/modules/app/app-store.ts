@@ -52,7 +52,7 @@ export const useAppStore = create<Store>(set => ({
   }))
 }))
 
-type Store = {
+export type Store = {
   accessToken: string,
   loading: boolean,
   sports: Array<Sport>,

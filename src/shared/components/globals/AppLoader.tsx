@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Column, Heading as BoostHeading, Loader, styled, COLORS } from '@8base/boost';
-import { useAppStore } from '../../../modules/app/app-store';
+import { useAppStore, Store } from '../../../modules/app/app-store';
 import errorEmoji from '../../assets/images/sad_error.png';
-import { APP_LOGO } from '../../constants';
+import { APP_LOGO, APP_TITLE } from '../../constants';
 
-const selectLoading = (state: any) => state.loading;
-const selectLogo = (state: any) => state.settings[APP_LOGO];
-const selectError = (state: any) => state.error;
+const selectLoading = (state: Store) => state.loading;
+const selectLogo = (state: Store) => state.settings[APP_LOGO];
+const selectError = (state: Store) => state.error;
+const selectTitle = (state: Store) => state.settings[APP_TITLE];
 
 const Display = styled(Column)`
   width: 100vw;
@@ -21,7 +22,18 @@ const Heading = styled(BoostHeading)`
 function AppLoader (props: Props) {
   const loading = useAppStore(selectLoading);
   const error = useAppStore(selectError);
-  const logo = useAppStore(selectLogo)
+  const logo = useAppStore(selectLogo);
+  const title = useAppStore(selectTitle);
+
+  useEffect(() => {
+    if (!loading) {
+      if (title) {
+        document.title = title.value;
+      }
+    } else {
+      document.title = 'Cargando...';
+    }
+  }, [loading, title]);
 
   if (loading) {
     return (

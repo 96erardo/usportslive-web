@@ -16,6 +16,8 @@ export const GENDER_OPTIONS = [
 
 export const APP_LOGO = 'APP_LOGO';
 
+export const APP_TITLE = 'APP_TITLE';
+
 export const INITIAL_LIST_STATE = {
   items: [],
   count: 0,
