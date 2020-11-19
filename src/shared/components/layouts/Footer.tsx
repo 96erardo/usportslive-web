@@ -26,16 +26,16 @@ export const Footer: React.FC = () => {
               Información
             </Heading>
             <Column className="w-100">
-              <Link to={settings[ABOUT_US_LINK]}>
+              <Link target="_blank" href={settings[ABOUT_US_LINK].value}>
                 Acerca de Nosotros
               </Link>
-              <Link to={settings[MISION_LINK]}>
+              <Link target="_blank" href={settings[MISION_LINK].value}>
                 Misión
               </Link>
-              <Link to={settings[VISION_LINK]}>
+              <Link target="_blank" href={settings[VISION_LINK].value}>
                 Visión
               </Link>
-              <Link to={settings[GOALS_LINK]}>
+              <Link target="_blank" href={settings[GOALS_LINK].value}>
                 Objetivos
               </Link>
             </Column>
@@ -46,10 +46,10 @@ export const Footer: React.FC = () => {
             </Heading>
             <Column className="w-100">
               <Text color="WHITE">
-                Correo: {settings[CONTACT_EMAIL]}
+                Correo: {settings[CONTACT_EMAIL].value}
               </Text>
               <Text color="WHITE">
-                Tlf: {settings[CONTACT_PHONE]}
+                Tlf: {settings[CONTACT_PHONE].value}
               </Text>
             </Column>
           </div>
@@ -58,13 +58,13 @@ export const Footer: React.FC = () => {
               Redes Sociales
             </Heading>
             <Column className="w-100">
-              <Link to={settings[FACEBOOK]}>
+              <Link target="_blank" href={settings[FACEBOOK].value}>
                 Facebook
               </Link>
-              <Link to={settings[TWITTER]}>
+              <Link target="_blank" href={settings[TWITTER].value}>
                 Twitter
               </Link>
-              <Link to={settings[INSTAGRAM]}>
+              <Link target="_blank" href={settings[INSTAGRAM].value}>
                 Instagram
               </Link>
             </Column>

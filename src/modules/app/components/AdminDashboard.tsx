@@ -4,6 +4,7 @@ import { Heading } from '../../../shared/components/globals';
 import { LogoChanger } from './LogoChanger';
 import { ConfigChanger } from './ConfigChanger';
 import { APP_TITLE } from '../../../shared/constants';
+import { FooterConfig } from './FooterConfig';
 
 export const AdminDashboard: React.FC = () => {
 
@@ -27,6 +28,9 @@ export const AdminDashboard: React.FC = () => {
                 setting={APP_TITLE}
               />
             </Column>
+          </div>
+          <div className="col-md-8">
+            <FooterConfig />
           </div>
         </div>
       </div>
