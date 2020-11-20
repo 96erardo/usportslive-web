@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { MutationResult, PaginatedResponse, Person, QueryResult, PlayedSports } from '../../shared/types';
+import { MutationResult, PaginatedResponse, Person, QueryResult, PlayedSports, Image } from '../../shared/types';
 import { useAppStore } from '../app/app-store';
 import Logger from 'js-logger';
 import qs from 'qs';
@@ -233,4 +233,54 @@ export async function fetchPersonsPlayedSports (
 
     return [e];
   }
+}
+
+/**
+ * Updates a user's profile
+ * 
+ * @param {UpdateProfileData} data - The data to update the profile
+ * 
+ * @returns {Promise<MutationResult<Person>>} The request result
+ */
+export async function updateProfile (data: UpdateProfileData): Promise<MutationResult<Person>> {
+  const { accessToken } = useAuthStore.getState();
+  const { id, ...profile } = data;
+
+  try {
+    const res: AxiosResponse<Person> = await authenticated.patch(`/api/persons/${id}`, {
+      name: profile.name,
+      lastname: profile.lastname,
+      gender: profile.gender,
+      ...(profile.avatar ? { avatarId: profile.avatar.id } : {})
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateProfile', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateProfile', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')];
+      
+    } else {
+      return [e];
+    }
+  }
+}
+
+type UpdateProfileData = {
+  id: number,
+  name: string,
+  lastname: string,
+  gender: string,
+  avatar?: Image
 }

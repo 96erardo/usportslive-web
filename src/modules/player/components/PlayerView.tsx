@@ -59,19 +59,16 @@ export const PlayerView: React.FC = () => {
   }
 
   return (
-    <div className="container-fluid mt-5">
+    <div className="container mt-5">
       <div className="row">
-        <div className="col-xs-12 col-md-4">
+        <div className="col-xs-12 col-md-5">
           <Column className="w-100 mb-4" gap="md">
-            <PersonCard 
-              person={player.person}
-              onChange={fetch}
-            />
+            <PersonCard person={player.person} />
             <PlayerTeams player={player.person} />
             <LatestPlayerGames player={player.person.id} />
           </Column>
         </div>
-        <div className="col-md-8">
+        <div className="col-md-7">
           <PlayerSports playerId={player.person.id} />
         </div>
       </div>

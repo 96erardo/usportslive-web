@@ -1,5 +1,5 @@
 import { request, authenticated } from '../../shared/config/axios';
-import { User, PaginatedResponse, QueryResult, Role, MutationResult, ExchangeCode, Person } from '../../shared/types';
+import { User, PaginatedResponse, QueryResult, Role, MutationResult, ExchangeCode, Person, Image } from '../../shared/types';
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
 import Logger from 'js-logger';
 import { useAppStore } from '../app/app-store';
@@ -352,4 +352,65 @@ export type BindUserData = {
   password: string,
   passwordConfirmation: string,
   code: string,
+}
+
+/**
+ * Updates a user profile
+ * 
+ * @param {UpdateUserData} data - The data to update the user
+ * 
+ * @returns {Promise<MutationResult<User>>} The request result
+ */
+export async function updateUser (data: UpdateUserData): Promise<MutationResult<User>> {
+  const { accessToken } = useAuthStore.getState();
+  const { id, ...user } = data;
+
+  try {
+    const res: AxiosResponse<User> = await authenticated.patch(`/api/users/${id}`, {
+      username: user.username,
+      email: user.email,
+      ...(user.oldPassword ? { oldPassword: user.oldPassword } : {}),
+      ...(user.password ? { password: user.password } : {}),
+      ...(user.passwordConfirmation ? { passwordConfirmation: user.passwordConfirmation } : {}),
+      person: {
+        name: user.name,
+        lastname: user.lastname,
+        gender: user.gender,
+        ...(user.avatar ? { avatarId: user.avatar.id } : {})
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('updateUser', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('updateUser', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}
+
+type UpdateUserData = {
+  id: number,
+  username: string,
+  email: string,
+  password: string,
+  oldPassword: string,
+  passwordConfirmation: string,
+  name: string,
+  lastname: string,
+  gender: string,
+  avatar?: Image | null
 }

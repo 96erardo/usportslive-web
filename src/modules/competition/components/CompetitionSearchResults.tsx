@@ -70,7 +70,7 @@ export const CompetitionSearchResults: React.FC = () => {
     <Card className="w-100">
       <div className="p-4">
         <Heading type="h2" fontWeight="800">
-          <span role="img" aria-label="shield">👽</span> Perfiles
+          <span role="img" aria-label="trophy">🏆</span> Torneos
         </Heading>
       </div>
       <Card.Body padding="none">
