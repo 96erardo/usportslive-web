@@ -1,6 +1,6 @@
 import { request, authenticated } from '../../shared/config/axios';  
 import axios, { CancelTokenSource, AxiosResponse } from 'axios';
-import { QueryResult, PaginatedResponse, Team, MutationResult, GamePerformance } from '../../shared/types';
+import { QueryResult, PaginatedResponse, Team, MutationResult, GamePerformance, Game } from '../../shared/types';
 import Logger from 'js-logger';
 import { useAuthStore } from '../auth/auth-store';
 import { useAppStore } from '../app/app-store';
@@ -304,6 +304,59 @@ export async function fetchTeamPerformance (
     });
 
     Logger.info('fetchTeamPerformance', res.data);
+
+    return [null, false, res.data];
+
+  } catch (e) {
+    if (axios.isCancel(e)) {
+      Logger.error('fetchTeamPerformance (Canceled)', e);
+
+      return [e, true];
+    }
+
+    Logger.error('fetchTeamPerformance', e);
+
+    return [e];
+  }
+}
+
+/**
+ * Fetches the games of the specified team
+ * 
+ * @param {number} page - The page of results
+ * @param {number} team - The team to fetch the games from
+ * @param {string} orderBy - The way to order the results
+ * @param {CancelTokenSource} source - The token source
+ * 
+ * @returns {Promise<QueryResult<PaginatedResponse<Game>>>} The request result
+ */
+export async function fetchTeamGames (
+  page: number = 1,
+  team: number,
+  include: Array<string> = [],
+  orderBy: string,
+  source?: CancelTokenSource
+): Promise<QueryResult<PaginatedResponse<Game>>> {
+  const { accessToken } = useAppStore.getState();
+
+  const first = 10;
+  const skip = first * (page - 1);
+  const query = qs.stringify({
+    first,
+    skip,
+    include,
+    orderBy
+  }, { encode: false, arrayFormat: 'brackets' })
+
+  try {
+    const res: AxiosResponse<PaginatedResponse<Game>> = await request.get(`/api/teams/${team}/games?${query}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      },
+      cancelToken: source ? source.token : undefined
+    });
+
+    Logger.info('fetchTeamGames', res.data);
 
     return [null, false, res.data];
 

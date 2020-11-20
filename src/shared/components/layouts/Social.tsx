@@ -10,6 +10,7 @@ import GameView from '../../../modules/game/components/GameView';
 import { PlayerView } from '../../../modules/player/components/PlayerView';
 import { CompetitionView } from '../../../modules/competition/components/CompetitionView';
 import { SearchView } from '../../../modules/app/components/SearchView';
+import { TeamView } from '../../../modules/team/components/TeamView';
 
 const Container = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ function Admin (props: Props) {
             <Route exact path="/profile/:id" component={PlayerView} />
             <Route exact path="/player/:id" component={PlayerView} />
             <Route exact path="/competition/:id" component={CompetitionView} />
+            <Route exact path="/team/:id" component={TeamView} />
             <Route exact path="/search" component={SearchView} />
           </Switch>
         </Content>

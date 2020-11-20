@@ -16,7 +16,7 @@ export const CompetitionSidebar: React.FC<Props> = ({ title, type }) => {
   }, [error]);
 
   return (
-    <Paper maxHeight={350} className="w-100 py-3" background={COLORS.BLACK}>  
+    <Paper maxHeight={350} className="w-100 py-3" background={COLORS.GRAY_70}>  
       <div className="px-4 mb-3">
         <Heading type="h2" fontWeight="600" color="#fff">
           {title}

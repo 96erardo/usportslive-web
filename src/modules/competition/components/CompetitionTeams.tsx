@@ -10,7 +10,7 @@ export const CompetitionTeams: React.FC<Props> = ({ id }) => {
   const { items, count, loading, next } = useCompetitionTeams(id);
 
   return (
-    <Paper className="w-100" background={COLORS.BLACK}>
+    <Paper className="w-100" background={COLORS.GRAY_70}>
       <Card.Header>
         <Heading type="h2" color="#fff">Equipos</Heading>
       </Card.Header>

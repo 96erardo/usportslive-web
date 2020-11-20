@@ -64,7 +64,7 @@ const TeamLive: React.FC<Props> = ({ id, type, game }) => {
   ));
 
   return (
-    <Paper background={COLORS.BLACK}>
+    <Paper background={COLORS.GRAY_70}>
       <Body padding="none">
         <Row className="p-4" stretch alignItems="center" justifyContent="between">
           <Row gap="md" alignItems="center">

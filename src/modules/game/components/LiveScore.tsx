@@ -36,7 +36,7 @@ const LiveScore: React.FC<Props> = ({ game }) => {
 
   if (loading) {
     return (
-      <Paper stretch background={COLORS.BLACK}>
+      <Paper stretch background={COLORS.GRAY_70}>
         <Row className="p-4" alignItems="center" justifyContent="center">
           <Loader size="md" color="WHITE" />
         </Row>
@@ -49,7 +49,7 @@ const LiveScore: React.FC<Props> = ({ game }) => {
   }
 
   return (
-    <Paper stretch background={COLORS.BLACK}>
+    <Paper stretch background={COLORS.GRAY_70}>
       <Body padding="none">
         <Row stretch className="py-4" alignItems="center" justifyContent="center" gap="md">
           <Avatar 

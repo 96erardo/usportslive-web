@@ -12,7 +12,7 @@ export const PlayerTeams: React.FC<Props> = ({ player }) => {
 
   if (loading) {
     return (
-      <Paper className="w-100" background={COLORS.BLACK}>
+      <Paper className="w-100" background={COLORS.GRAY_70}>
         <div className="w-100 p-4 border-bottom">
           <Heading type="h2" weight="bold" color="#fff">
             Equipos
@@ -27,7 +27,7 @@ export const PlayerTeams: React.FC<Props> = ({ player }) => {
 
   if (items.length === 0) {
     return (
-      <Paper className="w-100" background={COLORS.BLACK}>
+      <Paper className="w-100" background={COLORS.GRAY_70}>
         <div className="w-100 p-4 border-bottom">
           <Heading type="h2" weight="bold" color="#fff">
             Equipos
@@ -51,7 +51,7 @@ export const PlayerTeams: React.FC<Props> = ({ player }) => {
   return (
     <Paper 
       className="w-100" 
-      background={COLORS.BLACK}
+      background={COLORS.GRAY_70}
     >
       <div className="w-100 p-4 border-bottom">
         <Heading type="h2" weight="bold" color="#fff">
