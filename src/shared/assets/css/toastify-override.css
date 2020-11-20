@@ -1,0 +1,83 @@
+.Toastify__toast {
+  padding: 11px 22px !important;
+  min-height: 70px;
+  width: 458px;
+  max-height: 90vh !important;
+}
+
+.Toastify__toast-body {
+  overflow: auto;
+  color: #323C47;
+  font-family: Poppins;
+  font-weight: 400;
+  font-size: 12.5px;
+}
+
+/* Containers */
+.Toastify__toast-container {
+  z-index: 99999;
+  padding: 0px !important;
+}
+
+.Toastify__toast--info {
+  background: #fff;
+  border: 2px solid var(--color-blue-light);
+  border-radius: 4px;
+}
+
+.Toastify__progress-bar--info {
+  background-color: var(--color-blue-light) !important;
+}
+
+.Toastify__toast--success {
+  background: #fff;
+  border: 2px solid var(--color-primary);
+  border-radius: 4px;
+}
+
+.Toastify__progress-bar--success {
+  background-color: var(--color-primary) !important;
+}
+
+.Toastify__toast--warning {
+  background: #fff;
+  border: 2px solid var(--color-yellow);
+  border-radius: 4px;
+}
+
+.Toastify__progress-bar--warning {
+  background-color: var(--color-yellow) !important;
+}
+
+.Toastify__toast--error {
+  background: #fff;
+  border: 2px solid var(--color-red);
+  border-radius: 4px;
+}
+
+.Toastify__progress-bar--error {
+  background-color: var(--color-red) !important;
+}
+
+/* Close buttons */
+
+.Toastify__close-button {
+  -ms-flex-item-align: center;
+  align-self: center;
+}
+
+.Toastify__close-button--success {
+  color: var(--color-primary);
+}
+
+.Toastify__close-button--info {
+  color: var(--color-blue-light);
+}
+
+.Toastify__close-button--warning {
+  color: var(--color-yellow);
+}
+
+.Toastify__close-button--error {
+  color: var(--color-red);
+}

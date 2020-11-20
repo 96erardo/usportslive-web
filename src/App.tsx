@@ -1,25 +1,85 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Logger from 'js-logger';
+import { BoostProvider } from '@8base/boost';
+import { useAppStore } from './modules/app/app-store';
+import AuthCallback from './modules/auth/components/AuthCallback';
+import AppLoader from './shared/components/globals/AppLoader';
+import { ToastContainer } from 'react-toastify';
+import { PageNotFound } from './shared/components/globals/PageNotFound';
+import { SigninDialog } from './modules/user/components/SigninDialog';
+import { theme } from './shared/config/theme';
+import 'react-toastify/dist/ReactToastify.css';
+import './shared/assets/css/toastify-override.css';
 
-function App() {
+// Pages
+import ProtectedRoute from './shared/components/utilities/ProtectedRoute';
+import Admin from './shared/components/layouts/Admin';
+import Social from './shared/components/layouts/Social';
+
+// Icons
+import { ReactComponent as WhiteSoccer } from './shared/assets/images/white-soccer.svg';
+import { ReactComponent as WhiteTrophy } from './shared/assets/images/white-trophy.svg';
+import { ReactComponent as WhiteProfile } from './shared/assets/images/white-profile.svg';
+import { ReactComponent as BlackFilter } from './shared/assets/images/black-filter.svg';
+import { ReactComponent as BlueFilter } from './shared/assets/images/blue-filter.svg';
+import { ReactComponent as GreyImage } from './shared/assets/images/grey-image.svg';
+import { ReactComponent as GreyCircle } from './shared/assets/images/grey-circle.svg';
+import { ReactComponent as PrimaryCircle } from './shared/assets/images/primary-circle.svg';
+import { ReactComponent as GreyRect } from './shared/assets/images/grey-square.svg';
+import { ReactComponent as PrimaryRect } from './shared/assets/images/primary-square.svg';
+import { ReactComponent as WhiteHeart } from './shared/assets/images/white_heart.svg';
+import { ReactComponent as RedHeart } from './shared/assets/images/red_heart.svg';
+import { ReactComponent as RedBorderedHeart } from './shared/assets/images/red_bordered_heart.svg';
+import { ReactComponent as BlankStar } from './shared/assets/images/blank_star.svg';
+import { ReactComponent as YellowStar } from './shared/assets/images/yellow_star.svg';
+
+const icons = {
+  WhiteSoccer,
+  WhiteTrophy,
+  WhiteProfile,
+  BlackFilter,
+  BlueFilter,
+  GreyImage,
+  GreyCircle,
+  PrimaryCircle,
+  GreyRect,
+  PrimaryRect,
+  WhiteHeart,
+  RedHeart,
+  RedBorderedHeart,
+  BlankStar,
+  YellowStar
+};
+
+Logger.useDefaults({ defaultLevel: Logger.DEBUG });
+
+function App () {
+  const fetchAppResources = useAppStore(state => state.fetchAppResources);
+
+  useEffect(() => {
+    fetchAppResources();
+  }, [fetchAppResources]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BoostProvider theme={theme} icons={icons}>
+      <AppLoader>
+        <Router>
+          <Switch>
+            <Route exact path="/oauth/callback" component={AuthCallback}/>
+            <ProtectedRoute perform="admin-page" path="/admin" component={Admin} />
+            <Route path="/" component={Social}/>
+            <Route component={PageNotFound} />
+          </Switch>
+        </Router>
+      </AppLoader>
+      <SigninDialog />
+      <ToastContainer 
+        autoClose={8000}
+        position="bottom-left"
+        limit={5}
+      />
+    </BoostProvider>
   );
 }
 
