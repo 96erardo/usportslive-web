@@ -48,7 +48,7 @@ function AppLoader (props: Props) {
   
   if (error) {
     return (
-      <Display gap="sm" alignItems="center" justifyContent="center" background={COLORS.BLACK}>
+      <Display gap="sm" alignItems="center" justifyContent="center" background={COLORS.GRAY_70}>
         <img alt="Error sad face" src={errorEmoji} width="100" height="100" />
         <Heading color="#fff" type="h1" weight="bold">
           Un error ha ocurrido en la plataforma

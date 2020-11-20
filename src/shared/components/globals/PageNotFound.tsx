@@ -18,7 +18,7 @@ const Heading = styled(BoostHeading)`
 
 export const PageNotFound: React.FC = () => {
   return (
-    <Display background={COLORS.BLACK} alignItems="center" justifyContent="center">
+    <Display background={COLORS.GRAY_70} alignItems="center" justifyContent="center">
       <img alt="Resource not found" src={notFound} width="100" height="100" />
       <Heading type="h1" weight="bold" color="#fff">
         404

@@ -13,7 +13,7 @@ export const LatestPlayerGames: React.FC<Props> = ({ player }) => {
   }
 
   return (
-    <Paper className="w-100" background={COLORS.BLACK} >
+    <Paper className="w-100" background={COLORS.GRAY_70} >
       <div className="w-100 p-3 border-bottom">
         <Heading type="h2" color="#fff">
           Últimos juegos

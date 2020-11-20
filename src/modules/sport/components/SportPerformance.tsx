@@ -20,7 +20,7 @@ export const SportPerformance: React.FC<Props> = ({ playerId, played }) => {
   return (
     <Paper 
       className="w-100 p-4" 
-      background={COLORS.BLACK}
+      background={COLORS.GRAY_70}
       border={played.color}
     >
       <Column className="w-100">
