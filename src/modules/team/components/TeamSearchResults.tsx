@@ -79,7 +79,7 @@ export const TeamSearchResults: React.FC = () => {
           {teams.count > 0 &&
             <Table.Body data={teams.items}>
               {(team: Team) => (
-                <Table.BodyRow key={team.id} columns="200px 1fr">
+                <Table.BodyRow key={team.id} columns="100px 1fr">
                   <Table.BodyCell>
                     <Avatar 
                       size="sm"
