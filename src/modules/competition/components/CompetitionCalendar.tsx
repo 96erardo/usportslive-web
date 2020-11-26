@@ -91,6 +91,7 @@ const CompetitionCalendar: React.FC<Props> = ({
       type: game ? 'update' : 'before-create-update',
       id: event.id,
       date: event.start?.toISOString(),
+      key: game?.streamKey,
       local: game?.local,
       visitor: game?.visitor,
       competition: competition.id,

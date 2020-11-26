@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { Dialog, Row, Button, Column, DateInput, Icon, Label, useModal } from '@8base/boost';
+import { Dialog, Row, Button, Column, DateInput, Input, Icon, Label, useModal, styled, COLORS } from '@8base/boost';
 import CompetitionTeamSelector from '../../../competition/components/admin/CompetitionTeamSelector';
 import ClickableInput from '../../../../shared/components/form/ClickableInput';
 import { updateGame, deleteGame } from '../../game-actions';
@@ -14,6 +14,20 @@ const initialForm = {
   local: null,
   visitor: null,
 }
+
+const StreamKey = styled(Input)`
+  width: 50%;
+  border-radius: 5px;
+  cursor: pointer;
+  
+  & > input {
+    background: ${COLORS.GRAY};
+    height: 60px;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+`;
 
 const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
   const { isOpen, args, closeModal } = useModal(`${id}-game-form-dialog`);
@@ -196,6 +210,16 @@ const GameFormDialog: React.FC<Props> = ({ id, afterMutation }) => {
                   )}
                 </CompetitionTeamSelector>
               </Column>
+              {args.key &&
+                <Row className="w-100 mt-3" alignItems="center" justifyContent="center">
+                  <StreamKey
+                    readOnly
+                    align="center"
+                    name="stream-key"
+                    value={args.key}
+                  />
+                </Row>
+              }
             </>
           }
         </Column>

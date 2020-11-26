@@ -14,6 +14,9 @@ export const GENDER_OPTIONS = [
   { label: 'Otro', value: GENDERS.OTHER },
 ];
 
+/**
+ * Configuration options
+ */
 export const APP_LOGO = 'APP_LOGO';
 export const APP_TITLE = 'APP_TITLE';
 export const ABOUT_US_LINK = 'ABOUT_US_LINK';
