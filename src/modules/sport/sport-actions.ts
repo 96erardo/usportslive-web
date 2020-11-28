@@ -76,13 +76,8 @@ function createFilter (data: SportFilter) {
 export async function createSport (data: CreateSportInput): Promise<MutationResult<Sport>> {
   const { accessToken } = useAuthStore.getState();
 
-  const sport = {
-    name: data.name,
-    color: data.color
-  }
-
   try {
-    const res: AxiosResponse<Sport> = await authenticated.post(`/api/sports`, sport, {
+    const res: AxiosResponse<Sport> = await authenticated.post(`/api/sports`, data, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }

@@ -64,7 +64,7 @@ export function useGamesFeed (sport?: number) {
     setState(state => ({...state, loading: true }));
 
     const filters = {
-      isBefore: moment().endOf('day').format('YYYY-MM-DD'),
+      isBefore: moment().endOf('day').toISOString(),
       local: { ne: null },
       visitor: { ne: null },
       ...((sport !== undefined && sport > 0) ? {
