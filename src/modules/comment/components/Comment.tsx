@@ -1,19 +1,50 @@
 import React, { useCallback, useState } from 'react';
-import { Grid, Paragraph, Icon, Dropdown, Link, Menu, Text } from '@8base/boost';
+import { Grid, Paragraph, Icon, Dropdown, Link, Menu, Text, useModal } from '@8base/boost';
 import { Avatar } from '../../../shared/components/globals';
 import { Comment as CommentType } from '../../../shared/types';
 import Can from '../../../shared/components/utilities/Can';
 import { CommentForm } from './CommentForm';
 import { Replies } from './Replies';
+import { deleteComment } from '../comment-actions';
+import { onError } from '../../../shared/mixins';
+import { modalId } from '../../../shared/components/globals/DecisionDialog';
+import { toast } from 'react-toastify';
 
 export const Comment: React.FC<Props> = ({ comment, ...props }) => {
+  const { openModal, closeModal } = useModal(modalId);
   const [reply, setReply] = useState(false);
+
+  const removeComment = useCallback(async (id: number) => {
+    const [err] = await deleteComment(id);
+
+    if (err) {
+      return onError(err);
+    }
+
+    closeModal(modalId);
+
+    props.onCreate();
+
+    toast.success('Comment deleted');
+  }, [comment, props, closeModal]);
 
   const onCreate = useCallback(() => {
     props.onCreate();
 
     setReply(false);
   }, [props]);
+
+  const onDelete = useCallback((id: number) => {
+    openModal(modalId, {
+      title: 'Eliminar comentario',
+      text: '¿Está seguro que desea eliminar el comentario?',
+      confirmText: 'Si, Eliminar',
+      cancelText: 'Cancelar',
+      onClose: () => closeModal(modalId),
+      onCancel: () => closeModal(modalId),
+      onConfirm: () => removeComment(id),
+    })
+  }, [openModal, closeModal, removeComment]);
 
   return (
     <div className="w-100 py-3">
@@ -43,7 +74,10 @@ export const Comment: React.FC<Props> = ({ comment, ...props }) => {
               />
             </div>
           }
-          <Replies comment={comment.id} />
+          <Replies 
+            comment={comment.id}
+            onDelete={onDelete}
+          />
         </Grid.Box>
         <Grid.Box>
           <Can 
@@ -69,7 +103,7 @@ export const Comment: React.FC<Props> = ({ comment, ...props }) => {
                       perform="comment:delete"
                       data={{ comment }}
                       onYes={() => (
-                        <Menu.Item>
+                        <Menu.Item onClick={() => onDelete(comment.id)}>
                           <Text color="DANGER">
                             Eliminar
                           </Text>

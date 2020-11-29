@@ -121,3 +121,38 @@ type CreateCommentInputData = {
   content: string,
   parent?: number,
 }
+
+/**
+ * Deletes the specified comment
+ * 
+ * @param {number} id - The comment id
+ * 
+ * @returns {Promise<MutationResult<void>>} The request result
+ */
+export async function deleteComment (id: number): Promise<MutationResult<void>> {
+  const { accessToken } = useAuthStore.getState();
+
+  try {
+    const res: AxiosResponse<void> = await authenticated.delete(`/api/comments/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    Logger.info('deleteComment', res.data);
+
+    return [null, res.data];
+
+  } catch (e) {
+    Logger.error('deleteComment', e);
+
+    if (e.response) {
+      return [e.response.data]
+    
+    } else if (e.request) {
+      return [new Error('Algo ocurrió en la comunicación con el servidor, intente nuevamente')]
+    } else {
+      return [e];
+    }
+  }
+}

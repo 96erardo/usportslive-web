@@ -39,6 +39,8 @@ export function useComments (orderBy: OrderBy = 'createdAt_DESC', initialFilter:
   }, [page, orderBy, filters]);
 
   const refresh = useCallback(() => {
+    setState(prevState => ({ ...prevState, items: [], count: 0 }));
+
     if (page === 1) {
       fetch();
     } else {

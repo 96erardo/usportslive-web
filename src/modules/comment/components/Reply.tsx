@@ -3,7 +3,7 @@ import { Grid, Avatar, Link, Paragraph, Dropdown, Menu, Icon, Text } from '@8bas
 import Can from '../../../shared/components/utilities/Can';
 import { Comment } from '../../../shared/types';
 
-export const Reply: React.FC<Props> = ({ comment }) => {
+export const Reply: React.FC<Props> = ({ comment, onDelete }) => {
   return (
     <div className="w-100 py-3">
       <Grid.Layout inline stretch columns="60px 1fr 60px">
@@ -38,7 +38,7 @@ export const Reply: React.FC<Props> = ({ comment }) => {
                       perform="comment:delete"
                       data={{ comment }}
                       onYes={() => (
-                        <Menu.Item>
+                        <Menu.Item onClick={() => onDelete(comment.id)}>
                           <Text color="DANGER">
                             Eliminar
                           </Text>
@@ -57,5 +57,6 @@ export const Reply: React.FC<Props> = ({ comment }) => {
 }
 
 type Props = {
-  comment: Comment
+  comment: Comment,
+  onDelete: (id: number) => void
 }

@@ -9,7 +9,7 @@ const Body = styled(Column)`
   }
 `;
 
-export const Replies: React.FC<Props> = ({ comment }) => {
+export const Replies: React.FC<Props> = ({ comment, onDelete }) => {
   const { items, count, loading } = useReplies('createdAt_ASC', { parent: comment });
   const [active, setActive] = useState(false);
 
@@ -28,7 +28,11 @@ export const Replies: React.FC<Props> = ({ comment }) => {
   }
 
   const replies = items.map(reply => (
-    <Reply key={reply.id} comment={reply} />
+    <Reply
+      key={reply.id}
+      comment={reply}
+      onDelete={onDelete}
+    />
   ));
 
   return (
@@ -49,5 +53,6 @@ export const Replies: React.FC<Props> = ({ comment }) => {
 }
 
 type Props = {
-  comment: number
+  comment: number,
+  onDelete: (id: number) => void
 }
