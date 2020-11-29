@@ -9,7 +9,7 @@ const TextArea = styled(BoostTextArea)`
   resize: none;
 `;
 
-export const CommentForm: React.FC<Props> = ({ game, onCreate }) => {
+export const CommentForm: React.FC<Props> = ({ game, parent, onCreate, onCancel }) => {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -19,7 +19,8 @@ export const CommentForm: React.FC<Props> = ({ game, onCreate }) => {
 
     const [err] = await createComment({
       game,
-      content
+      content,
+      ...(parent ? { parent } : {})
     })
 
     setLoading(false);
@@ -33,7 +34,7 @@ export const CommentForm: React.FC<Props> = ({ game, onCreate }) => {
     toast.success('Comentario creado correctamente');
 
     onCreate();
-  }, [game, content, onCreate]);
+  }, [game, content, parent, onCreate]);
 
   return (
     <Column className="w-100 p-4">
@@ -44,13 +45,23 @@ export const CommentForm: React.FC<Props> = ({ game, onCreate }) => {
         onChange={setContent}
       />
       <Row className="w-100" alignItems="center" justifyContent="end">
+        {onCancel &&
+          <Button 
+            size="sm"
+            color="neutral"
+            disabled={loading}
+            onClick={onCancel}
+          >
+            Cancelar
+          </Button>
+        }
         <Button
           size="sm" 
           color="primary"
           loading={loading}
           onClick={onSubmit}
         >
-          Enviar
+          {parent ? 'Responder' : 'Enviar'}
         </Button>
       </Row>
     </Column>
@@ -60,4 +71,6 @@ export const CommentForm: React.FC<Props> = ({ game, onCreate }) => {
 type Props = {
   game: number,
   onCreate: () => void,
+  parent?: number,
+  onCancel?: () => void,
 }

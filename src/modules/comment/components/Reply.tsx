@@ -1,20 +1,9 @@
-import React, { useCallback, useState } from 'react';
-import { Grid, Paragraph, Icon, Dropdown, Link, Menu, Text } from '@8base/boost';
-import { Avatar } from '../../../shared/components/globals';
-import { Comment as CommentType } from '../../../shared/types';
+import React from 'react';
+import { Grid, Avatar, Link, Paragraph, Dropdown, Menu, Icon, Text } from '@8base/boost';
 import Can from '../../../shared/components/utilities/Can';
-import { CommentForm } from './CommentForm';
-import { Replies } from './Replies';
+import { Comment } from '../../../shared/types';
 
-export const Comment: React.FC<Props> = ({ comment, ...props }) => {
-  const [reply, setReply] = useState(false);
-
-  const onCreate = useCallback(() => {
-    props.onCreate();
-
-    setReply(false);
-  }, [props]);
-
+export const Reply: React.FC<Props> = ({ comment }) => {
   return (
     <div className="w-100 py-3">
       <Grid.Layout inline stretch columns="60px 1fr 60px">
@@ -33,17 +22,6 @@ export const Comment: React.FC<Props> = ({ comment, ...props }) => {
           <Paragraph>
             {comment.content}
           </Paragraph>
-          {reply &&
-            <div className="w-100 mt-3">
-              <CommentForm 
-                game={comment.gameId}
-                parent={comment.id}
-                onCreate={onCreate}
-                onCancel={() => setReply(false)}
-              />
-            </div>
-          }
-          <Replies comment={comment.id} />
         </Grid.Box>
         <Grid.Box>
           <Can 
@@ -56,15 +34,6 @@ export const Comment: React.FC<Props> = ({ comment, ...props }) => {
                 </Dropdown.Head>
                 <Dropdown.Body>
                   <Menu>
-                    <Can
-                      perform="comment:reply"
-                      data={{ comment }}
-                      onYes={() => (
-                        <Menu.Item onClick={() => setReply(true)}>
-                          Responder
-                        </Menu.Item>
-                      )}
-                    />
                     <Can
                       perform="comment:delete"
                       data={{ comment }}
@@ -88,6 +57,5 @@ export const Comment: React.FC<Props> = ({ comment, ...props }) => {
 }
 
 type Props = {
-  comment: CommentType,
-  onCreate: () => void,
-};
+  comment: Comment
+}

@@ -1,4 +1,4 @@
-import { Game, User, Person } from "../types"
+import { Game, User, Person, Comment } from "../types"
 
 const rules: Rules = {
   Visitor: {
@@ -11,7 +11,7 @@ const rules: Rules = {
   Normal: {
     static: [
       'dashboard-page:visit',
-      'user:authenticated'
+      'user:authenticated',
     ],
     dynamic: {
       'game-player:actions': ({ game }: { game: Game }) => {
@@ -20,6 +20,15 @@ const rules: Rules = {
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id;
       },
+      'comment:actions': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId || comment.parentId === null;
+      },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
+      },
+      'comment:delete': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId;
+      }
     }
   },
   Audiovisual: {
@@ -60,6 +69,15 @@ const rules: Rules = {
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id;
       },
+      'comment:actions': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId || comment.parentId === null;
+      },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
+      },
+      'comment:delete': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId;
+      }
     }
   },
   Teacher: {
@@ -100,6 +118,15 @@ const rules: Rules = {
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id || person.userId === null;
       },
+      'comment:actions': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId || comment.parentId === null;
+      },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
+      },
+      'comment:delete': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId;
+      }
     }
   },
   Administrator: {
@@ -110,6 +137,8 @@ const rules: Rules = {
       // Actions
       'game-point:update',
       'game-point:delete',
+      'comment:actions',
+      'comment:delete'
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
@@ -139,6 +168,9 @@ const rules: Rules = {
       },
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id || person.userId === null;
+      },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
       },
     }
   }

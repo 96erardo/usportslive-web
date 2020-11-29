@@ -33,6 +33,7 @@ export const GameComments: React.FC = () => {
     <Comment 
       key={comment.id} 
       comment={comment}
+      onCreate={refresh}
     />
   ));
 
@@ -59,15 +60,15 @@ export const GameComments: React.FC = () => {
         />
         {comments}
         {loading &&
-          <Row stretch alignItems="center" justifyContent="center">
-            <Loader 
+          <Row className="w-100" alignItems="center" justifyContent="center">
+            <Loader
               color="PRIMARY"
               size="sm"
             />
           </Row>
         }
         {!loading && items.length < count &&
-          <Row stretch className="py-3" alignItems="center" justifyContent="center">
+          <Row className="w-100 py-3" alignItems="center" justifyContent="center">
             <Link onClick={next}>Cargar más</Link>
           </Row>
         }

@@ -63,7 +63,7 @@ function createFilter (data: FetchCommentsFilterData) {
         eq: data.game 
       } 
     } : {}),
-    ...(data.parent ? {
+    ...(data.parent !== undefined ? {
       parentId: { 
         eq: data.parent === null ? '_null_' : data.parent
       } 
@@ -89,7 +89,10 @@ export async function createComment (data: CreateCommentInputData): Promise<Muta
   const { game, ...comment } = data;
 
   try {
-    const res: AxiosResponse<Comment> = await authenticated.post(`/api/comments/game/${data.game}`, comment, {
+    const res: AxiosResponse<Comment> = await authenticated.post(`/api/comments/game/${data.game}`, {
+      content: comment.content,
+      parentId: comment.parent
+    }, {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
