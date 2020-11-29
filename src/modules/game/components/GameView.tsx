@@ -8,6 +8,7 @@ import { WaitingStream } from './WaitingStream';
 import { GameProvider } from '../contexts/GameContext';
 import { useGameLive } from '../hooks/useGameLive';
 import { PlayerRatingDialog } from '../../player/components/PlayerRatingDialog';
+import { GameComments } from '../../comment/components/GameComments';
 
 const GameView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,6 +58,15 @@ const GameView: React.FC = () => {
           </div>
         </div>
         <PlayerRatingDialog />
+      </div>
+      <div className="container">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-8 mx-auto">
+              <GameComments />
+            </div>
+          </div>
+        </div>
       </div>
     </GameProvider>
   );
