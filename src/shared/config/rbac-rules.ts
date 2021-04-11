@@ -1,4 +1,4 @@
-import { Game, User, Person } from "../types"
+import { Game, User, Person, Comment } from "../types"
 
 const rules: Rules = {
   Visitor: {
@@ -11,7 +11,7 @@ const rules: Rules = {
   Normal: {
     static: [
       'dashboard-page:visit',
-      'user:authenticated'
+      'user:authenticated',
     ],
     dynamic: {
       'game-player:actions': ({ game }: { game: Game }) => {
@@ -20,13 +20,32 @@ const rules: Rules = {
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id;
       },
+      'comment:actions': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId || comment.parentId === null;
+      },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
+      },
+      'comment:delete': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId;
+      }
     }
   },
   Audiovisual: {
     static: [
-      'admin-page:visit',
       'dashboard-page:visit',
-      'user:authenticated'
+      'user:authenticated',
+      'admin-page:visit',
+      'admin-teams:visit',
+      'admin-team:visit',
+      'admin-competitions:visit',
+      'admin-competition:visit',
+      'team-player:create',
+      'team-player:remove',
+      'competition:update',
+      'competition-team:create',
+      'competition-team:remove',
+      'competition-game:create',
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
@@ -60,13 +79,39 @@ const rules: Rules = {
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id;
       },
+      'comment:actions': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId || comment.parentId === null;
+      },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
+      },
+      'comment:delete': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId;
+      }
     }
   },
   Teacher: {
     static: [
-      'admin-page:visit',
       'user:authenticated',
       'dashboard-page:visit',
+      'admin-page:visit',
+      'admin-sports:visit',
+      'admin-teams:visit',
+      'admin-team:visit',
+      'admin-competitions:visit',
+      'admin-competition:visit',
+      'admin-users:visit',
+      'team:create',
+      'team:update',
+      'team:delete',
+      'team-player:create',
+      'team-player:remove',
+      'competition:create',
+      'competition:update',
+      'competition:delete',
+      'competition-team:create',
+      'competition-team:remove',
+      'competition-game:create',
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
@@ -100,16 +145,46 @@ const rules: Rules = {
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id || person.userId === null;
       },
+      'comment:actions': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId || comment.parentId === null;
+      },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
+      },
+      'comment:delete': ({ user, comment }: { user: User, comment: Comment }) => {
+        return user.id === comment.userId;
+      }
     }
   },
   Administrator: {
     static: [
       'user:authenticated',
-      'admin-page:visit',
       'dashboard-page:visit',
+      'admin-page:visit',
+      'admin-dashboard:visit',
+      'admin-sports:visit',
+      'admin-teams:visit',
+      'admin-team:visit',
+      'admin-competitions:visit',
+      'admin-competition:visit',
+      'admin-users:visit',
       // Actions
       'game-point:update',
       'game-point:delete',
+      'comment:actions',
+      'comment:delete',
+      'team:create',
+      'team:update',
+      'team:delete',
+      'team-player:create',
+      'team-player:remove',
+      'competition:create',
+      'competition:update',
+      'competition:delete',
+      'competition-team:create',
+      'competition-team:remove',
+      'competition-game:create',
+      'user-account:create',
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
@@ -140,6 +215,12 @@ const rules: Rules = {
       'person:update': ({ user, person }: { user: User, person: Person }) => {
         return user.personId === person.id || person.userId === null;
       },
+      'comment:reply': ({ comment }: { comment: Comment }) => {
+        return comment.parentId === null;
+      },
+      'user-role:update': ({ user, toUpdate }: { user: User, toUpdate: User }) => {
+        return user.id !== toUpdate.id;
+      }
     }
   }
 };

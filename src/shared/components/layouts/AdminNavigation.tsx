@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { Navigation as NavigationBoost, styled } from '@8base/boost';
+import Can from '../utilities/Can';
 import { useHistory } from 'react-router-dom';
 
 const Navigation = styled(NavigationBoost)`
@@ -16,35 +17,60 @@ function AdminNavigation () {
 
   return (
     <Navigation color="GRAY_60" expandedWidth="400px">
-      <NavigationBoost.Item 
-        onClick={navigate('/admin/dashboard')}
-        iconSize="sm" 
-        icon="Home" 
-        label="Dashboard" 
+      <Can
+        perform="admin-dashboard:visit"
+        onYes={() => (
+          <NavigationBoost.Item 
+            onClick={navigate('/admin/dashboard')}
+            iconSize="sm" 
+            icon="Home" 
+            label="Dashboard" 
+          />
+        )}
       />
-      <NavigationBoost.Item 
-        onClick={navigate('/admin/sports')} 
-        iconSize="md" 
-        icon="WhiteSoccer" 
-        label="Deportes" 
+      <Can
+        perform="admin-sports:visit"
+        onYes={() => (
+          <NavigationBoost.Item 
+            onClick={navigate('/admin/sports')} 
+            iconSize="md" 
+            icon="WhiteSoccer" 
+            label="Deportes" 
+          />
+        )}
       />
-      <NavigationBoost.Item 
-        onClick={navigate('/admin/teams')} 
-        iconSize="sm" 
-        icon="Group" 
-        label="Equipos" 
+      <Can
+        perform="admin-teams:visit"
+        onYes={() => (
+          <NavigationBoost.Item 
+            onClick={navigate('/admin/teams')} 
+            iconSize="sm" 
+            icon="Group" 
+            label="Equipos" 
+          />
+        )}
       />
-      <NavigationBoost.Item 
-        onClick={navigate('/admin/competitions')} 
-        iconSize="md" 
-        icon="WhiteTrophy" 
-        label="Torneos" 
+      <Can
+        perform="admin-competitions:visit"
+        onYes={() => (
+          <NavigationBoost.Item 
+            onClick={navigate('/admin/competitions')} 
+            iconSize="md" 
+            icon="WhiteTrophy" 
+            label="Torneos" 
+          />
+        )}
       />
-      <NavigationBoost.Item 
-        onClick={navigate('/admin/users')} 
-        iconSize="sm" 
-        icon="WhiteProfile" 
-        label="Usuarios" 
+      <Can
+        perform="admin-users:visit"
+        onYes={() => (
+          <NavigationBoost.Item 
+            onClick={navigate('/admin/users')} 
+            iconSize="sm" 
+            icon="WhiteProfile" 
+            label="Usuarios" 
+          />          
+        )}
       />
       <NavigationBoost.Item 
         onClick={navigate('/')} 

@@ -252,6 +252,18 @@ export type ExchangeCode = {
   expiresAt: string,
 }
 
+export type Comment = {
+  id: number,
+  content: string,
+  status: 'PUBLIC' | 'CENSURED',
+  userId: number,
+  gameId: number,
+  parentId: number | null,
+  user?: User,
+  game?: Game,
+  parent?: Comment
+}
+
 export interface Event {
   type?: 'in' | 'out' | 'point'
 }

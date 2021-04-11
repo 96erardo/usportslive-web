@@ -7,13 +7,14 @@ import { useUsers } from '../../user-hooks';
 import { User } from '../../../../shared/types';
 import UserTableRow from './UserTableRow';
 import { BindAccountButton } from './BindAccountButton';
+import Can from '../../../../shared/components/utilities/Can';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
 `;
 
 const include = ['role', 'person', 'person.avatar'];
-const columns = '100px 1fr 200px 150px 200px';
+const columns = '100px 1fr 200px 200px';
 
 function TeamsView () {
   const [query, setQuery] = useQuery();
@@ -46,9 +47,14 @@ function TeamsView () {
               onSearch={handleSearch}
             />
           </Card.Header.Left>
-          <Card.Header.Right>
-            <BindAccountButton />
-          </Card.Header.Right>
+          <Can
+            perform="user-account:create"
+            onYes={() => (
+              <Card.Header.Right>
+                <BindAccountButton />
+              </Card.Header.Right>
+            )}
+          />
         </Card.Header>
         <Card.Body padding="none">
           <Table>
@@ -56,7 +62,6 @@ function TeamsView () {
               <Table.HeaderCell></Table.HeaderCell>
               <Table.HeaderCell>Nombre</Table.HeaderCell>
               <Table.HeaderCell>Rol</Table.HeaderCell>
-              <Table.HeaderCell>Stream Key</Table.HeaderCell>
               <Table.HeaderCell>Fecha de Alta</Table.HeaderCell>
             </Table.Header>
             <Body data={items} loading={loading}>
