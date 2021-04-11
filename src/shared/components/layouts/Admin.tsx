@@ -31,13 +31,55 @@ function Admin (props: Props) {
         <AdminNavigation />
         <Content>
           <Switch>
-            <ProtectedRoute perform="admin-page" exact path="/admin/dashboard" component={AdminDashboard} />
-            <ProtectedRoute perform="admin-page" exact path="/admin/sports" component={SportsView} />
-            <ProtectedRoute perform="admin-page" exact path="/admin/teams" component={TeamsView} />
-            <ProtectedRoute perform="admin-page" exact path="/admin/team/:id" component={TeamDetails} />
-            <ProtectedRoute perform="admin-page" exact path="/admin/competitions" component={CompetitionsView} />
-            <ProtectedRoute perform="admin-page" exact path="/admin/competition/:id?" component={Competition} />
-            <ProtectedRoute perform="admin-page" exact path="/admin/users" component={UsersView} />
+            <ProtectedRoute 
+              perform="admin-dashboard" 
+              exact 
+              path="/admin/dashboard"
+              redirect="/admin/teams"
+              component={AdminDashboard} 
+            />
+            <ProtectedRoute 
+              perform="admin-sports" 
+              exact 
+              path="/admin/sports"
+              redirect="/admin/teams"
+              component={SportsView} 
+            />
+            <ProtectedRoute 
+              perform="admin-teams" 
+              exact 
+              path="/admin/teams" 
+              redirect="/admin/teams"
+              component={TeamsView} 
+            />
+            <ProtectedRoute 
+              perform="admin-team"
+              exact 
+              path="/admin/team/:id" 
+              redirect="/admin/teams"
+              component={TeamDetails} 
+            />
+            <ProtectedRoute 
+              perform="admin-competitions"
+              exact 
+              path="/admin/competitions" 
+              redirect="/admin/teams"
+              component={CompetitionsView} 
+            />
+            <ProtectedRoute 
+              perform="admin-page" 
+              exact 
+              path="/admin/competition/:id?" 
+              redirect="/admin/teams"
+              component={Competition} 
+            />
+            <ProtectedRoute 
+              perform="admin-users"
+              exact 
+              path="/admin/users" 
+              redirect="/admin/teams"
+              component={UsersView} 
+            />
             <Route component={PageNotFound} />
           </Switch>
         </Content>

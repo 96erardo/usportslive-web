@@ -9,6 +9,7 @@ import TeamTableRow from './TeamTableRow';
 import CreateTeamButton from './CreateTeamButton';
 import TeamFormDialog from './TeamFormDialog';
 import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
+import Can from '../../../../shared/components/utilities/Can';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -48,9 +49,14 @@ function TeamsView () {
               onSearch={handleSearch}
             />
           </Card.Header.Left>
-          <Card.Header.Right>
-            <CreateTeamButton afterCreate={fetch} />
-          </Card.Header.Right>
+          <Can 
+            perform="team:create"
+            onYes={() => (
+              <Card.Header.Right>
+                <CreateTeamButton afterCreate={fetch} />
+              </Card.Header.Right>
+            )}
+          />
         </Card.Header>
         <Card.Body padding="none">
           <Table>
@@ -59,7 +65,12 @@ function TeamsView () {
               <Table.HeaderCell>Nombre</Table.HeaderCell>
               <Table.HeaderCell>Deporte</Table.HeaderCell>
               <Table.HeaderCell>Fecha de Creación</Table.HeaderCell>
-              <Table.HeaderCell>Acciones</Table.HeaderCell>
+              <Can 
+                perform="team:update"
+                onYes={() => (
+                  <Table.HeaderCell>Acciones</Table.HeaderCell>                  
+                )}
+              />
             </Table.Header>
             <Body data={items} loading={loading}>
               {(team: Team) => (

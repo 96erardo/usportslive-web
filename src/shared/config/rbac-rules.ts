@@ -33,9 +33,18 @@ const rules: Rules = {
   },
   Audiovisual: {
     static: [
-      'admin-page:visit',
       'dashboard-page:visit',
-      'user:authenticated'
+      'user:authenticated',
+      'admin-page:visit',
+      'admin-teams:visit',
+      'admin-team:visit',
+      'admin-competitions:visit',
+      'team-player:create',
+      'team-player:remove',
+      'competition:update',
+      'competition-team:create',
+      'competition-team:remove',
+      'competition-game:create',
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
@@ -82,9 +91,25 @@ const rules: Rules = {
   },
   Teacher: {
     static: [
-      'admin-page:visit',
       'user:authenticated',
       'dashboard-page:visit',
+      'admin-page:visit',
+      'admin-sports:visit',
+      'admin-teams:visit',
+      'admin-team:visit',
+      'admin-competitions:visit',
+      'admin-users:visit',
+      'team:create',
+      'team:update',
+      'team:delete',
+      'team-player:create',
+      'team-player:remove',
+      'competition:create',
+      'competition:update',
+      'competition:delete',
+      'competition-team:create',
+      'competition-team:remove',
+      'competition-game:create',
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
@@ -132,13 +157,30 @@ const rules: Rules = {
   Administrator: {
     static: [
       'user:authenticated',
-      'admin-page:visit',
       'dashboard-page:visit',
+      'admin-page:visit',
+      'admin-dashboard:visit',
+      'admin-sports:visit',
+      'admin-teams:visit',
+      'admin-team:visit',
+      'admin-competitions:visit',
+      'admin-users:visit',
       // Actions
       'game-point:update',
       'game-point:delete',
       'comment:actions',
-      'comment:delete'
+      'comment:delete',
+      'team:create',
+      'team:update',
+      'team:delete',
+      'team-player:create',
+      'team-player:remove',
+      'competition:create',
+      'competition:update',
+      'competition:delete',
+      'competition-team:create',
+      'competition-team:remove',
+      'competition-game:create',
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
