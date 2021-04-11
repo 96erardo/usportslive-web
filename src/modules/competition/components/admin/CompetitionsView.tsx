@@ -10,6 +10,7 @@ import CompetitionTableRow from './CompetitionTableRow';
 import { FilterData } from '../../competition-actions';
 import { useHistory } from 'react-router-dom';
 import DecisionDialog from '../../../../shared/components/globals/DecisionDialog';
+import Can from '../../../../shared/components/utilities/Can';
 
 const Body = styled(Table.Body)`
   min-height: 500px;
@@ -65,11 +66,16 @@ const CompetitionView: React.FC = () => {
               onFilter={handleFilter}
             />
           </Card.Header.Left>
-          <Card.Header.Right>
-            <Button color="neutral" onClick={handleCreate}>
-              Crear Torneo
-            </Button>
-          </Card.Header.Right>
+          <Can
+            perform="competition:create"
+            onYes={() => (
+              <Card.Header.Right>
+                <Button color="neutral" onClick={handleCreate}>
+                  Crear Torneo
+                </Button>
+              </Card.Header.Right>
+            )}
+          />
         </Card.Header>
         <Card.Body padding="none">
           <Table>
@@ -81,7 +87,12 @@ const CompetitionView: React.FC = () => {
               <Table.HeaderCell>Inicio</Table.HeaderCell>
               <Table.HeaderCell>Deporte</Table.HeaderCell>
               <Table.HeaderCell>Estatus</Table.HeaderCell>
-              <Table.HeaderCell>Acciones</Table.HeaderCell>
+              <Can
+                perform="competition:update"
+                onYes={() => (
+                  <Table.HeaderCell>Acciones</Table.HeaderCell>
+                )}
+              />
             </Table.Header>
             <Body data={items} loading={loading}>
               {(competition: Competition) => (

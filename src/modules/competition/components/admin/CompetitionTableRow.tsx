@@ -9,6 +9,7 @@ import { COMPETITION_STATUS as STATUS } from '../../../../shared/constants';
 import { onError } from '../../../../shared/mixins';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import Can from '../../../../shared/components/utilities/Can';
 
 const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutation }) => {
   const { openModal, closeModal } = useModal(modalId);
@@ -87,33 +88,48 @@ const CompetitionTableRow: React.FC<Props> = ({ columns, competition, afterMutat
               {STATUS[competition.status].label}
             </Tag>
           </Dropdown.Head>
-          <Dropdown.Body>
-            <Menu>
-              {status.map((value) => (
-                <Menu.Item key={value} onClick={() => onStatusChange(value)}>
-                  {STATUS[value].label}
-                </Menu.Item>
-              ))}
-            </Menu>
-          </Dropdown.Body>
+          <Can
+            perform="competition:update"
+            onYes={() => (
+              <Dropdown.Body>
+                <Menu>
+                  {status.map((value) => (
+                    <Menu.Item key={value} onClick={() => onStatusChange(value)}>
+                      {STATUS[value].label}
+                    </Menu.Item>
+                  ))}
+                </Menu>
+              </Dropdown.Body>
+            )}
+          />
         </Dropdown>
       </Table.BodyCell>
       <Table.BodyCell>
-        <Dropdown defaultOpen={false}>
-          <Dropdown.Head>
-            <Icon color="GRAY_40" name="More" />
-          </Dropdown.Head>
-          <Dropdown.Body>
-            <Menu>
-              <Menu.Item onClick={onUpdate}>
-                Editar
-              </Menu.Item>
-              <Menu.Item onClick={onDeleteClick}>
-                <Text color="DANGER">Eliminar</Text>
-              </Menu.Item>
-            </Menu>
-          </Dropdown.Body>
-        </Dropdown>
+        <Can
+          perform="competition:update"
+          onYes={() => (
+            <Dropdown defaultOpen={false}>
+              <Dropdown.Head>
+                <Icon color="GRAY_40" name="More" />
+              </Dropdown.Head>
+              <Dropdown.Body>
+                <Menu>
+                  <Menu.Item onClick={onUpdate}>
+                    Editar
+                  </Menu.Item>
+                  <Can
+                    perform="competition:delete"
+                    onYes={() => (
+                      <Menu.Item onClick={onDeleteClick}>
+                        <Text color="DANGER">Eliminar</Text>
+                      </Menu.Item>
+                    )}
+                  />
+                </Menu>
+              </Dropdown.Body>
+            </Dropdown>
+          )}
+        />
       </Table.BodyCell>
     </Table.BodyRow>
   );

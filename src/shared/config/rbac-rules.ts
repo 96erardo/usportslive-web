@@ -39,6 +39,7 @@ const rules: Rules = {
       'admin-teams:visit',
       'admin-team:visit',
       'admin-competitions:visit',
+      'admin-competition:visit',
       'team-player:create',
       'team-player:remove',
       'competition:update',
@@ -98,6 +99,7 @@ const rules: Rules = {
       'admin-teams:visit',
       'admin-team:visit',
       'admin-competitions:visit',
+      'admin-competition:visit',
       'admin-users:visit',
       'team:create',
       'team:update',
@@ -164,6 +166,7 @@ const rules: Rules = {
       'admin-teams:visit',
       'admin-team:visit',
       'admin-competitions:visit',
+      'admin-competition:visit',
       'admin-users:visit',
       // Actions
       'game-point:update',
@@ -181,6 +184,7 @@ const rules: Rules = {
       'competition-team:create',
       'competition-team:remove',
       'competition-game:create',
+      'user-account:create',
     ],
     dynamic: {
       'game-player:actions': ({ game, status, participated }: { game: Game, status: 'playing' | 'bench', participated: boolean }) => {
@@ -214,6 +218,9 @@ const rules: Rules = {
       'comment:reply': ({ comment }: { comment: Comment }) => {
         return comment.parentId === null;
       },
+      'user-role:update': ({ user, toUpdate }: { user: User, toUpdate: User }) => {
+        return user.id !== toUpdate.id;
+      }
     }
   }
 };
