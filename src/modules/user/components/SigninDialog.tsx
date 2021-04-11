@@ -33,6 +33,7 @@ export const SigninDialog: React.FC = () => {
   useEffect(() => {
     if (isOpen) {
       setProfile(initialProfile);
+      setForm(initialForm);
     }
   }, [isOpen]);
 

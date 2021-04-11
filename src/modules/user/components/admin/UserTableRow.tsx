@@ -79,9 +79,6 @@ function UserTableRow ({ columns, user, afterUpdate }: Props) {
         </Dropdown>
       </Table.BodyCell>
       <Table.BodyCell>
-        {user.streamKey}
-      </Table.BodyCell>
-      <Table.BodyCell>
         {moment(user.createdAt).format(DATE_TIME_FORMAT)}
       </Table.BodyCell>
     </Table.BodyRow>
