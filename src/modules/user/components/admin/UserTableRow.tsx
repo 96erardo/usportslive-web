@@ -7,6 +7,7 @@ import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import { useAppStore } from '../../../app/app-store';
+import Can from '../../../../shared/components/utilities/Can';
 
 function UserTableRow ({ columns, user, afterUpdate }: Props) {
   const [loading, setLoading] = useState(false);
@@ -61,21 +62,33 @@ function UserTableRow ({ columns, user, afterUpdate }: Props) {
                 <Link underline={false} color="GRAY_60" variant="link">
                   {user.role.name}
                 </Link>
-                <Icon size="xs" color="GRAY_60" name="ChevronDown" />
+                <Can
+                  perform="user-role:update"
+                  data={{ toUpdate: user }}
+                  onYes={() => (
+                    <Icon size="xs" color="GRAY_60" name="ChevronDown" />
+                  )}
+                />
               </Row>
             )}
           </Dropdown.Head>
-          <Dropdown.Body>
-            {(dropdown: any) => (
-              <Menu>
-                {roles.map(role => (
-                  <Menu.Item key={role.id} onClick={() => onStatusChange(role.id, dropdown)}>
-                    {role.name}
-                  </Menu.Item>
-                ))}
-              </Menu>
+          <Can
+            perform="user-role:update"
+            data={{ toUpdate: user }}
+            onYes={() => (
+              <Dropdown.Body>
+                {(dropdown: any) => (
+                  <Menu>
+                    {roles.map(role => (
+                      <Menu.Item key={role.id} onClick={() => onStatusChange(role.id, dropdown)}>
+                        {role.name}
+                      </Menu.Item>
+                    ))}
+                  </Menu>
+                )}
+              </Dropdown.Body>
             )}
-          </Dropdown.Body>
+          />
         </Dropdown>
       </Table.BodyCell>
       <Table.BodyCell>

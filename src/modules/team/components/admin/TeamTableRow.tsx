@@ -9,6 +9,7 @@ import { modalId as decisionModalId } from '../../../../shared/components/global
 import { onError } from '../../../../shared/mixins';
 import { toast } from 'react-toastify';
 import moment from 'moment';
+import Can from '../../../../shared/components/utilities/Can';
 
 function TeamTableRow ({ columns, team, afterUpdate }: Props) {
   const { openModal, closeModal } = useModal('update-team-dialog');
@@ -67,19 +68,24 @@ function TeamTableRow ({ columns, team, afterUpdate }: Props) {
         {moment(team.createdAt).format(DATE_TIME_FORMAT)}
       </Table.BodyCell>
       <Table.BodyCell>
-        <Dropdown defaultOpen={false}>
-          <Dropdown.Head>
-            <Icon name="More" color="GRAY_40" />
-          </Dropdown.Head>
-          <Dropdown.Body>
-            <Menu>
-              <Menu.Item onClick={onUpdate}>Editar</Menu.Item>
-              <Menu.Item onClick={onDelete}>
-                <Text color="DANGER">Eliminar</Text>
-              </Menu.Item>
-            </Menu>
-          </Dropdown.Body>
-        </Dropdown>
+        <Can 
+          perform="team:update"
+          onYes={() => (
+            <Dropdown defaultOpen={false}>
+              <Dropdown.Head>
+                <Icon name="More" color="GRAY_40" />
+              </Dropdown.Head>
+              <Dropdown.Body>
+                <Menu>
+                  <Menu.Item onClick={onUpdate}>Editar</Menu.Item>
+                  <Menu.Item onClick={onDelete}>
+                    <Text color="DANGER">Eliminar</Text>
+                  </Menu.Item>
+                </Menu>
+              </Dropdown.Body>
+            </Dropdown>
+          )}
+        />
       </Table.BodyCell>
     </Table.BodyRow>
   );

@@ -12,7 +12,7 @@ function CreateSportButton (props: Props) {
   return (
     <React.Fragment>
       <Button color="neutral" onClick={handleClick}>
-        Create Sport
+        Crear Deporte
       </Button>
       <SportDialog 
         type="create"
