@@ -30,7 +30,7 @@
     "moment": "2.24.0",
     "node-fetch": "^2.6.1",
     "notistack": "^0.9.11",
-    "qs": "^6.9.4",
+    "qs": "^6.9.7",
     "react": "^16.12.0",
     "react-color": "^2.18.1",
     "react-contenteditable": "^3.3.5",
